@@ -1,22 +1,26 @@
 ﻿using System;
 using System.Configuration;
+using System.Data;
+using System.Data.Common;
 using System.Data.SqlClient;
+using MySqlConnector;
 
 namespace DAL
 {
-    public class DbConnection : IDbConnection
+    public class DbConnection
     {
-        private string _connectionString = "Server = 127.0.0.1; Database=garageplanner;Uid=root;Pwd=;";
-        private SqlConnection _sqlConnection;
+        private readonly string _connectionString = "datasource=127.0.0.1;port=3306;username=root;password=;database=garageplanner";
+        private readonly MySqlConnection _sqlConnection;
+
         private bool isConnected;
 
         public DbConnection()
         {
-            _sqlConnection = new SqlConnection(_connectionString);
+            _sqlConnection = new MySqlConnection(_connectionString);
             isConnected = false;
         }
 
-        public void Connect()
+        private void Connect()
         {
             try
             {
@@ -32,7 +36,7 @@ namespace DAL
             }
         }
 
-        public void Disconnect()
+        private void Disconnect()
         {
             try
             {
@@ -48,18 +52,19 @@ namespace DAL
             }
         }
 
-        public System.Data.DataTable ExecuteQuery(string query, SqlParameter[] parameters)
+
+        public DataTable ExecuteQuery(string query, MySqlParameter[] parameters)
         {
             Connect();
             try
             {
-                SqlCommand command = new SqlCommand(query, _sqlConnection);
+                MySqlCommand command = new (query, _sqlConnection);
                 if (parameters != null)
                 {
                     command.Parameters.AddRange(parameters);
                 }
-                SqlDataAdapter adapter = new SqlDataAdapter(command);
-                System.Data.DataTable dataTable = new System.Data.DataTable();
+                MySqlDataAdapter adapter = new (command);
+                DataTable dataTable = new();
                 adapter.Fill(dataTable);
                 return dataTable;
             }
@@ -72,6 +77,9 @@ namespace DAL
                 Disconnect();
             }
         }
+
+
+
 
     }
 }

@@ -1,34 +1,59 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
+﻿using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
+using Core;
+using MySqlConnector;
 
-namespace DAL
+
+namespace DAL;
+
+public class DALCustomer : IDALCustomer
 {
-    internal class DALCustomer
+    public void InsertCustomer(string first_name, string last_name, string address, string email, string password)
     {
-
-
-        public void insertCustomer(string firstName, string lastName, string address, string email, string password)
+        var query = "INSERT INTO customers (first_name, last_name, address, email, password) " +
+                    "VALUES (@first_name, @last_name, @address, @email, @password)";
+        MySqlParameter[] parameters =
         {
-            string query = "INSERT INTO Customers (FirstName, LastName, Address, Email, Password) " +
-                           "VALUES (@FirstName, @LastName, @Address, @Email, @Password)";
-            SqlParameter[] parameters = new SqlParameter[]
+            new("@first_name", MySqlDbType.VarChar, 50) { Value = first_name },
+            new("@last_name", MySqlDbType.VarChar, 50) { Value = last_name },
+            new("@address", MySqlDbType.VarChar, 100) { Value = address },
+            new("@email", MySqlDbType.VarChar, 50) { Value = email },
+            new("@password", MySqlDbType.VarChar, 50) { Value = password }
+        };
+
+        var connection = new DbConnection();
+        connection.ExecuteQuery(query, parameters);
+    }
+
+    public Dictionary<string, object> GetCustomerByEmail(string email)
+    {
+        var query = "SELECT * FROM customers WHERE email = @email";
+        var parameters = new MySqlParameter[]
+        {
+            new MySqlParameter("@email", email)
+        };
+
+        var connection = new DbConnection();
+        var dataTable = connection.ExecuteQuery(query, parameters);
+
+        if (dataTable.Rows.Count > 0)
+        {
+            var row = dataTable.Rows[0];
+            var customerData = new Dictionary<string, object>
             {
-            new SqlParameter("@FirstName", SqlDbType.VarChar, 50) { Value = firstName },
-            new SqlParameter("@LastName", SqlDbType.VarChar, 50) { Value = lastName },
-            new SqlParameter("@Address", SqlDbType.VarChar, 100) { Value = address },
-            new SqlParameter("@Email", SqlDbType.VarChar, 50) { Value = email },
-            new SqlParameter("@Password", SqlDbType.VarChar, 50) { Value = password }
+                { "id", Convert.ToInt32(row["id"]) },
+                { "first_name", row["first_name"].ToString() },
+                { "last_name", row["last_name"].ToString() },
+                { "address", row["address"].ToString() },
+                { "email", email },
+                { "password", row["password"].ToString() }
             };
 
-            DbConnection connection = new DbConnection();
-            connection.ExecuteQuery(query, parameters);
+            return customerData;
         }
+        throw new Exception("Customer not found");
 
     }
+
+
 }

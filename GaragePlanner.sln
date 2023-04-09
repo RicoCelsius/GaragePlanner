@@ -4,10 +4,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.3.32929.385
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GaragePlanner", "GaragePlanner\GaragePlanner.csproj", "{D36A7991-8B47-4CBB-B075-154B2DE67C74}"
+	ProjectSection(ProjectDependencies) = postProject
+		{4502EDAB-657D-4FB9-B7F0-1FC24F01185B} = {4502EDAB-657D-4FB9-B7F0-1FC24F01185B}
+	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DAL", "DAL\DAL.csproj", "{17FDB701-7562-4128-B853-4B3211D338B8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DAL", "DAL\DAL.csproj", "{17FDB701-7562-4128-B853-4B3211D338B8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Core\Core.csproj", "{4502EDAB-657D-4FB9-B7F0-1FC24F01185B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core", "Core\Core.csproj", "{4502EDAB-657D-4FB9-B7F0-1FC24F01185B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Interfaces", "Interfaces", "{2B1F1098-77AF-443E-AC42-D22DCC512EC6}"
+	ProjectSection(SolutionItems) = preProject
+		Core\Interfaces\ICustomerService.cs = Core\Interfaces\ICustomerService.cs
+		Core\Interfaces\IDALCustomer.cs = Core\Interfaces\IDALCustomer.cs
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
