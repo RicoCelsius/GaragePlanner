@@ -1,22 +1,36 @@
-﻿using System;
-using System.Configuration;
-using System.Data;
-using System.Data.Common;
-using System.Data.SqlClient;
+﻿using System.Data;
 using MySqlConnector;
+using Microsoft.Extensions.Configuration;
+using System.Configuration;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration.Json;
+
+
 
 namespace DAL
 {
     public class DbConnection
     {
-        private readonly string _connectionString = "datasource=127.0.0.1;port=3306;username=root;password=;database=garageplanner";
+       
         private readonly MySqlConnection _sqlConnection;
+        private readonly string _connectionString;
 
         private bool isConnected;
 
+       
+
+
+
         public DbConnection()
         {
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+            IConfigurationRoot configuration = builder.Build();
+            _connectionString = configuration.GetConnectionString("DefaultConnection");
+
             _sqlConnection = new MySqlConnection(_connectionString);
+            
             isConnected = false;
         }
 
@@ -24,7 +38,7 @@ namespace DAL
         {
             try
             {
-                if (isConnected == false)
+                if (!isConnected)
                 {
                     _sqlConnection.Open();
                     isConnected = true;
@@ -40,17 +54,19 @@ namespace DAL
         {
             try
             {
-                if (isConnected == true)
+                if (!isConnected)
                 {
-                    _sqlConnection.Close();
-                    isConnected = false;
+                    return;
                 }
+                _sqlConnection.Close();
+                isConnected = false;
             }
             catch (Exception ex)
             {
                 throw new Exception("Unable to disconnect from the database.", ex);
             }
         }
+
 
 
         public DataTable ExecuteQuery(string query, MySqlParameter[] parameters)

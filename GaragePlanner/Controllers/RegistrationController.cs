@@ -1,5 +1,4 @@
 ﻿using Core;
-using Core.Interfaces;
 using GaragePlanner.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,11 +10,11 @@ namespace GaragePlanner.Controllers
 {
     public class RegistrationController : Controller
     {
-        private readonly ICustomerService _customerService;
+        private readonly CustomerFile _customerFile;
 
-        public RegistrationController(ICustomerService customerService)
+        public RegistrationController()
         {
-            _customerService = customerService;
+            _customerFile = new CustomerFile();
         }   
 
         public IActionResult Index()
@@ -24,7 +23,7 @@ namespace GaragePlanner.Controllers
         }
 
         [HttpPost]
-        public IActionResult RegisterCustomer(CustomerViewModel model)
+        public IActionResult RegisterCustomer(RegistrationViewModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -33,10 +32,11 @@ namespace GaragePlanner.Controllers
 
             try
             {
-                _customerService.AddCustomer(new string[] { model.FirstName, model.LastName, model.Address, model.Email, model.Password });
+                _customerFile.AddCustomer(new Customer(model.FirstName,model.LastName,model.Address,model.Email,model.Password));
             }
             catch (Exception e)
             {
+                Console.WriteLine(e);
                 return View("Index", model);
             }
 

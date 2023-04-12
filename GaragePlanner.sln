@@ -12,12 +12,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DAL", "DAL\DAL.csproj", "{1
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core", "Core\Core.csproj", "{4502EDAB-657D-4FB9-B7F0-1FC24F01185B}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Interfaces", "Interfaces", "{2B1F1098-77AF-443E-AC42-D22DCC512EC6}"
-	ProjectSection(SolutionItems) = preProject
-		Core\Interfaces\ICustomerService.cs = Core\Interfaces\ICustomerService.cs
-		Core\Interfaces\IDALCustomer.cs = Core\Interfaces\IDALCustomer.cs
-	EndProjectSection
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

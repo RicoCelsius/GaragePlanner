@@ -6,11 +6,11 @@ namespace GaragePlanner.Controllers
 {
     public class LoginController : Controller
     {
-        private readonly ICustomerService _customerService;
+        private readonly CustomerFile _customerFile = new();
 
-        public LoginController(ICustomerService customerService)
+        public LoginController()
         {
-            _customerService = customerService;
+
         }
 
         public IActionResult Index()
@@ -25,11 +25,12 @@ namespace GaragePlanner.Controllers
             {
                 return View("Index");
             }
-            _customerService.AuthenticateCustomer(model.Email,model.Password);
+            Credentials userCredentials = new Credentials(model.Email, model.Password);
+            Customer authenticatedCustomer = _customerFile.AuthenticateCustomer(userCredentials);
 
 
 
-            return View();
+            return View("dashboard",authenticatedCustomer);
         }
     }
 }
