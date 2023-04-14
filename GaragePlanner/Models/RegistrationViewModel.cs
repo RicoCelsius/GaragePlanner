@@ -2,7 +2,7 @@
 
 namespace GaragePlanner.Models
 {
-    public class CustomerViewModel
+    public class RegistrationViewModel
     {
         [Required(ErrorMessage = "Please enter a first name.")]
         public string FirstName { get; set; }
@@ -18,10 +18,17 @@ namespace GaragePlanner.Models
         public string Email { get; set; }
 
         [Required(ErrorMessage = "Please enter a password.")]
+        [DataType(DataType.Password)]
         [MinLength(6, ErrorMessage = "Password must be at least 6 characters.")]
         public string Password { get; set; }
 
-        public CustomerViewModel()
+        [Required(ErrorMessage = "Please enter a password")]
+        [DataType(DataType.Password)]
+        [Compare("Password", ErrorMessage = "Passwords do not match.")]
+        public string ConfirmPassword { get; set; }
+
+
+        public RegistrationViewModel()
         {
 
         }

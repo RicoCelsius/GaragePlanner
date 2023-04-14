@@ -1,8 +1,28 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"] - AutoGarage - Schedule Appointments</title>
+    <link href="@Url.Content("~/css/forms.css")" rel="stylesheet" type="text/css" />
+</head>
+<body>
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+
+<main>
+    <section>
+        <h2>Welcome to AutoGarage</h2>
+        <p>With our scheduling app, you can easily schedule appointments with our garage, increasing efficiency and convenience for our customers.</p>
+    </section>
+
+    <section>
+        <h2>Dashboard</h2>
+        <p>Once you've registered and logged in, you'll have access to your dashboard. Here, you can add your cars, schedule, modify or cancel appointments, and view the garage's calendar.</p>
+            <a href="@Url.Action("Index", "Registration")">Register Now</a>
+    </section>
+</main>
+
+
+<script src="~/js/site.js" asp-append-version="true"></script>
+</body>
+</html>

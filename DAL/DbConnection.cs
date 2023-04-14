@@ -11,14 +11,10 @@ namespace DAL
 {
     public class DbConnection
     {
-       
+
         private readonly MySqlConnection _sqlConnection;
         private readonly string _connectionString;
-
         private bool isConnected;
-
-       
-
 
 
         public DbConnection()
@@ -30,41 +26,30 @@ namespace DAL
             _connectionString = configuration.GetConnectionString("DefaultConnection");
 
             _sqlConnection = new MySqlConnection(_connectionString);
-            
+
             isConnected = false;
         }
 
         private void Connect()
         {
-            try
+            if (!isConnected)
             {
-                if (!isConnected)
-                {
-                    _sqlConnection.Open();
-                    isConnected = true;
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Unable to connect to the database.", ex);
+                _sqlConnection.Open();
+                isConnected = true;
             }
         }
 
+
+
         private void Disconnect()
         {
-            try
+            if (!isConnected)
             {
-                if (!isConnected)
-                {
-                    return;
-                }
-                _sqlConnection.Close();
-                isConnected = false;
+                throw new Exception("Cannot disconnect, because the application is not connected.");
             }
-            catch (Exception ex)
-            {
-                throw new Exception("Unable to disconnect from the database.", ex);
-            }
+
+            _sqlConnection.Close();
+            isConnected = false;
         }
 
 
@@ -72,30 +57,22 @@ namespace DAL
         public DataTable ExecuteQuery(string query, MySqlParameter[] parameters)
         {
             Connect();
-            try
+            MySqlCommand command = new(query, _sqlConnection);
+            if (parameters != null)
             {
-                MySqlCommand command = new (query, _sqlConnection);
-                if (parameters != null)
-                {
-                    command.Parameters.AddRange(parameters);
-                }
-                MySqlDataAdapter adapter = new (command);
-                DataTable dataTable = new();
-                adapter.Fill(dataTable);
-                return dataTable;
+                command.Parameters.AddRange(parameters);
             }
-            catch (Exception ex)
-            {
-                throw new Exception("Error executing query.", ex);
-            }
-            finally
-            {
-                Disconnect();
-            }
+
+            MySqlDataAdapter adapter = new(command);
+            DataTable dataTable = new();
+            adapter.Fill(dataTable);
+            Disconnect();
+            return dataTable;
         }
-
-
-
-
     }
 }
+
+
+
+
+

@@ -5,9 +5,9 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DAL
+namespace DAL.models
 {
-    public class CustomerDto
+    public class CustomerDalDto
     {
         public int? Id { get; set; }
         public string FirstName { get; set; }
@@ -16,7 +16,7 @@ namespace DAL
         public string Email { get; set; }
         public string Password { get; set; }
 
-        public CustomerDto(int? id, string firstName, string lastName, string address, string email, string password)
+        public CustomerDalDto(int? id, string firstName, string lastName, string address, string email, string password)
         {
             Id = id;
             FirstName = firstName;

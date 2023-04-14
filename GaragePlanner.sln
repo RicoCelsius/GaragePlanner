@@ -10,7 +10,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GaragePlanner", "GaragePlan
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DAL", "DAL\DAL.csproj", "{17FDB701-7562-4128-B853-4B3211D338B8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core", "Core\Core.csproj", "{4502EDAB-657D-4FB9-B7F0-1FC24F01185B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "Core\Domain.csproj", "{4502EDAB-657D-4FB9-B7F0-1FC24F01185B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GaragePlannerTests", "GaragePlannerTests\GaragePlannerTests.csproj", "{21F6BF1A-552E-4229-AE5F-31EA96426109}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -30,6 +32,10 @@ Global
 		{4502EDAB-657D-4FB9-B7F0-1FC24F01185B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4502EDAB-657D-4FB9-B7F0-1FC24F01185B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4502EDAB-657D-4FB9-B7F0-1FC24F01185B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{21F6BF1A-552E-4229-AE5F-31EA96426109}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{21F6BF1A-552E-4229-AE5F-31EA96426109}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{21F6BF1A-552E-4229-AE5F-31EA96426109}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{21F6BF1A-552E-4229-AE5F-31EA96426109}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

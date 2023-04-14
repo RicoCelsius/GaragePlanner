@@ -10,11 +10,11 @@ namespace GaragePlanner.Controllers
 {
     public class RegistrationController : Controller
     {
-        private readonly CustomerFile _customerFile;
+        private readonly CustomerCollection _customerCollection;
 
         public RegistrationController()
         {
-            _customerFile = new CustomerFile();
+            _customerCollection = new CustomerCollection();
         }   
 
         public IActionResult Index()
@@ -22,30 +22,44 @@ namespace GaragePlanner.Controllers
             return View();
         }
 
+ 
+
         [HttpPost]
-        public IActionResult RegisterCustomer(RegistrationViewModel model)
+        [ValidateAntiForgeryToken]
+        public IActionResult RegisterCustomer(RegistrationViewModel registrationViewModel)
         {
             if (!ModelState.IsValid)
             {
-                return View("Index");
+                return View(registrationViewModel);
             }
 
             try
             {
-                _customerFile.AddCustomer(new Customer(model.FirstName,model.LastName,model.Address,model.Email,model.Password));
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                return View("Index", model);
+                _customerCollection.CreateCustomer(
+                    registrationViewModel.FirstName,
+                    registrationViewModel.LastName,
+                    registrationViewModel.Address,
+                    registrationViewModel.Email,
+                    registrationViewModel.Password
+                );
             }
 
-            return RedirectToAction("RegistrationSuccess");
+            catch 
+            {
+                var errorViewModel = new ErrorViewModel()
+                {
+                    ErrorMessage = "Something unexpected happened. Please try again later."
+                };
+               
+                return View("Error",errorViewModel);
+            }
+
+            return RedirectToAction("RegistrationSuccess", registrationViewModel);
         }
 
-        public IActionResult RegistrationSuccess()
+        public IActionResult RegistrationSuccess(RegistrationViewModel model)
         {
-            return View();
+            return View(model);
         }
     }
 

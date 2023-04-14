@@ -1,13 +1,16 @@
 ﻿using System.Data;
 using System.Data.SqlClient;
+using DAL.models;
 using MySqlConnector;
+
+
 
 
 namespace DAL;
 
 public class DALCustomer 
 {
-    public void InsertCustomer(CustomerDto customerDto)
+    public void InsertCustomer(CustomerDalDto customerDto)
     {
         var query = "INSERT INTO customers (first_name, last_name, address, email, password) " +
                     "VALUES (@first_name, @last_name, @address, @email, @password)";
@@ -24,7 +27,7 @@ public class DALCustomer
         connection.ExecuteQuery(query, parameters);
     }
 
-    public CustomerDto GetCustomerByEmail(string email)
+    public CustomerDalDto GetCustomerByEmail(string email)
     {
         var query = "SELECT * FROM customers WHERE email = @email";
         var parameters = new MySqlParameter[]
@@ -38,7 +41,7 @@ public class DALCustomer
         if (dataTable.Rows.Count > 0)
         {
             var row = dataTable.Rows[0];
-            var customerData = new CustomerDto(
+            var customerData = new CustomerDalDto(
                 row.Field<int>("id"),
                 row.Field<string>("first_name"),
                 row.Field<string>("last_name"),
