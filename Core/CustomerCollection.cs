@@ -1,6 +1,4 @@
-﻿using DAL;
-using DAL.models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,29 +10,44 @@ namespace Core
     public class CustomerCollection
     {
         public List<Customer> Customers { get; set; }
-        private readonly DALCustomer _dalCustomer;
+        private readonly ICustomerDal _iCustomerDal;
 
 
-        public CustomerCollection()
+        public CustomerCollection(ICustomerDal iCustomerDal )
         {
-            _dalCustomer = new DALCustomer();
+            this._iCustomerDal = iCustomerDal;
             Customers = new List<Customer>();
         }
 
 
         public void CreateCustomer(string firstName, string lastName, string address, string email, string password)
         {
+            /*if(doesCustomerExist(email))
+                throw new Exception("Customer already exists");*/
+
             string encryptedPassword = PasswordEncryptor.EncryptPassword(password);
-            CustomerDalDto customerDto = new(null, firstName, lastName, address, email, encryptedPassword);
-            _dalCustomer.InsertCustomer(customerDto);
+            Customer customer = new(firstName, lastName, address, email, encryptedPassword);
+            _iCustomerDal.InsertCustomer(customer);
         }
 
+        public bool doesCustomerExist(string email)
+        {
+            try
+            {
+                Customer customerInfo = _iCustomerDal.GetCustomerByEmail(email);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
 
 
 
         public Customer AuthenticateCustomer(string email, string inputPassword)
         {
-            CustomerDalDto customerInfo = _dalCustomer.GetCustomerByEmail(email);
+            Customer customerInfo = _iCustomerDal.GetCustomerByEmail(email);
             string hashedPassword = customerInfo.Password;
             string hashedInputPassword = PasswordEncryptor.EncryptPassword(inputPassword);
 

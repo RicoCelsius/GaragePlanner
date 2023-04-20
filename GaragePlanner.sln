@@ -5,14 +5,18 @@ VisualStudioVersion = 17.3.32929.385
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GaragePlanner", "GaragePlanner\GaragePlanner.csproj", "{D36A7991-8B47-4CBB-B075-154B2DE67C74}"
 	ProjectSection(ProjectDependencies) = postProject
+		{17FDB701-7562-4128-B853-4B3211D338B8} = {17FDB701-7562-4128-B853-4B3211D338B8}
 		{4502EDAB-657D-4FB9-B7F0-1FC24F01185B} = {4502EDAB-657D-4FB9-B7F0-1FC24F01185B}
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DAL", "DAL\DAL.csproj", "{17FDB701-7562-4128-B853-4B3211D338B8}"
+	ProjectSection(ProjectDependencies) = postProject
+		{4502EDAB-657D-4FB9-B7F0-1FC24F01185B} = {4502EDAB-657D-4FB9-B7F0-1FC24F01185B}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "Core\Domain.csproj", "{4502EDAB-657D-4FB9-B7F0-1FC24F01185B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GaragePlannerTests", "GaragePlannerTests\GaragePlannerTests.csproj", "{21F6BF1A-552E-4229-AE5F-31EA96426109}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GaragePlannerTests", "GaragePlannerTests\GaragePlannerTests.csproj", "{21F6BF1A-552E-4229-AE5F-31EA96426109}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

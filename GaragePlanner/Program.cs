@@ -1,9 +1,15 @@
 using Core;
+using DAL;
+using Domain;
+using GaragePlanner.Controllers;
 using Microsoft.Extensions.Configuration;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddSingleton<ICustomerDal, CustomerDal>();
+
+
 
 var configuration = new ConfigurationBuilder()
     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)

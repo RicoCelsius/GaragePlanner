@@ -1,4 +1,6 @@
 ﻿using Core;
+using DAL;
+using Domain;
 using GaragePlanner.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,11 +12,10 @@ namespace GaragePlanner.Controllers
 {
     public class RegistrationController : Controller
     {
-        private readonly CustomerCollection _customerCollection;
-
-        public RegistrationController()
+        private ICustomerDal _customerDal;
+        public RegistrationController(ICustomerDal customerDal)
         {
-            _customerCollection = new CustomerCollection();
+            _customerDal = customerDal;
         }   
 
         public IActionResult Index()
@@ -35,6 +36,7 @@ namespace GaragePlanner.Controllers
 
             try
             {
+                CustomerCollection _customerCollection = new CustomerCollection(_customerDal);
                 _customerCollection.CreateCustomer(
                     registrationViewModel.FirstName,
                     registrationViewModel.LastName,

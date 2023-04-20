@@ -1,5 +1,6 @@
 ﻿using Core;
 using DAL;
+using Domain;
 using GaragePlanner.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,12 +8,17 @@ namespace GaragePlanner.Controllers
 {
     public class LoginController : Controller
     {
-        private readonly CustomerCollection _customerFile = new();
+        ICustomerDal _customerDal;
+        private readonly CustomerCollection _customerFile;
 
-        public LoginController()
+
+        public LoginController(ICustomerDal customerDal)
         {
-
+            _customerDal = customerDal;
+            _customerFile = new CustomerCollection(_customerDal);
         }
+        
+    
 
         public IActionResult Index()
         {
