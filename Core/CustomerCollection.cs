@@ -22,7 +22,7 @@ namespace Core
 
         public void CreateCustomer(string firstName, string lastName, string address, string email, string password)
         {
-            /*if(doesCustomerExist(email))
+            /*if(DoesCustomerExist(email))
                 throw new Exception("Customer already exists");*/
 
             string encryptedPassword = PasswordEncryptor.EncryptPassword(password);
@@ -30,7 +30,7 @@ namespace Core
             _iCustomerDal.InsertCustomer(customer);
         }
 
-        public bool doesCustomerExist(string email)
+        public bool DoesCustomerExist(string email)
         {
             try
             {
