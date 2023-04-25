@@ -12,17 +12,17 @@ namespace DAL
 
     public class CustomerDal : ICustomerDal
     {
-        public void InsertCustomer(Customer customerDto)
+        public void InsertCustomer(Customer customer)
         {
             var query = "INSERT INTO customers (first_name, last_name, address, email, password) " +
                         "VALUES (@first_name, @last_name, @address, @email, @password)";
             MySqlParameter[] parameters =
             {
-                new("@first_name", MySqlDbType.VarChar, 50) { Value = customerDto.FirstName },
-                new("@last_name", MySqlDbType.VarChar, 50) { Value = customerDto.LastName },
-                new("@address", MySqlDbType.VarChar, 100) { Value = customerDto.Address },
-                new("@email", MySqlDbType.VarChar, 50) { Value = customerDto.Email },
-                new("@password", MySqlDbType.VarChar, 50) { Value = customerDto.Password }
+                new("@first_name", MySqlDbType.VarChar, 50) { Value = customer.FirstName },
+                new("@last_name", MySqlDbType.VarChar, 50) { Value = customer.LastName },
+                new("@address", MySqlDbType.VarChar, 100) { Value = customer.Address },
+                new("@email", MySqlDbType.VarChar, 50) { Value = customer.Email },
+                new("@password", MySqlDbType.VarChar, 50) { Value = customer.Password }
             };
 
             var connection = new DbConnection();

@@ -1,6 +1,6 @@
 ﻿using Core;
 using DAL;
-using Domain;
+using Domain.interfaces;
 using GaragePlanner.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 
 namespace GaragePlanner.Controllers
-    
+
 {
     public class RegistrationController : Controller
     {

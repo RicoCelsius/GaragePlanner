@@ -1,6 +1,6 @@
 using Core;
 using DAL;
-using Domain;
+using Domain.interfaces;
 using GaragePlanner.Controllers;
 using Microsoft.Extensions.Configuration;
 var builder = WebApplication.CreateBuilder(args);
@@ -8,6 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddSingleton<ICustomerDal, CustomerDal>();
+builder.Services.AddSingleton<ICarDal, CarDal>();
 
 
 

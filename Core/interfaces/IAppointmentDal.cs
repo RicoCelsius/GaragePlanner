@@ -1,6 +1,6 @@
 ﻿using DAL.dto;
 
-namespace DAL;
+namespace Domain.interfaces;
 
 public interface IAppointmentDal
 {

@@ -14,6 +14,8 @@ namespace Domain
         public string Email { get; set; }
         public string Password { get; set; }
 
+        public List<Car> Cars { get; set; }
+
         public Customer(string firstName,string lastName,string address, string email, string password)
         {
             this.FirstName = firstName;
