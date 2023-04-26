@@ -10,5 +10,6 @@ namespace Domain.interfaces
     {
         void InsertCustomer(Customer customer);
         Customer GetCustomerByEmail(string email);
+        List<Customer> GetAllCustomers();
     }
 }

@@ -14,7 +14,7 @@ namespace Core
         private readonly ICustomerDal _iCustomerDal;
 
 
-        public CustomerCollection(ICustomerDal iCustomerDal )
+        public CustomerCollection(ICustomerDal iCustomerDal)
         {
             this._iCustomerDal = iCustomerDal;
             Customers = new List<Customer>();
@@ -54,13 +54,21 @@ namespace Core
 
             if (hashedPassword == hashedInputPassword)
             {
-                Customer customer = new(customerInfo.FirstName, customerInfo.LastName, customerInfo.Address, customerInfo.Email, customerInfo.Password);
+                Customer customer = new(customerInfo.FirstName, customerInfo.LastName, customerInfo.Address,
+                    customerInfo.Email, customerInfo.Password);
                 return customer;
             }
 
             throw new Exception("Incorrect password");
 
 
+        }
+
+        public List<string> GetCustomerNames()
+        {
+            List<Customer> customers = _iCustomerDal.GetAllCustomers();
+            List<string> customerNames = customers.Select(c => c.FirstName + " " + c.LastName).ToList();
+            return customerNames;
         }
 
     }

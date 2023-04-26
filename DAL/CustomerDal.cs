@@ -2,6 +2,7 @@
 using System.Data.SqlClient;
 using Core;
 using Domain;
+using Domain.interfaces;
 using MySqlConnector;
 
 
@@ -55,6 +56,32 @@ namespace DAL
 
             throw new Exception("Customer not found");
 
+        }
+
+        public List<Customer> GetAllCustomers()
+        {
+            var query = "SELECT * FROM customers";
+            var connection = new DbConnection();
+            var parameters = new MySqlParameter[]
+            {
+                new MySqlParameter()
+            };
+
+            var dataTable = connection.ExecuteQuery(query,parameters);
+
+            List<Customer> customers = new List<Customer>();
+            foreach (DataRow row in dataTable.Rows)
+            {
+                Customer customer = new(
+                    row.Field<string>("first_name"),
+                    row.Field<string>("last_name"),
+                    row.Field<string>("address"),
+                    row.Field<string>("email"),
+                    row.Field<string>("password"));
+                customers.Add(customer);
+            }
+
+            return customers;
         }
 
 
