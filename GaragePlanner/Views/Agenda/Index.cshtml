@@ -163,10 +163,10 @@
         var elements = document.getElementsByTagName("td");
 
         for (var i = 0; i < elements.length; i++) {
-            if (elements[i].innerHTML == "Free") {
+            if (elements[i].innerHTML === "Free") {
                 elements[i].style.background = "green";
             }
-            if (elements[i].innerHTML == "Occupied") {
+            if (elements[i].innerHTML === "Occupied") {
                 elements[i].style.background = "red";
             }
         }

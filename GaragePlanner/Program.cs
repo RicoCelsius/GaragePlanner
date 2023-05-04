@@ -12,6 +12,8 @@ builder.Services.AddSingleton<ICarDal, CarDal>();
 
 
 
+
+
 var configuration = new ConfigurationBuilder()
     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
     .Build();

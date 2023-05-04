@@ -10,7 +10,7 @@ using Domain.interfaces;
 
 namespace GaragePlannerTests.mocks
 {
-    internal class Mock : ICustomerDal
+    internal class Mock
     {
         public Customer GetCustomerByEmail(string email)
         {
