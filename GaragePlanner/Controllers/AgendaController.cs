@@ -17,14 +17,30 @@ namespace GaragePlanner.Controllers
         {
             return View();
         }
-        
-        public IActionResult Book(BookViewModel model)
+
+        [HttpGet]
+        [HttpPost]
+
+        public IActionResult Book(BookViewModel model, DateTime selectedDate, DateTime selectedTimeSlot)
         {
             AppointmentCollection appointmentCollection = new AppointmentCollection(_appointmentDal);
+            List<DateTime> availableDates = appointmentCollection.GetAvailableDates();
+            model.AvailableTimeSlots = appointmentCollection.GetAvailableTimeSlots(selectedDate);
+            model.AvailableDates = availableDates;
+
+            // If a date has been selected, get the available time slots for that date
+
+                
             
-            
-            
-            return View();
+
+            // If the form has been submitted and a date and time slot have been selected, create the appointment
+            if (model.SelectedDate != default(DateTime) && model.SelectedTimeSlot != null)
+            {
+                appointmentCollection.TryCreateAppointment((DateTime)model.SelectedDate);
+            }
+
+            return View(model);
         }
+
     }
 }

@@ -1,41 +1,57 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-
-
-
-}
-
+﻿@model GaragePlanner.Models.BookViewModel
 
 <!DOCTYPE html>
-
 <html>
 <head>
-    <title>Agenda</title>
-    <link href="@Url.Content("~/css/tables.css")" rel="stylesheet" type="text/css"/>
+    <title>Book Appointment</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
-
 <body>
-<div>
- <label for="available-dates">Available dates:</label>
- <select id="available-dates" name="available-dates">
-   <option value="2022-05-10">Ma 10, 2022</option>
-   <option value="2022-05-11">Ma 11, 2022</option>
-   <option value="2022-05-12">May 12, 2022</option>
-   <option value="2022-05-13">May 13, 2022</option>
-   <option value="2022-05-14">May 14, 2022</option>
- </select>
-     
-</div>
-</body>
+<h1>Book Appointment</h1>
+
+<form method="post" action="@Url.Action("Book", "Agenda")">
+    @Html.AntiForgeryToken()
+
+    <div>
+        <label for="date">Select Date:</label>
+        <select name="SelectedDate" id="date">
+            <option value="">-- Select Date --</option>
+            @foreach (var date in Model.AvailableDates)
+            {
+                <option value="@date.ToString("yyyy-MM-dd")">@date.ToString("ddd, MMM d, yyyy")</option>
+            }
+        </select>
+        @Html.ValidationMessageFor(model => model.SelectedDate)
+    </div>
+
+    <div id="timeslot" style="display:none;">
+        <label for="time">Select Timeslot:</label>
+        <select name="SelectedTimeslot" id="time">
+            <option value="">-- Select Timeslot --</option>
+            @foreach (var timeslot in Model.AvailableTimeSlots)
+            {
+                <option value="@timeslot">@timeslot</option>
+            }
+        </select>
+        @Html.ValidationMessageFor(model => model.SelectedTimeSlot)
+    </div>
+
+    <input type="submit" value="Book Appointment">
+</form>
 
 <script>
+    var dateSelect = document.getElementById("date");
+    var timeslotDiv = document.getElementById("timeslot");
 
+    dateSelect.addEventListener("change", function() {
+        if (dateSelect.value != "") {
+            timeslotDiv.style.display = "block";
+        } else {
+            timeslotDiv.style.display = "none";
+        }
+    });
+</script>
 
-
-    </script>
-
-
-
+</body>
 </html>

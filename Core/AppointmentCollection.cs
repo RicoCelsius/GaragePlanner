@@ -33,34 +33,62 @@ namespace Domain
 
             return dates;
         }
-        
+
+        private bool IsDateAvailable(DateTime date)
+        {
+            return _appointmentDal.GetAppointmentByDate(date) == null;
+        }
+
+        public void TryCreateAppointment(DateTime appointmentDate)
+        {
+            Appointment appointment = new Appointment(appointmentDate,Enums.Type.OilChange,Enums.Status.Scheduled,1,1);
+            _appointmentDal.InsertAppointment(appointment);
+        }
+
         public List<DateTime> GetAvailableDates()
         {
-            List<DateTime> availableDates = GetDatesTwoWeeksFromNow();
-            foreach (var appointment in appointments)
+            List<DateTime> datesTwoWeeksFromNow = GetDatesTwoWeeksFromNow();
+            List<DateTime> availableDates = new List<DateTime>();
+            foreach (DateTime date in datesTwoWeeksFromNow)
             {
-                availableDates.Remove(appointment.Date);
+                if (_appointmentDal.GetAppointmentByDate(date) == null)
+                {
+                    availableDates.Add(date);
+                }
             }
-
             return availableDates;
         }
-        
-        
-        
-        
 
-
-        public void AddAppointment(AppointmentDto appointment)
+        public List<string> GenerateTimeSlots(DateTime date)
         {
-            _appointmentDal.Create(appointment);
+            List<string> timeSlots = new List<string>();
+            DateTime startTime = date.Date.AddHours(9);
+
+            while (startTime <= date.Date.AddHours(17))
+            {
+                timeSlots.Add(startTime.ToString("hh:mm tt"));
+                startTime = startTime.AddMinutes(30);
+            }
+
+            return timeSlots;
         }
 
-        public void RemoveAppointment(AppointmentDto appointment)
+
+
+        public List<String> GetAvailableTimeSlots(DateTime selectedDate)
         {
-            _appointmentDal.Delete(appointment.Id);
+            return GenerateTimeSlots(selectedDate);
         }
-        
-        
+
+
+
+
+
+
+
+
+
+
 
         /*public List<Appointment> GetAppointments()
         {

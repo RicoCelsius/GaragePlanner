@@ -2,19 +2,19 @@
 {
     public class Appointment
     {
-        private DateTime AppointmentDate { get; set; }
-        private Enums.Type ServiceType { get; set; }
-        private Enums.Status AppointmentStatus { get; set; }
-        private int? CustomerId { get; set; }
-        private int? CarId { get; set; }
+        public DateTime Date { get; set; }
+        public Enums.Type ServiceType { get; set; }
+        public Enums.Status Status { get; set; }
+        public int? CustomerId { get; set; }
+        public int? CarId { get; set; }
 
 
-        public Appointment(DateTime appointmentDate, Enums.Type serviceType, Enums.Status appointmentStatus,
+        public Appointment(DateTime date, Enums.Type serviceType, Enums.Status status,
             int? customerId, int? carId)
         {
-            AppointmentDate = appointmentDate;
+            Date = date;
             ServiceType = serviceType;
-            AppointmentStatus = appointmentStatus;
+            Status = status;
             CustomerId = customerId;
             CarId = carId;
         }
@@ -23,14 +23,14 @@
 
         public DateTime UpdateAppointmentDate(DateTime newAppointmentDate)
         {
-            AppointmentDate = newAppointmentDate;
-            return AppointmentDate;
+            Date = newAppointmentDate;
+            return Date;
         }
 
         public Enums.Status UpdateAppointmentStatus(Enums.Status newAppointmentStatus)
         {
-            AppointmentStatus = newAppointmentStatus;
-            return AppointmentStatus;
+            Status = newAppointmentStatus;
+            return Status;
         }   
     }
 }

@@ -9,6 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddSingleton<ICustomerDal, CustomerDal>();
 builder.Services.AddSingleton<ICarDal, CarDal>();
+builder.Services.AddSingleton<IAppointmentDal, AppointmentDal>();
 
 
 
