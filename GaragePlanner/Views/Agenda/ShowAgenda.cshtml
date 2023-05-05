@@ -1,0 +1,95 @@
+﻿@model GaragePlanner.Models.AgendaViewModel;
+
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Agenda</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        table {
+            border-collapse: collapse;
+            border-width: 2px;
+            border-style: solid;
+            border-color: black;
+        }
+
+        th, td {
+            border-width: 2px;
+            border-style: solid;
+            width: 80px;
+            height: 50px;
+            border-color: black;
+            text-align: center
+        }
+
+        th.time {
+            border-right: none;
+           
+        }
+
+        th.day {
+            border-bottom: none;
+        }
+
+        td.available {
+            background-color: green;
+            
+            color: white;
+        }
+
+        a {
+            color: white;
+        }
+
+        td.booked {
+            background-color: red;
+        }
+
+
+    </style>
+</head>
+<body>
+    <h1>Agenda</h1>
+    <table>
+        <thead>
+            <tr>
+                <th></th> 
+                @foreach (var date in Model.Dates.DistinctBy(x => x.Date))
+                {
+                    <th class="day">@date.ToString("dddd d MMMM")</th> 
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var timeSlot in Model.TimeSlots.DistinctBy(x => x.TimeOfDay))
+            {
+                <tr>
+                    <th class="time">@timeSlot.ToString("HH:mm")</th> 
+                    @foreach (var date in Model.AvailableDatesAndTimeSlots.DistinctBy(x => x.Date))
+                    {
+                        var availableTimeSlots = Model.AvailableDatesAndTimeSlots
+                        .Where(x => x.Date == date.Date && x.TimeOfDay == timeSlot.TimeOfDay);
+
+                        <td class="@((availableTimeSlots.Any()) ? "available" : "booked")">
+                            @if (availableTimeSlots.Any())
+                            {
+                                @foreach (var availableTimeSlot in availableTimeSlots)
+                                {
+                                    <div><a href="/agenda/book?dateAndTime=@availableTimeSlot.ToString("yyyy-MM-ddTHH:mm:ss")">Book</a></div>
+                                }
+                            }
+                            else
+                            {
+                                <div>Booked</div>
+                            }
+                        </td>
+
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+</body>
+</html>

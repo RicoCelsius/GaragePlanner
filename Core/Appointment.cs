@@ -3,6 +3,7 @@
     public class Appointment
     {
         public DateTime Date { get; set; }
+        public string TimeSlot { get; set; }
         public Enums.Type ServiceType { get; set; }
         public Enums.Status Status { get; set; }
         public int? CustomerId { get; set; }
@@ -10,9 +11,10 @@
 
 
         public Appointment(DateTime date, Enums.Type serviceType, Enums.Status status,
-            int? customerId, int? carId)
+            int? customerId, int? carId, string timeSlot)
         {
             Date = date;
+            TimeSlot = timeSlot;
             ServiceType = serviceType;
             Status = status;
             CustomerId = customerId;

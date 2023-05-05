@@ -21,7 +21,7 @@ namespace Domain
             return DateTime.Today;
         }
         
-        private List<DateTime> GetDatesTwoWeeksFromNow()
+        public List<DateTime> GetDatesTwoWeeksFromNow()
         {
             List<DateTime> dates = new List<DateTime>();
             DateTime currentDate = GetCurrentDate();
@@ -34,51 +34,55 @@ namespace Domain
             return dates;
         }
 
-        private bool IsDateAvailable(DateTime date)
-        {
-            return _appointmentDal.GetAppointmentByDate(date) == null;
-        }
-
         public void TryCreateAppointment(DateTime appointmentDate)
         {
-            Appointment appointment = new Appointment(appointmentDate,Enums.Type.OilChange,Enums.Status.Scheduled,1,1);
+            Appointment appointment = new Appointment(appointmentDate,Enums.Type.OilChange,Enums.Status.Scheduled,1,1,"09:00");
             _appointmentDal.InsertAppointment(appointment);
         }
 
-        public List<DateTime> GetAvailableDates()
+        public List<DateTime> GetAvailableDateAndTimeSlots()
         {
-            List<DateTime> datesTwoWeeksFromNow = GetDatesTwoWeeksFromNow();
+            List<DateTime> datesAndTimeSlots = GenerateDatesAndTimeSlots();
             List<DateTime> availableDates = new List<DateTime>();
-            foreach (DateTime date in datesTwoWeeksFromNow)
+            foreach (DateTime dateAndTime in datesAndTimeSlots)
             {
-                if (_appointmentDal.GetAppointmentByDate(date) == null)
+                if (_appointmentDal.GetAppointmentByDateAndTime(dateAndTime) == null)
                 {
-                    availableDates.Add(date);
+                    availableDates.Add(dateAndTime);
                 }
             }
             return availableDates;
         }
 
-        public List<string> GenerateTimeSlots(DateTime date)
-        {
-            List<string> timeSlots = new List<string>();
-            DateTime startTime = date.Date.AddHours(9);
 
-            while (startTime <= date.Date.AddHours(17))
+
+        public List<DateTime> GenerateDatesAndTimeSlots()
+        {
+            var currentDate = DateTime.Today;
+            var datesTwoWeeksFromNow = Enumerable.Range(0, 14)
+                .Select(i => currentDate.AddDays(i))
+                .ToList();
+
+            var timeSlots = new List<string>
             {
-                timeSlots.Add(startTime.ToString("hh:mm tt"));
-                startTime = startTime.AddMinutes(30);
+                "09:00", "10:00", "11:00", "12:00",
+                "13:00", "14:00", "15:00", "16:00", "17:00"
+            };
+
+            var datesAndTimeSlots = new List<DateTime>();
+            foreach (var date in datesTwoWeeksFromNow)
+            {
+                foreach (var time in timeSlots)
+                {
+                    var dateTime = date.Add(TimeSpan.Parse(time));
+                    datesAndTimeSlots.Add(dateTime);
+                }
             }
 
-            return timeSlots;
+            return datesAndTimeSlots;
         }
 
 
-
-        public List<String> GetAvailableTimeSlots(DateTime selectedDate)
-        {
-            return GenerateTimeSlots(selectedDate);
-        }
 
 
 

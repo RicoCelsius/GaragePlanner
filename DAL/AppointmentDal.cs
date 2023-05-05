@@ -13,12 +13,13 @@ namespace DAL
 {
     public class AppointmentDal : IAppointmentDal
     {
-        public AppointmentDto? GetAppointmentByDate(DateTime date)
+        public AppointmentDto? GetAppointmentByDateAndTime(DateTime dateAndTime)
         {
-            var query = "SELECT * FROM appointment WHERE date = @date";
+            var mysqlDateTime = dateAndTime.ToString("yyyy-MM-dd HH:mm:ss");
+            var query = "SELECT * FROM appointment WHERE date = @dateAndTime";
             var parameters = new MySqlParameter[]
             {
-                new MySqlParameter("@date", date)
+                new MySqlParameter("@dateAndTime", MySqlDbType.DateTime) { Value = dateAndTime },
             };
             var connection = new DbConnection();
             var dataTable = connection.ExecuteQuery(query, parameters);
@@ -37,8 +38,9 @@ namespace DAL
                 row.Field<int>("status")
             );
             return appointment;
-           
         }
+
+
 
         public void InsertAppointment(Appointment appointment)
         {

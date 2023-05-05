@@ -3,55 +3,48 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Book Appointment</title>
+    <title>Book</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
-<h1>Book Appointment</h1>
 
-<form method="post" action="@Url.Action("Book", "Agenda")">
-    @Html.AntiForgeryToken()
-
-    <div>
-        <label for="date">Select Date:</label>
-        <select name="SelectedDate" id="date">
-            <option value="">-- Select Date --</option>
-            @foreach (var date in Model.AvailableDates)
+<form>
+    <label for="customer">Customer:</label>
+        <select name="customerName" id="customerName">
+            @foreach (var customerName in Model.CustomerNames)
             {
-                <option value="@date.ToString("yyyy-MM-dd")">@date.ToString("ddd, MMM d, yyyy")</option>
+                <option value="@customerName">@customerName</option>
             }
         </select>
-        @Html.ValidationMessageFor(model => model.SelectedDate)
-    </div>
 
-    <div id="timeslot" style="display:none;">
-        <label for="time">Select Timeslot:</label>
-        <select name="SelectedTimeslot" id="time">
-            <option value="">-- Select Timeslot --</option>
-            @foreach (var timeslot in Model.AvailableTimeSlots)
-            {
-                <option value="@timeslot">@timeslot</option>
-            }
-        </select>
-        @Html.ValidationMessageFor(model => model.SelectedTimeSlot)
-    </div>
+    <br>
 
-    <input type="submit" value="Book Appointment">
+    <label for="car">Car:</label>
+    <select id="car" name="car">
+        <option value="car1">Car 1</option>
+        <option value="car2">Car 2</option>
+        <option value="car3">Car 3</option>
+    </select>
+
+    <br>
+
+    <label for="type">Type:</label>
+    <select id="type" name="type">
+        <option value="type1">Type 1</option>
+        <option value="type2">Type 2</option>
+        <option value="type3">Type 3</option>
+    </select>
+
+    <br>
+
+    <label for="chosenDateTime">Chosen Date Time:</label>
+    <input type="text" id="chosenDateTime" name="chosenDateTime" value="@Model.ChosenDateTime" readonly>
+
+    <br>
+
+    <input type="submit" value="Submit">
 </form>
-
-<script>
-    var dateSelect = document.getElementById("date");
-    var timeslotDiv = document.getElementById("timeslot");
-
-    dateSelect.addEventListener("change", function() {
-        if (dateSelect.value != "") {
-            timeslotDiv.style.display = "block";
-        } else {
-            timeslotDiv.style.display = "none";
-        }
-    });
-</script>
 
 </body>
 </html>

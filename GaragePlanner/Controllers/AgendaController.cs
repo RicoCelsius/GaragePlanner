@@ -1,4 +1,5 @@
-﻿using Domain;
+﻿using Core;
+using Domain;
 using Domain.interfaces;
 using GaragePlanner.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -8,10 +9,12 @@ namespace GaragePlanner.Controllers
     public class AgendaController : Controller
     {
         private readonly IAppointmentDal _appointmentDal;
+        private readonly ICustomerDal _customerDal;
 
-        public AgendaController(IAppointmentDal appointmentDal)
+        public AgendaController(IAppointmentDal appointmentDal, ICustomerDal customerDal)
         {
             this._appointmentDal = appointmentDal;
+            this._customerDal = customerDal;
         }
         public IActionResult Index()
         {
@@ -21,23 +24,33 @@ namespace GaragePlanner.Controllers
         [HttpGet]
         [HttpPost]
 
-        public IActionResult Book(BookViewModel model, DateTime selectedDate, DateTime selectedTimeSlot)
+        public IActionResult ShowAgenda(AgendaViewModel model, DateTime dateAndTime)
         {
             AppointmentCollection appointmentCollection = new AppointmentCollection(_appointmentDal);
-            List<DateTime> availableDates = appointmentCollection.GetAvailableDates();
-            model.AvailableTimeSlots = appointmentCollection.GetAvailableTimeSlots(selectedDate);
-            model.AvailableDates = availableDates;
 
-            // If a date has been selected, get the available time slots for that date
+            List<DateTime> datesAndTimes = appointmentCollection.GenerateDatesAndTimeSlots();
+            List<DateTime> availableDatesAndTimeSlots = appointmentCollection.GetAvailableDateAndTimeSlots();
 
-                
-            
+            model.AvailableDatesAndTimeSlots = availableDatesAndTimeSlots;
+            model.Dates = datesAndTimes;
+            model.TimeSlots = datesAndTimes;
 
-            // If the form has been submitted and a date and time slot have been selected, create the appointment
-            if (model.SelectedDate != default(DateTime) && model.SelectedTimeSlot != null)
-            {
-                appointmentCollection.TryCreateAppointment((DateTime)model.SelectedDate);
-            }
+
+            return View(model);
+        }
+
+        public IActionResult Book(BookViewModel model, DateTime dateAndTime)
+        {
+            AppointmentCollection appointmentCollection = new AppointmentCollection(_appointmentDal);
+            CustomerCollection customerCollection = new CustomerCollection(_customerDal);
+            List<String> customers = customerCollection.GetCustomerNames();
+            model.CustomerNames = customers;
+            model.ChosenDateTime = dateAndTime;
+
+            appointmentCollection.TryCreateAppointment(dateAndTime);
+
+
+
 
             return View(model);
         }

@@ -4,7 +4,7 @@ namespace Domain.interfaces;
 
 public interface IAppointmentDal
 {
-  
-    AppointmentDto? GetAppointmentByDate(DateTime date);
+
+    AppointmentDto? GetAppointmentByDateAndTime(DateTime dateAndTime);
     void InsertAppointment(Appointment appointment);
 }
