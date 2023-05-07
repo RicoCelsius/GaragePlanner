@@ -8,7 +8,7 @@ namespace Domain
     public class AppointmentCollection
     {
         private readonly IAppointmentDal _appointmentDal;
-        private List<DateTime> _availableDatesAndTimeSlots = new List<DateTime>();
+        private readonly List<DateTime> _availableDatesAndTimeSlots = new List<DateTime>();
 
         public AppointmentCollection(IAppointmentDal appointmentDal)
         {
