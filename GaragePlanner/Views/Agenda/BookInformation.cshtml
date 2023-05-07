@@ -1,0 +1,55 @@
+﻿@using Domain
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model GaragePlanner.Models.BookViewModel
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Book</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<form method="post" action="@Url.Action("Book", "Agenda")">
+    <label for="customer">Customer:</label>
+    <select name="selectedEmail" id="customerName">
+        @foreach (var customerEmail in Model.CustomerEmails)
+        {
+            <option value="@customerEmail">@customerEmail</option>
+        }
+    </select>
+
+    <br>
+
+    <label for="car">Car:</label>
+    <select id="car" name="selectedCar">
+        <option value="car1">Car 1</option>
+        <option value="car2">Car 2</option>
+        <option value="car3">Car 3</option>
+    </select>
+
+    <br>
+
+    <label for="type">Type:</label>
+    <select id="type" name="selectedTypeOfAppointment">
+        @foreach (var typeName in Enum.GetNames(typeof(Enums.Type)))
+        {
+            <option value="@typeName">@typeName</option>
+        }
+    </select>
+
+
+    <br>
+
+<label for="chosenDateTime">Chosen Date Time:</label>
+<input type="text" id="chosenDateTime" name="chosenDateTime" value="@Model.ChosenDateTime" readonly>
+
+
+    <br>
+
+    <button type="submit">Submit</button>
+</form>
+
+</body>
+</html>

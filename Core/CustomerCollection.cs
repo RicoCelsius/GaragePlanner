@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DAL.dto;
 using Domain;
 using Domain.interfaces;
 
@@ -35,7 +36,7 @@ namespace Core
         {
             try
             {
-                Customer customerInfo = _iCustomerDal.GetCustomerByEmail(email);
+                CustomerDto customerInfo = _iCustomerDal.GetCustomerByEmail(email);
                 return true;
             }
             catch (Exception)
@@ -46,9 +47,10 @@ namespace Core
 
 
 
+
         public Customer AuthenticateCustomer(string email, string inputPassword)
         {
-            Customer customerInfo = _iCustomerDal.GetCustomerByEmail(email);
+            CustomerDto customerInfo = _iCustomerDal.GetCustomerByEmail(email);
             string hashedPassword = customerInfo.Password;
             string hashedInputPassword = PasswordEncryptor.EncryptPassword(inputPassword);
 
@@ -64,11 +66,19 @@ namespace Core
 
         }
 
-        public List<string> GetCustomerNames()
+        public int GetCustomerIdByEmail(string emailAddress)
+        {
+            CustomerDto customerDto = _iCustomerDal.GetCustomerByEmail(emailAddress);
+            int id = customerDto.Id;
+
+            return id;
+        }
+
+        public List<string> GetCustomerEmails()
         {
             List<Customer> customers = _iCustomerDal.GetAllCustomers();
-            List<string> customerNames = customers.Select(c => c.FirstName + " " + c.LastName).ToList();
-            return customerNames;
+            List<string> customerEmails = customers.Select(c => c.Email).ToList();
+            return customerEmails;
         }
 
     }

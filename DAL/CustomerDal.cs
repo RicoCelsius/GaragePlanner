@@ -1,6 +1,7 @@
 ﻿using System.Data;
 using System.Data.SqlClient;
 using Core;
+using DAL.dto;
 using Domain;
 using Domain.interfaces;
 using MySqlConnector;
@@ -30,7 +31,7 @@ namespace DAL
             connection.ExecuteQuery(query, parameters);
         }
 
-        public Customer GetCustomerByEmail(string email)
+        public CustomerDto GetCustomerByEmail(string email)
         {
             var query = "SELECT * FROM customers WHERE email = @email";
             var parameters = new MySqlParameter[]
@@ -44,7 +45,8 @@ namespace DAL
             if (dataTable.Rows.Count > 0)
             {
                 var row = dataTable.Rows[0];
-                var customerData = new Customer(
+                var customerData = new CustomerDto(
+                    row.Field<int>("id"),
                     row.Field<string>("first_name"),
                     row.Field<string>("last_name"),
                     row.Field<string>("address"),

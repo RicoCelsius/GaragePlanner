@@ -3,6 +3,7 @@ using Domain;
 using Domain.interfaces;
 using GaragePlanner.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Reflection;
 
 namespace GaragePlanner.Controllers
 {
@@ -16,15 +17,7 @@ namespace GaragePlanner.Controllers
             this._appointmentDal = appointmentDal;
             this._customerDal = customerDal;
         }
-        public IActionResult Index()
-        {
-            return View();
-        }
-
-        [HttpGet]
-        [HttpPost]
-
-        public IActionResult ShowAgenda(AgendaViewModel model, DateTime dateAndTime)
+        public IActionResult Index(AgendaViewModel model, DateTime dataAndTime)
         {
             AppointmentCollection appointmentCollection = new AppointmentCollection(_appointmentDal);
 
@@ -39,16 +32,52 @@ namespace GaragePlanner.Controllers
             return View(model);
         }
 
-        public IActionResult Book(BookViewModel model, DateTime dateAndTime)
+
+
+
+        [HttpGet]
+        [HttpPost]
+
+        public IActionResult BookInformation(BookViewModel model, DateTime dateAndTime, Car selectedCar, Enums.Type selectedTypeOfAppointment, string selectedCustomerEmail)
         {
             AppointmentCollection appointmentCollection = new AppointmentCollection(_appointmentDal);
             CustomerCollection customerCollection = new CustomerCollection(_customerDal);
-            List<String> customers = customerCollection.GetCustomerNames();
-            model.CustomerNames = customers;
+            List<String> customerEmails = customerCollection.GetCustomerEmails();
+            model.CustomerEmails = customerEmails;
             model.ChosenDateTime = dateAndTime;
+            model.SelectedTypeOfAppointment = selectedTypeOfAppointment;
+            model.selectedEmail = selectedCustomerEmail;
 
-            appointmentCollection.TryCreateAppointment(dateAndTime);
 
+
+
+
+
+            return View(model);
+        }
+
+
+        [HttpPost]
+        public IActionResult Book(BookViewModel model)
+        {
+
+
+            // Create a new appointment using the chosen date and time
+            AppointmentCollection appointmentCollection = new AppointmentCollection(_appointmentDal);
+            CustomerCollection customerCollection = new CustomerCollection(_customerDal);
+            int id = customerCollection.GetCustomerIdByEmail(model.selectedEmail);
+
+
+
+            appointmentCollection.TryCreateAppointment(id,model.ChosenDateTime,model.SelectedTypeOfAppointment);
+
+            // Redirect to the confirmation page with the model
+            return RedirectToAction("Confirmation",model);
+
+        }
+
+        public IActionResult Confirmation(BookViewModel model)
+        {
 
 
 

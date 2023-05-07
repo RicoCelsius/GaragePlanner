@@ -12,11 +12,11 @@ namespace DAL.dto
         public int? CustomerId { get; set; }
         public int? VehicleId { get; set; }
         public DateTime? DateAndTime { get; set; }
-        public int? Type { get; set; }
-        public int? Status { get; set; }
+        public string? Type { get; set; }
+        public string? Status { get; set; }
        
 
-        public AppointmentDto(int id, int customerId, int vehicleId, DateTime dateAndTime, int type, int status)
+        public AppointmentDto(int id, int customerId, int vehicleId, DateTime dateAndTime, string type, string status)
         {
             Id = id;
             CustomerId = customerId;

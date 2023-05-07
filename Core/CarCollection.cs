@@ -12,12 +12,11 @@ namespace Domain
 {
     public class CarCollection
     {
-        private List<Car> _cars;
+        public List<Car> Cars { get; set; }
         private ICarDal _iCarDal;
 
         public CarCollection(ICarDal iCarDal)
         {
-            _cars = new List<Car>();
             _iCarDal = iCarDal;
         }
 

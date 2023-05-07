@@ -8,6 +8,7 @@ namespace Domain
     public class AppointmentCollection
     {
         private readonly IAppointmentDal _appointmentDal;
+        private List<DateTime> _availableDatesAndTimeSlots = new List<DateTime>();
 
         public AppointmentCollection(IAppointmentDal appointmentDal)
         {
@@ -15,43 +16,35 @@ namespace Domain
         }
 
 
-
-        private DateTime GetCurrentDate()
+        public void TryCreateAppointment(int customerId,DateTime appointmentDate, Enums.Type type)
         {
-            return DateTime.Today;
-        }
-        
-        public List<DateTime> GetDatesTwoWeeksFromNow()
-        {
-            List<DateTime> dates = new List<DateTime>();
-            DateTime currentDate = GetCurrentDate();
-            for (int i = 0; i < 14; i++)
+            if (!IsDateTimeValid(appointmentDate))
             {
-                dates.Add(currentDate);
-                currentDate = currentDate.AddDays(1);
+                throw new Exception("Invalid date or time");
             }
-
-            return dates;
+            Appointment appointment = new Appointment(appointmentDate,type,Enums.Status.Scheduled,customerId,1);
+            _appointmentDal.InsertAppointment(appointment);
         }
 
-        public void TryCreateAppointment(DateTime appointmentDate)
+        private bool IsDateTimeValid(DateTime dateAndTime)
         {
-            Appointment appointment = new Appointment(appointmentDate,Enums.Type.OilChange,Enums.Status.Scheduled,1,1,"09:00");
-            _appointmentDal.InsertAppointment(appointment);
+            AppointmentCollection appointmentCollection = new AppointmentCollection(_appointmentDal);
+            List<DateTime> availableDateTimes = appointmentCollection.GetAvailableDateAndTimeSlots();
+            return availableDateTimes.Contains(dateAndTime);
         }
 
         public List<DateTime> GetAvailableDateAndTimeSlots()
         {
             List<DateTime> datesAndTimeSlots = GenerateDatesAndTimeSlots();
-            List<DateTime> availableDates = new List<DateTime>();
+
             foreach (DateTime dateAndTime in datesAndTimeSlots)
             {
                 if (_appointmentDal.GetAppointmentByDateAndTime(dateAndTime) == null)
                 {
-                    availableDates.Add(dateAndTime);
+                    _availableDatesAndTimeSlots.Add(dateAndTime);
                 }
             }
-            return availableDates;
+            return _availableDatesAndTimeSlots;
         }
 
 

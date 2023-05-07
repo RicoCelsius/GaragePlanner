@@ -33,12 +33,12 @@ namespace GaragePlanner.Controllers
 
 
         // GET: CarController/Create
-        public ActionResult Create(CarViewModel carViewModel, [FromForm] string customerName)
+        public ActionResult Create(CarViewModel carViewModel, [FromForm] string customerEmail)
         {
-            List<string> customerNames = new List<string>();
+            List<string> customerEmails = new List<string>();
             CustomerCollection customerCollection = new CustomerCollection(_customerDal);
-            customerNames = customerCollection.GetCustomerNames();
-            carViewModel.CustomerNames = customerNames;
+            customerEmails = customerCollection.GetCustomerEmails();
+            carViewModel.CustomerEmails = customerEmails;
             if (!ModelState.IsValid)
             {
                 return View(carViewModel);
@@ -46,7 +46,7 @@ namespace GaragePlanner.Controllers
 
             Car car = new Car
             {
-                CustomerName = customerName,
+                CustomerName = customerEmail,
                 LicensePlate = carViewModel.LicensePlate,
                 Color = carViewModel.Color,
                 Model = carViewModel.Model,

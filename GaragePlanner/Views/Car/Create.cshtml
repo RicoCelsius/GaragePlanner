@@ -10,7 +10,7 @@
 <form action="#" method="POST">
     <label for="customerName">Customer Name:</label>
     <select name="customerName" id="customerName">
-        @foreach (var customerName in Model.CustomerNames)
+        @foreach (var customerName in Model.CustomerEmails)
         {
             <option value="@customerName">@customerName</option>
         }

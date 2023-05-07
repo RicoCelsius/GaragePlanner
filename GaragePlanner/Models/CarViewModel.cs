@@ -4,7 +4,7 @@ namespace GaragePlanner.Models
 {
     public class CarViewModel
     {
-        public List<string> CustomerNames { get; set; }
+        public List<string> CustomerEmails { get; set; }
 
         [Required(ErrorMessage = "Please enter a license plate number.")]
         public string LicensePlate { get; set; }

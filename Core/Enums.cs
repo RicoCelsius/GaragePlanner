@@ -11,10 +11,8 @@ namespace Domain
         public enum Type
         {
             OilChange,
-            BrakeRepair,
-            TireRotation,
-            EngineTuneUp,
-            Other
+            BigMaintenance,
+            SmallMaintenance,
         }
 
         public enum Status

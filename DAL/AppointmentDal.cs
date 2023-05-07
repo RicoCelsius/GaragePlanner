@@ -34,8 +34,8 @@ namespace DAL
                 row.Field<int>("customer_id"),
                 row.Field<int>("car_id"),
                 row.Field<DateTime>("date"),
-                row.Field<int>("type"),
-                row.Field<int>("status")
+                row.Field<string>("type"),
+                row.Field<string>("status")
             );
             return appointment;
         }
@@ -51,7 +51,7 @@ namespace DAL
             {
                 new("@customer_id", MySqlDbType.Int32) { Value = appointment.CustomerId },
                 new("@vehicle_id", MySqlDbType.Int32) { Value = appointment.CarId },
-                new("@date", MySqlDbType.DateTime) { Value = appointment.Date },
+                new("@date", MySqlDbType.DateTime) { Value = appointment.DateAndTime },
                 new("@type", MySqlDbType.VarChar, 50) { Value = appointment.ServiceType},
                 new("@status", MySqlDbType.VarChar, 50) { Value = appointment.Status }
             };  

@@ -9,14 +9,14 @@ namespace DAL.dto
 {
     public class CustomerDto
     {
-        public int? Id { get; set; }
+        public int Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Address { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
 
-        public CustomerDto(int? id, string firstName, string lastName, string address, string email, string password)
+        public CustomerDto(int id, string firstName, string lastName, string address, string email, string password)
         {
             Id = id;
             FirstName = firstName;
