@@ -39,7 +39,7 @@ namespace Domain
 
             foreach (DateTime dateAndTime in datesAndTimeSlots)
             {
-                if (_appointmentDal.GetAppointmentByDateAndTime(dateAndTime) == null)
+                if (!_appointmentDal.AppointmentExistsByDateAndTime(dateAndTime))
                 {
                     _availableDatesAndTimeSlots.Add(dateAndTime);
                 }

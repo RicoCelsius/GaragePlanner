@@ -23,22 +23,34 @@ namespace DAL
             };
             var connection = new DbConnection();
             var dataTable = connection.ExecuteQuery(query, parameters);
-            if (dataTable.Rows.Count == 0)
-            {
-                return null;
-            }
-
             var row = dataTable.Rows[0];
-            var appointment = new AppointmentDto(
-                row.Field<int>("id"),
-                row.Field<int>("customer_id"),
-                row.Field<int>("car_id"),
-                row.Field<DateTime>("date"),
-                row.Field<string>("type"),
-                row.Field<string>("status")
-            );
-            return appointment;
+                var appointment = new AppointmentDto(
+                    row.Field<int>("id"),
+                    row.Field<int>("customer_id"),
+                    row.Field<int>("car_id"),
+                    row.Field<DateTime>("date"),
+                    row.Field<string>("type"),
+                    row.Field<string>("status")
+                );
+                return appointment;
+            
         }
+
+        public bool AppointmentExistsByDateAndTime(DateTime dateAndTime)
+        {
+            var mysqlDateTime = dateAndTime.ToString("yyyy-MM-dd HH:mm:ss");
+            var query = "SELECT EXISTS(SELECT 1 FROM appointment WHERE date = @dateAndTime)";
+            var parameters = new MySqlParameter[]
+            {
+                new MySqlParameter("@dateAndTime", MySqlDbType.DateTime) { Value = dateAndTime },
+            };
+            var connection = new DbConnection();
+            var dataTable = connection.ExecuteQuery(query, parameters);
+            var result = Convert.ToBoolean(dataTable.Rows[0][0]);
+
+            return Convert.ToBoolean(result);
+        }
+
 
 
 

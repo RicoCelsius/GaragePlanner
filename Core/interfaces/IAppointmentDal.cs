@@ -6,5 +6,6 @@ public interface IAppointmentDal
 {
 
     AppointmentDto? GetAppointmentByDateAndTime(DateTime dateAndTime);
+    bool AppointmentExistsByDateAndTime(DateTime dateAndTime);
     void InsertAppointment(Appointment appointment);
 }
