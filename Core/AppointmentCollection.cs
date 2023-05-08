@@ -20,7 +20,7 @@ namespace Domain
             {
                 throw new Exception("Invalid date or time");
             }
-            Appointment appointment = new Appointment(appointmentDate,type,Enums.Status.Scheduled,customerId,1);
+            Appointment appointment = new Appointment();
             _appointmentDal.InsertAppointment(appointment);
         }
 

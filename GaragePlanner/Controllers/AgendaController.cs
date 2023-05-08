@@ -21,12 +21,7 @@ namespace GaragePlanner.Controllers
         {
             AppointmentCollection appointmentCollection = new AppointmentCollection(_appointmentDal);
 
-            List<DateTime> datesAndTimes = appointmentCollection.GenerateDatesAndTimeSlots();
-            List<DateTime> availableDatesAndTimeSlots = appointmentCollection.GetAvailableDateAndTimeSlots();
 
-            model.AvailableDatesAndTimeSlots = availableDatesAndTimeSlots;
-            model.Dates = datesAndTimes;
-            model.TimeSlots = datesAndTimes;
 
 
             return View(model);

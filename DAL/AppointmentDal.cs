@@ -12,25 +12,7 @@ namespace DAL
 {
     public class AppointmentDal : IAppointmentDal
     {
-        public Appointment GetAppointmentByDateAndTime(DateTime dateAndTime)
-        {
-            var mysqlDateTime = dateAndTime.ToString("yyyy-MM-dd HH:mm:ss");
-            var query = "SELECT * FROM appointment WHERE date = @dateAndTime";
-            var parameters = new MySqlParameter[]
-            {
-                new MySqlParameter("@dateAndTime", MySqlDbType.DateTime) { Value = dateAndTime },
-            };
-            var connection = new DbConnection();
-            var dataTable = connection.ExecuteQuery(query, parameters);
-            var row = dataTable.Rows[0];
-                var appointment = new Appointment(
-                    row.Field<DateTime>("date"),
-                    row.Field<string>("type"),
-                    row.Field<string>("status")
-                );
-                return appointment;
-            
-        }
+
 
         public bool AppointmentExistsByDateAndTime(DateTime dateAndTime)
         {
