@@ -4,7 +4,6 @@ using System.ComponentModel.Design;
 using System.Linq;
 using System.Data;
 using System.Threading.Tasks;
-using DAL.dto;
 using Domain.interfaces;
 using MySqlConnector;
 using Domain;
@@ -13,7 +12,7 @@ namespace DAL
 {
     public class AppointmentDal : IAppointmentDal
     {
-        public AppointmentDto? GetAppointmentByDateAndTime(DateTime dateAndTime)
+        public Appointment GetAppointmentByDateAndTime(DateTime dateAndTime)
         {
             var mysqlDateTime = dateAndTime.ToString("yyyy-MM-dd HH:mm:ss");
             var query = "SELECT * FROM appointment WHERE date = @dateAndTime";
@@ -24,10 +23,7 @@ namespace DAL
             var connection = new DbConnection();
             var dataTable = connection.ExecuteQuery(query, parameters);
             var row = dataTable.Rows[0];
-                var appointment = new AppointmentDto(
-                    row.Field<int>("id"),
-                    row.Field<int>("customer_id"),
-                    row.Field<int>("car_id"),
+                var appointment = new Appointment(
                     row.Field<DateTime>("date"),
                     row.Field<string>("type"),
                     row.Field<string>("status")
@@ -56,13 +52,11 @@ namespace DAL
 
         public void InsertAppointment(Appointment appointment)
         {
-            var query = "INSERT INTO appointment (customer_id, car_id, date, type, status) " +
+            var query = "INSERT INTO appointment (date, type, status) " +
                         "VALUES (@customer_id, @vehicle_id, @date, @type, @status)";
             var connection = new DbConnection();
             MySqlParameter[] parameters =
             {
-                new("@customer_id", MySqlDbType.Int32) { Value = appointment.CustomerId },
-                new("@vehicle_id", MySqlDbType.Int32) { Value = appointment.CarId },
                 new("@date", MySqlDbType.DateTime) { Value = appointment.DateAndTime },
                 new("@type", MySqlDbType.VarChar, 50) { Value = appointment.ServiceType},
                 new("@status", MySqlDbType.VarChar, 50) { Value = appointment.Status }
