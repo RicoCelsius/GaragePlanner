@@ -14,24 +14,6 @@ namespace Domain
         }
 
 
-        public void TryCreateAppointment(int customerId,DateTime appointmentDate, Enums.Type type)
-        {
-            if (AppointmentValidator.IsDateTimeValid(appointmentDate))
-            {
-                throw new Exception("Invalid date or time");
-            }
-            Appointment appointment = new Appointment();
-            _appointmentDal.InsertAppointment(appointment);
-        }
-
-
-
-
-
-
-
-
-
 
 
 

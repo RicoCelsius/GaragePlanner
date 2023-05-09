@@ -60,11 +60,11 @@ namespace GaragePlanner.Controllers
             // Create a new appointment using the chosen date and time
             AppointmentCollection appointmentCollection = new AppointmentCollection(_appointmentDal);
             CustomerCollection customerCollection = new CustomerCollection(_customerDal);
-            int id = customerCollection.GetCustomerIdByEmail(model.selectedEmail);
+            /*int id = customerCollection.GetCustomerIdByEmail(model.selectedEmail);
 
 
 
-            appointmentCollection.TryCreateAppointment(id,model.ChosenDateTime,model.SelectedTypeOfAppointment);
+            appointmentCollection.TryCreateAppointment(id,model.ChosenDateTime,model.SelectedTypeOfAppointment);*/
 
             // Redirect to the confirmation page with the model
             return RedirectToAction("Confirmation",model);

@@ -1,27 +1,30 @@
-﻿namespace Domain
+﻿using Domain.interfaces;
+
+namespace Domain
 {
     public class TimeSlot
     {
-        public DateTime StartTime { get; }
-        public DateTime EndTime { get; }
+        public TimeOnly StartTime { get; }
+        public TimeOnly EndTime { get; }
 
         private Appointment? _appointment;
 
-        public TimeSlot(DateTime startTime)
+        public TimeSlot(TimeOnly startTime)
         {
             StartTime = startTime;
             EndTime = StartTime.AddHours(1);
         }
 
-        public bool IsAvailable()
+        private bool HasAppointment()
         {
             return _appointment == null;
         }
 
 
-        public bool tryAddAppointment(Appointment appointment)
+
+        public bool TryAddAppointment(Appointment appointment)
         {
-            if (!IsAvailable())
+            if (!HasAppointment())
             {
                 return false;
             }

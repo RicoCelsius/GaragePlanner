@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Domain.interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,42 +9,34 @@ namespace Domain
 {
     public class Day
     {
-        public readonly DateTime Date;
+        public readonly DateOnly Date;
         public readonly List<TimeSlot> TimeSlots;
+        private readonly IAppointmentDal _appointmentDal;
 
-        public Day(DateTime date)
+        public Day(DateOnly date)
         {
+
             Date = date;
             TimeSlots = new List<TimeSlot>();
             InitializeTimeSlots();
         }
 
-        public bool IsDayAvailable()
-        {
-            foreach (var slot in TimeSlots)
-            {
-                if (slot.IsAvailable())
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
 
+
+        public TimeSlot FindTimeSlot(TimeOnly time)
+        {
+            return TimeSlots.Find(timeSlot => timeSlot.StartTime == time);
+        }
 
         private void InitializeTimeSlots()
         {
-            DateTime startTime = Date.Date.AddHours(9);
+            TimeOnly startTime = new TimeOnly(9, 0);
 
             for (int i = 0; i < 8; i++)
             {
                 TimeSlots.Add(new TimeSlot(startTime));
-                startTime = startTime.AddHours(1);
+                startTime = startTime.Add(TimeSpan.FromHours(1));
             }
         }
-
-
     }
-
 }
-

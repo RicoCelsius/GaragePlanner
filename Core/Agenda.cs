@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Domain.interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,33 +17,34 @@ namespace Domain
             GenerateTwoWeeksDays();
         }
 
-        public bool TryCreateAppointment(DateTime appointmentDateTime,Enums.Type type,Enums.Status status, Customer customer, Car car)
+        public bool TryCreateAppointment(DateTime appointmentDateTime, Enums.Type type, Enums.Status status, Customer customer, Car car)
         {
+            DateOnly appointmentDate = DateOnly.FromDateTime(appointmentDateTime);
+            TimeOnly appointmentTime = TimeOnly.FromDateTime(appointmentDateTime);
 
-            var targetDay = Days.Find(day => day.Date.Date == appointmentDateTime.Date);
+            TimeSlot targetTimeSlot = Days.Find(day => day.Date == appointmentDate).FindTimeSlot(appointmentTime);
 
-            if (targetDay == null || !targetDay.IsDayAvailable())
+            Appointment appointment = new(type, status, customer, car);
+
+            if (targetTimeSlot.TryAddAppointment(appointment))
             {
-                return false;
+                return true;
             }
 
-            var targetTimeSlot = targetDay.TimeSlots.Find(timeSlot => timeSlot.StartTime == appointmentDateTime);
+            return false;
+            
 
-            if (targetTimeSlot == null || !targetTimeSlot.IsAvailable())
-            {
-                return false;
-            }
+          
+           
 
-            Appointment appointment = new Appointment(appointmentDateTime,type,status,customer,car);
-
-
-            return targetTimeSlot.tryAddAppointment(appointment);
+            return targetTimeSlot.TryAddAppointment(appointment);
         }
-        
+
+
 
         private void GenerateTwoWeeksDays()
         {
-            DateTime startDate = DateTime.Now.Date.AddDays(1);
+            DateOnly startDate = DateOnly.FromDateTime(DateTime.Now);
             for (int i = 0; i < 14; i++)
             {
                 Days.Add(new Day(startDate));
