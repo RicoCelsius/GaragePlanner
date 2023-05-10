@@ -15,7 +15,7 @@ namespace Domain
         public Agenda(IAppointmentDal appointmentDal)
         {
             Days = new List<Day>();
-            GenerateTwoWeeksDays();
+            GenerateDays(14);
             _appointmentDal = appointmentDal;
         }
 
@@ -44,7 +44,7 @@ namespace Domain
 
 
 
-        private void GenerateTwoWeeksDays()
+        private void GenerateDays(int amountOfDays)
         {
             DateOnly startDate = DateOnly.FromDateTime(DateTime.Now);
             for (int i = 0; i < 14; i++)

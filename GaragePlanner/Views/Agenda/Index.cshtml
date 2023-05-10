@@ -1,7 +1,6 @@
 ﻿@model GaragePlanner.Models.AgendaViewModel;
 
 <!DOCTYPE html>
-<!DOCTYPE html>
 <html>
 <head>
     <title>Agenda</title>
@@ -37,14 +36,13 @@
                 color: white;
             }
 
-        a {
+            td.booked {
+                background-color: red;
+            }
+
+        a.book-link {
             color: white;
         }
-
-        td.booked {
-            background-color: red;
-        }
-
     </style>
 </head>
 <body>
@@ -55,12 +53,26 @@
                 <th></th>
                 @foreach (var date in Model.Days)
                 {
-                    <th class="day">@date.ToString()</th>
+                    <th class="day">@date.Date.ToString()</th>
                 }
             </tr>
         </thead>
         <tbody>
-
+            @foreach (var timeSlot in Model.Days.SelectMany(d => d.TimeSlots).Select(ts => ts.Time).Distinct().OrderBy(t => t))
+            {
+                <tr>
+                    <th class="time">@timeSlot.ToString("HH:mm")</th>
+                    @foreach (var day in Model.Days)
+                    {
+                        var timeslot = day.TimeSlots.FirstOrDefault(ts => ts.Time == timeSlot);
+                        var bookLink = timeslot?.IsAvailable == true
+                        ? $"<a href=\"/agenda/bookinformation?dateAndTime={day.Date:yyyy-MM-dd}T{timeSlot:HH:mm:ss}\" class=\"book-link\">Book</a>"
+                        : "Booked";
+                        <td class="@((timeslot?.IsAvailable == true) ? "available" : "booked")">
+                            @Html.Raw(bookLink)
+                        </td>
+                    }
+                </tr>
             }
         </tbody>
     </table>
