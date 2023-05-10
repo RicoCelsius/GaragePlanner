@@ -44,15 +44,12 @@ namespace GaragePlanner.Controllers
                 return View(carViewModel);
             }
 
-            Car car = new Car
-            {
-                CustomerName = customerEmail,
-                LicensePlate = carViewModel.LicensePlate,
-                Color = carViewModel.Color,
-                Model = carViewModel.Model,
-                Year = carViewModel.Year
-
-            };
+            Car car = new Car(
+                carViewModel.LicensePlate,
+                carViewModel.Color,
+                carViewModel.Model,
+                carViewModel.Year
+            );
 
 
             CarCollection carCollection = new CarCollection(_carDal);

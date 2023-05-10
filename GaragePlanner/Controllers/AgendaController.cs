@@ -4,6 +4,7 @@ using Domain.interfaces;
 using GaragePlanner.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Reflection;
+using DAL;
 
 namespace GaragePlanner.Controllers
 {
@@ -11,25 +12,25 @@ namespace GaragePlanner.Controllers
     {
         private readonly IAppointmentDal _appointmentDal;
         private readonly ICustomerDal _customerDal;
+        private readonly IAgendaDal _AgendaDal;
 
-        public AgendaController(IAppointmentDal appointmentDal, ICustomerDal customerDal)
+        public AgendaController(IAppointmentDal appointmentDal, ICustomerDal customerDal, IAgendaDal agendaDal )
         {
             this._appointmentDal = appointmentDal;
             this._customerDal = customerDal;
+            this._AgendaDal = agendaDal;
         }
         public IActionResult Index(DateTime dataAndTime)
         {
-            Agenda agenda = new(_appointmentDal);
+            Agenda agenda = _AgendaDal.GetAgenda();
             AgendaViewModel model = new();
-            DateTime appointmentDateTime = DateTime.Today + new TimeSpan(14, 0, 0); // 2:00 PM today
-            agenda.TryCreateAppointment(appointmentDateTime, Enums.Type.BigMaintenance,Enums.Status.Cancelled, new Customer("rico", "a", "d", "w", "d"),new Car());
 
-            /*List <Day> days = agenda.Days;
+            List <Day> days = agenda.Days;
             
 
             foreach (var day in days)
             {
-                DayViewModel dayViewModel = new DayViewModel { DateOfDay = day.DateOfDay };
+                DayViewModel dayViewModel = new DayViewModel { Date = day.DateOfDay };
                 foreach (TimeSlot timeslot in day.TimeSlots)
                 {
                     TimeSlotViewModel timeslotViewModel = new TimeSlotViewModel
@@ -40,7 +41,7 @@ namespace GaragePlanner.Controllers
                     dayViewModel.TimeSlots.Add(timeslotViewModel);
                 }
                 model.Days.Add(dayViewModel);
-            }*/
+            }
 
             return View(model);
 

@@ -23,6 +23,12 @@ namespace Domain
             this.Address = address;
             this.Email = email;
             this.Password = password;
+            this.Cars = new List<Car>();
+        }
+
+        public void AddCar(Car car)
+        {
+            this.Cars.Add(car);
         }
     }
 }

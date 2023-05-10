@@ -40,14 +40,12 @@ namespace DAL
             var cars = new List<Car>();
             foreach (DataRow row in dataTable.Rows)
             {
-                var car = new Car
-                {
-                    Id = row.Field<int>("id"),
-                    LicensePlate = row.Field<string>("license_plate"),
-                    Color = row.Field<string>("color"),
-                    Model = row.Field<string>("model"),
-                    Year = row.Field<int>("year")
-                };
+                var car = new Car(
+                    row.Field<string>("license_plate"),
+                    row.Field<string>("color"),
+                    row.Field<string>("model"),
+                    row.Field<int>("year")
+                );
                 cars.Add(car);
             }
             return cars;
@@ -68,16 +66,15 @@ namespace DAL
                 throw new Exception("Car not found");
             }
             var row = dataTable.Rows[0];
-            var car = new Car
-            {
-                Id = row.Field<int>("id"),
-                LicensePlate = row.Field<string>("license_plate"),
-                Color = row.Field<string>("color"),
-                Model = row.Field<string>("model"),
-                Year = row.Field<int>("year")
-            };
+            var car = new Car(
+                row.Field<string>("license_plate"),
+                row.Field<string>("color"),
+                row.Field<string>("model"),
+                row.Field<int>("year")
+            );
             return car;
         }
+
 
 
 

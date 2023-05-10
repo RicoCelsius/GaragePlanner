@@ -10,6 +10,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddSingleton<ICustomerDal, CustomerDal>();
 builder.Services.AddSingleton<ICarDal, CarDal>();
 builder.Services.AddSingleton<IAppointmentDal, AppointmentDal>();
+builder.Services.AddSingleton<IAgendaDal, AgendaDal>();
 
 
 

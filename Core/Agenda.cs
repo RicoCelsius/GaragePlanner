@@ -47,15 +47,14 @@ namespace Domain
             }
             return false;
         }
-
-        public void loadAgenda(DateTime date, List<Appointment> appointments)
+        public void LoadAgenda(List<DateTime> dates, List<Appointment> appointments)
         {
-            foreach (Appointment appointment in appointments)
+            var pairs = dates.Zip(appointments, (date, appointment) => (date, appointment));
+            foreach (var pair in pairs)
             {
-                TryCreateAppointment(date, appointment.ServiceType, appointment.Status, appointment.Customer, appointment.Car);
+                TryCreateAppointment(pair.date, pair.appointment.ServiceType, pair.appointment.Status, pair.appointment.Customer, pair.appointment.Car);
             }
         }
-
 
 
 

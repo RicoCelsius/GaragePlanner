@@ -9,13 +9,14 @@ using MySqlConnector;
 
 namespace DAL
 {
-    public class AgendaDal
+    public class AgendaDal : IAgendaDal
     {
 
-        public Agenda getAgenda()
+        public Agenda GetAgenda()
         {
             Agenda agenda = new Agenda();
             List<Appointment> appointments = new List<Appointment>();
+            List<DateTime> dates = new List<DateTime>();
 
             var query = @"
         SELECT appointment.date, appointment.type, appointment.status, 
@@ -39,7 +40,6 @@ namespace DAL
                 );
 
                 Car car = new Car(
-                    customer,
                     row.Field<string>("license_plate"),
                     row.Field<string>("red"),
                     row.Field<string>("model"),
@@ -52,11 +52,12 @@ namespace DAL
                     customer,
                     car
                 );
-
+               
+                dates.Add(row.Field<DateTime>("date"));
                 appointments.Add(appointment);
             }
 
-            agenda.loadAgenda(DateTime.Now, appointments);
+            agenda.LoadAgenda(dates, appointments);
 
             return agenda;
         }
