@@ -19,12 +19,24 @@ namespace Domain
             _appointmentDal = appointmentDal;
         }
 
+        public Agenda()
+        {
+            Days = new List<Day>();
+            GenerateDays(14);
+        }
+
+
+
+
         public bool TryCreateAppointment(DateTime appointmentDateTime, Enums.Type type, Enums.Status status, Customer customer, Car car)
         {
             DateOnly appointmentDate = DateOnly.FromDateTime(appointmentDateTime);
             TimeOnly appointmentTime = TimeOnly.FromDateTime(appointmentDateTime);
 
-            TimeSlot targetTimeSlot = Days.Find(day => day.Date == appointmentDate).FindTimeSlot(appointmentTime);
+            Day targetDay = Days.FirstOrDefault(day => day.DateOfDay.Equals(appointmentDate));
+
+
+            TimeSlot targetTimeSlot = targetDay.FindTimeSlot(appointmentTime);
 
             Appointment appointment = new(type, status, customer, car);
 
@@ -34,9 +46,15 @@ namespace Domain
                 return true;
             }
             return false;
-
         }
 
+        public void loadAgenda(DateTime date, List<Appointment> appointments)
+        {
+            foreach (Appointment appointment in appointments)
+            {
+                TryCreateAppointment(date, appointment.ServiceType, appointment.Status, appointment.Customer, appointment.Car);
+            }
+        }
 
 
 

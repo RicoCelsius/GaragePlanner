@@ -58,6 +58,27 @@ namespace DAL
 
         }
 
+        public static int GetCustomerIdByEmail(string email)
+        {
+            var query = "SELECT * FROM customers WHERE email = @email";
+            var parameters = new MySqlParameter[]
+            {
+                new MySqlParameter("@email", email)
+            };
+
+            var connection = new DbConnection();
+            var dataTable = connection.ExecuteQuery(query, parameters);
+
+            if (dataTable.Rows.Count > 0)
+            {
+                var row = dataTable.Rows[0];
+                return row.Field<int>("id");
+            }
+
+            throw new Exception("Customer not found");
+
+        }
+
         public List<Customer> GetAllCustomers()
         {
             var query = "SELECT * FROM customers";

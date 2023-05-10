@@ -9,14 +9,14 @@ namespace Domain
 {
     public class Day
     {
-        public readonly DateOnly Date;
+        public DateOnly DateOfDay;
         public readonly List<TimeSlot> TimeSlots;
         private readonly IAppointmentDal _appointmentDal;
 
-        public Day(DateOnly date)
+        public Day(DateOnly dateOfDay)
         {
 
-            Date = date;
+            DateOfDay = dateOfDay;
             TimeSlots = new List<TimeSlot>();
             InitializeTimeSlots();
         }

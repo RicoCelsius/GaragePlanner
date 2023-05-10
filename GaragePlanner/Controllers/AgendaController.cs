@@ -21,15 +21,18 @@ namespace GaragePlanner.Controllers
         {
             Agenda agenda = new(_appointmentDal);
             AgendaViewModel model = new();
-            List <Day> days = agenda.Days;
+            DateTime appointmentDateTime = DateTime.Today + new TimeSpan(14, 0, 0); // 2:00 PM today
+            agenda.TryCreateAppointment(appointmentDateTime, Enums.Type.BigMaintenance,Enums.Status.Cancelled, new Customer("rico", "a", "d", "w", "d"),new Car());
+
+            /*List <Day> days = agenda.Days;
             
 
             foreach (var day in days)
             {
-                DayViewModel dayViewModel = new DayViewModel { Date = day.Date };
+                DayViewModel dayViewModel = new DayViewModel { DateOfDay = day.DateOfDay };
                 foreach (TimeSlot timeslot in day.TimeSlots)
                 {
-                    var timeslotViewModel = new TimeslotViewModel
+                    TimeSlotViewModel timeslotViewModel = new TimeSlotViewModel
                     {
                         Time = timeslot.StartTime,
                         IsAvailable = timeslot.HasAppointment(),
@@ -37,13 +40,13 @@ namespace GaragePlanner.Controllers
                     dayViewModel.TimeSlots.Add(timeslotViewModel);
                 }
                 model.Days.Add(dayViewModel);
-            }
+            }*/
 
             return View(model);
 
 
 
-            
+
         }
 
 

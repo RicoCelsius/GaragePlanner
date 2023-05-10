@@ -1,6 +1,6 @@
 ﻿namespace GaragePlanner.Models
 {
-    public class TimeslotViewModel
+    public class TimeSlotViewModel
     {
         public TimeOnly Time { get; set; }
         public bool IsAvailable { get; set; }
