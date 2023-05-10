@@ -15,8 +15,8 @@ namespace DAL
         {
             Agenda agenda = new Agenda();
             AppointmentDal appointmentDal = new AppointmentDal();
+            List<Appointment> appointments = new();
 
-            List<Appointment> = appointmentDal.GetAppointments();
 
 
 
@@ -31,6 +31,9 @@ namespace DAL
                 var row = dataTable.Rows[0];
                 agenda.loadAgenda(row.Field<DateTime>("date"));
             }
+
+            appointments.Add(new Appointment());
+            
           
 
             return agenda;
