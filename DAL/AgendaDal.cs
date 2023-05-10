@@ -20,10 +20,10 @@ namespace DAL
 
             var query = @"
         SELECT appointment.date, appointment.type, appointment.status, 
-            customer.first_name, customer.last_name, customer.address, 
-            car.make, car.model, car.year 
+            customers.first_name, customers.last_name, customers.address, customers.email, customers.password, 
+            car.license_plate, car.color, car.model, car.year 
         FROM appointment 
-        INNER JOIN customer ON appointment.customer_id = customer.id 
+        INNER JOIN customers ON appointment.customer_id = customers.id 
         INNER JOIN car ON appointment.car_id = car.id";
 
             var connection = new DbConnection();
@@ -41,14 +41,14 @@ namespace DAL
 
                 Car car = new Car(
                     row.Field<string>("license_plate"),
-                    row.Field<string>("red"),
+                    row.Field<string>("color"),
                     row.Field<string>("model"),
                     row.Field<int>("year")
                 );
 
                 Appointment appointment = new Appointment(
-                    row.Field<Enums.Type>("type"),
-                    row.Field<Enums.Status>("status"),
+                    (Enums.Type)Enum.Parse(typeof(Enums.Type), row.Field<string>("type")),
+                    (Enums.Status)Enum.Parse(typeof(Enums.Status), row.Field<string>("status")),
                     customer,
                     car
                 );

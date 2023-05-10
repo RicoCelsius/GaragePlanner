@@ -32,7 +32,7 @@ namespace Domain
         {
             DateOnly appointmentDate = DateOnly.FromDateTime(appointmentDateTime);
             TimeOnly appointmentTime = TimeOnly.FromDateTime(appointmentDateTime);
-
+            
             Day targetDay = Days.FirstOrDefault(day => day.DateOfDay.Equals(appointmentDate));
 
 
@@ -42,7 +42,7 @@ namespace Domain
 
             if (targetTimeSlot.TryAddAppointment(appointment))
             {
-                _appointmentDal.InsertAppointment(appointment);
+               /* _appointmentDal.InsertAppointment(appointment);*/
                 return true;
             }
             return false;
