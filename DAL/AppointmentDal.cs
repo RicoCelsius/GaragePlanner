@@ -39,6 +39,7 @@ namespace DAL
             var connection = new DbConnection();
             MySqlParameter[] parameters =
             {
+
                 new("@type", MySqlDbType.VarChar, 50) { Value = appointment.ServiceType},
                 new("@status", MySqlDbType.VarChar, 50) { Value = appointment.Status }
             };  

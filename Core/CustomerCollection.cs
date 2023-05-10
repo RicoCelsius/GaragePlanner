@@ -65,7 +65,15 @@ namespace Core
 
         }
 
-       /* public int GetCustomerIdByEmail(string emailAddress)
+        public Customer GetCustomerByEmail(string email)
+        {
+            Customer customerInfo = _iCustomerDal.GetCustomerByEmail(email);
+            Customer customer = new(customerInfo.FirstName, customerInfo.LastName, customerInfo.Address,
+                               customerInfo.Email, customerInfo.Password);
+            return customer;
+        }
+
+       /*public int GetCustomerIdByEmail(string emailAddress)
         {
             Customer customerDto = _iCustomerDal.GetCustomerByEmail(emailAddress);
             int id = customerDto.Id;

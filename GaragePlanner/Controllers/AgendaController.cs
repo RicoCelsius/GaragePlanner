@@ -17,14 +17,33 @@ namespace GaragePlanner.Controllers
             this._appointmentDal = appointmentDal;
             this._customerDal = customerDal;
         }
-        public IActionResult Index(AgendaViewModel model, DateTime dataAndTime)
+        public IActionResult Index(DateTime dataAndTime)
         {
-            AppointmentCollection appointmentCollection = new AppointmentCollection(_appointmentDal);
+            Agenda agenda = new(_appointmentDal);
+            AgendaViewModel model = new();
+            List <Day> days = agenda.Days;
+            
 
-
-
+            foreach (var day in days)
+            {
+                DayViewModel dayViewModel = new DayViewModel { Date = day.Date };
+                foreach (TimeSlot timeslot in day.TimeSlots)
+                {
+                    var timeslotViewModel = new TimeslotViewModel
+                    {
+                        Time = timeslot.StartTime,
+                        IsAvailable = timeslot.HasAppointment(),
+                    };
+                    dayViewModel.TimeSlots.Add(timeslotViewModel);
+                }
+                model.Days.Add(dayViewModel);
+            }
 
             return View(model);
+
+
+
+            
         }
 
 
@@ -58,13 +77,13 @@ namespace GaragePlanner.Controllers
 
 
             // Create a new appointment using the chosen date and time
-            AppointmentCollection appointmentCollection = new AppointmentCollection(_appointmentDal);
+            Agenda agenda = new(_appointmentDal);
             CustomerCollection customerCollection = new CustomerCollection(_customerDal);
             /*int id = customerCollection.GetCustomerIdByEmail(model.selectedEmail);
 
-
-
             appointmentCollection.TryCreateAppointment(id,model.ChosenDateTime,model.SelectedTypeOfAppointment);*/
+
+            agenda.TryCreateAppointment(model.ChosenDateTime, model.SelectedTypeOfAppointment, Enums.Status.Scheduled, customerCollection.GetCustomerByEmail(model.selectedEmail), model.SelectedCar);
 
             // Redirect to the confirmation page with the model
             return RedirectToAction("Confirmation",model);
@@ -73,8 +92,6 @@ namespace GaragePlanner.Controllers
 
         public IActionResult Confirmation(BookViewModel model)
         {
-
-
 
             return View(model);
         }

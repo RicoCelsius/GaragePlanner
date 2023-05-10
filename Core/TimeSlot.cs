@@ -15,7 +15,7 @@ namespace Domain
             EndTime = StartTime.AddHours(1);
         }
 
-        private bool HasAppointment()
+        public bool HasAppointment()
         {
             return _appointment == null;
         }

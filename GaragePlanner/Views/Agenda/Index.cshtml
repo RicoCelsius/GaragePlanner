@@ -53,38 +53,14 @@
         <thead>
             <tr>
                 <th></th>
-                @foreach (var date in Model.Dates.DistinctBy(x => x.Date))
+                @foreach (var date in Model.Days)
                 {
-                    <th class="day">@date.ToString("dddd d MMMM")</th>
+                    <th class="day">@date.ToString()</th>
                 }
             </tr>
         </thead>
         <tbody>
-            @foreach (var timeSlot in Model.TimeSlots.DistinctBy(x => x.TimeOfDay))
-            {
-                <tr>
-                    <th class="time">@timeSlot.ToString("HH:mm")</th>
-                    @foreach (var date in Model.AvailableDatesAndTimeSlots.DistinctBy(x => x.Date))
-                    {
-                        var availableTimeSlots = Model.AvailableDatesAndTimeSlots
-                        .Where(x => x.Date == date.Date && x.TimeOfDay == timeSlot.TimeOfDay);
 
-                        <td class="@((availableTimeSlots.Any()) ? "available" : "booked")">
-                            @if (availableTimeSlots.Any())
-                            {
-                                @foreach (var availableTimeSlot in availableTimeSlots)
-                                {
-                                    <div><a href="/agenda/bookinformation?dateAndTime=@availableTimeSlot.ToString("yyyy-MM-ddTHH:mm:ss")">Book</a></div>
-                                }
-                            }
-                            else
-                            {
-                                <div>Booked</div>
-                            }
-                        </td>
-
-                    }
-                </tr>
             }
         </tbody>
     </table>

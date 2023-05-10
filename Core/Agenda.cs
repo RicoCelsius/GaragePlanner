@@ -10,11 +10,13 @@ namespace Domain
     public class Agenda
     {
         public List<Day> Days { get; set; }
+        private readonly IAppointmentDal _appointmentDal;
 
-        public Agenda()
+        public Agenda(IAppointmentDal appointmentDal)
         {
             Days = new List<Day>();
             GenerateTwoWeeksDays();
+            _appointmentDal = appointmentDal;
         }
 
         public bool TryCreateAppointment(DateTime appointmentDateTime, Enums.Type type, Enums.Status status, Customer customer, Car car)
@@ -28,17 +30,17 @@ namespace Domain
 
             if (targetTimeSlot.TryAddAppointment(appointment))
             {
+                _appointmentDal.InsertAppointment(appointment);
                 return true;
             }
-
             return false;
-            
 
-          
-           
-
-            return targetTimeSlot.TryAddAppointment(appointment);
         }
+
+
+
+
+
 
 
 
