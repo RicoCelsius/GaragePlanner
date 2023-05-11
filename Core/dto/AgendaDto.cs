@@ -8,8 +8,8 @@ namespace Domain.dto
 {
     public class AgendaDto
     {
-        DateTime Date { get; set; }
-        bool IsAvailable { get; set; }
+        public DateTime Date { get; set; }
+        public bool IsAvailable { get; set; }
 
 
         public AgendaDto(DateTime date, bool isAvailable)

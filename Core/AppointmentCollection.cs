@@ -10,10 +10,12 @@ namespace Domain
     {
         private readonly IAppointmentDal _appointmentDal;
         private readonly List<DateTime> _availableDatesAndTimeSlots = new List<DateTime>();
+        private readonly List<DateTime> _datesAndTimeSlots = new List<DateTime>();
 
         public AppointmentCollection(IAppointmentDal appointmentDal)
         {
             _appointmentDal = appointmentDal;
+            _datesAndTimeSlots = GenerateDatesAndTimeSlots();
         }
 
 
@@ -29,7 +31,7 @@ namespace Domain
 
         private bool IsDateTimeValid(DateTime dateAndTime)
         {
-            List<DateTime> availableDateTimes = GetAvailableDateAndTimeSlots();
+            List<DateTime> availableDateTimes = GetAvailableDateAndTimeSlots(_datesAndTimeSlots);
             return availableDateTimes.Contains(dateAndTime);
         }
 

@@ -4,6 +4,7 @@ using Domain.interfaces;
 using GaragePlanner.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Reflection;
+using Domain.dto;
 
 namespace GaragePlanner.Controllers
 {
@@ -20,11 +21,11 @@ namespace GaragePlanner.Controllers
         public IActionResult Index(AgendaViewModel model, DateTime dataAndTime)
         {
             AppointmentCollection appointmentCollection = new AppointmentCollection(_appointmentDal);
+            List<AgendaDto> appointments = appointmentCollection.getAgenda();
+
+            model.Appointments = appointments;
 
 
-            model.AvailableDatesAndTimeSlots = availableDatesAndTimeSlots;
-            model.Dates = datesAndTimes;
-            model.TimeSlots = datesAndTimes;
 
 
             return View(model);

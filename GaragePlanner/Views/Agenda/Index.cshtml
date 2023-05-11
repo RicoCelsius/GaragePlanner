@@ -21,12 +21,8 @@
             width: 80px;
             height: 50px;
             border-color: black;
-            text-align: center
+            text-align: center;
         }
-
-            th.time {
-                border-right: none;
-            }
 
             th.day {
                 border-bottom: none;
@@ -53,36 +49,31 @@
         <thead>
             <tr>
                 <th></th>
-                @foreach (var date in Model.Dates.DistinctBy(x => x.Date))
+                @foreach (var date in Model.Appointments.Select(a => a.Date.Date).Distinct())
                 {
                     <th class="day">@date.ToString("dddd d MMMM")</th>
                 }
             </tr>
         </thead>
         <tbody>
-            @foreach (var timeSlot in Model.TimeSlots.DistinctBy(x => x.TimeOfDay))
+            @foreach (var timeSlot in Model.Appointments.Select(a => a.Date.TimeOfDay).Distinct())
             {
                 <tr>
-                    <th class="time">@timeSlot.ToString("HH:mm")</th>
-                    @foreach (var date in Model.AvailableDatesAndTimeSlots.DistinctBy(x => x.Date))
+                    <th class="time">@timeSlot.ToString(@"hh\:mm")</th>
+                    @foreach (var date in Model.Appointments.Select(a => a.Date.Date).Distinct())
                     {
-                        var availableTimeSlots = Model.AvailableDatesAndTimeSlots
-                        .Where(x => x.Date == date.Date && x.TimeOfDay == timeSlot.TimeOfDay);
+                        var appointment = Model.Appointments.FirstOrDefault(a => a.Date.Date == date && a.Date.TimeOfDay == timeSlot);
 
-                        <td class="@((availableTimeSlots.Any()) ? "available" : "booked")">
-                            @if (availableTimeSlots.Any())
+                        <td class="@((appointment != null && appointment.IsAvailable) ? "available" : "booked")">
+                            @if (appointment != null && appointment.IsAvailable)
                             {
-                                @foreach (var availableTimeSlot in availableTimeSlots)
-                                {
-                                    <div><a href="/agenda/bookinformation?dateAndTime=@availableTimeSlot.ToString("yyyy-MM-ddTHH:mm:ss")">Book</a></div>
-                                }
+                                <div><a href="/agenda/bookinformation?dateAndTime=@appointment.Date.ToString("yyyy-MM-ddTHH:mm:ss")">Book</a></div>
                             }
                             else
                             {
                                 <div>Booked</div>
                             }
                         </td>
-
                     }
                 </tr>
             }
