@@ -17,13 +17,13 @@ namespace Domain
         }
 
 
-        public void TryCreateAppointment(int customerId,DateTime appointmentDate, Enums.Type type)
+        public void TryCreateAppointment(int customerId,DateTime appointmentDate, Enums.Type type, Customer customer, Car car)
         {
             if (!IsDateTimeValid(appointmentDate))
             {
                 throw new Exception("Invalid date or time");
             }
-            Appointment appointment = new Appointment(appointmentDate,type,Enums.Status.Scheduled,customerId,1);
+            Appointment appointment = new Appointment(type,Enums.Status.Scheduled,customer,car);
             _appointmentDal.InsertAppointment(appointment);
         }
 

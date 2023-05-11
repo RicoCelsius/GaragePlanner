@@ -2,7 +2,6 @@
 {
     public class Appointment
     {
-        public DateTime DateAndTime { get; set; }
         public Enums.Type ServiceType { get; set; }
         public Enums.Status Status { get; set; }
 
@@ -11,10 +10,9 @@
 
 
 
-        public Appointment(DateTime date, Enums.Type serviceType, Enums.Status status,Customer customer, Car car)
+        public Appointment(Enums.Type serviceType, Enums.Status status,Customer customer, Car car)
        
         {
-            DateAndTime = date;
             ServiceType = serviceType;
             Status = status;
             Customer = customer;

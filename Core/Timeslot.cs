@@ -12,13 +12,15 @@ namespace Domain
 
         public DateTime Date { get; set; }
         public bool IsAvailable { get; set; }
+        public Appointment Appointment { get; set; }
 
 
 
-        public Timeslot(DateTime date, bool isAvailable)
+        public Timeslot(DateTime date, bool isAvailable, Appointment appointment)
         {
             Date = date;
             IsAvailable = isAvailable;
+            Appointment = appointment;
         }
     }
 }
