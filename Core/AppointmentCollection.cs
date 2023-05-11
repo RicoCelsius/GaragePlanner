@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using DAL.dto;
+using Domain.dto;
 using Domain.interfaces;
 
 namespace Domain
@@ -28,14 +29,13 @@ namespace Domain
 
         private bool IsDateTimeValid(DateTime dateAndTime)
         {
-            AppointmentCollection appointmentCollection = new AppointmentCollection(_appointmentDal);
-            List<DateTime> availableDateTimes = appointmentCollection.GetAvailableDateAndTimeSlots();
+            List<DateTime> availableDateTimes = GetAvailableDateAndTimeSlots();
             return availableDateTimes.Contains(dateAndTime);
         }
 
-        public List<DateTime> GetAvailableDateAndTimeSlots()
+        public List<DateTime> GetAvailableDateAndTimeSlots(List<DateTime> datesAndTimeSlots)
         {
-            List<DateTime> datesAndTimeSlots = GenerateDatesAndTimeSlots();
+           
 
             foreach (DateTime dateAndTime in datesAndTimeSlots)
             {
@@ -45,6 +45,13 @@ namespace Domain
                 }
             }
             return _availableDatesAndTimeSlots;
+        }
+        public List<AgendaDto> getAgenda()
+        {
+            List<DateTime> dateTimes = GenerateDatesAndTimeSlots();
+            HashSet<DateTime> availableDateTimes = new HashSet<DateTime>(GetAvailableDateAndTimeSlots(dateTimes));
+
+            return dateTimes.Select(dateAndTime => new AgendaDto(dateAndTime, availableDateTimes.Contains(dateAndTime))).ToList();
         }
 
 
