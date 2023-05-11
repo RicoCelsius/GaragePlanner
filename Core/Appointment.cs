@@ -5,18 +5,21 @@
         public DateTime DateAndTime { get; set; }
         public Enums.Type ServiceType { get; set; }
         public Enums.Status Status { get; set; }
-        public int? CustomerId { get; set; }
-        public int? CarId { get; set; }
+
+        public Customer Customer { get; set; }
+        public Car Car { get; set; }
 
 
-        public Appointment(DateTime date, Enums.Type serviceType, Enums.Status status,
-            int? customerId, int? carId)
+
+        public Appointment(DateTime date, Enums.Type serviceType, Enums.Status status,Customer customer, Car car)
+       
         {
             DateAndTime = date;
             ServiceType = serviceType;
             Status = status;
-            CustomerId = customerId;
-            CarId = carId;
+            Customer = customer;
+            Car = car;
+
         }
         
         

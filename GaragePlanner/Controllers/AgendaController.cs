@@ -4,7 +4,6 @@ using Domain.interfaces;
 using GaragePlanner.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Reflection;
-using Domain.dto;
 
 namespace GaragePlanner.Controllers
 {
@@ -17,11 +16,12 @@ namespace GaragePlanner.Controllers
         {
             this._appointmentDal = appointmentDal;
             this._customerDal = customerDal;
+
         }
         public IActionResult Index(AgendaViewModel model, DateTime dataAndTime)
         {
-            AppointmentCollection appointmentCollection = new AppointmentCollection(_appointmentDal);
-            List<AgendaDto> appointments = appointmentCollection.getAgenda();
+            Agenda agenda = new Agenda(_appointmentDal);
+            List<Timeslot> appointments = agenda.GetAgenda();
 
             model.Appointments = appointments;
 
@@ -39,7 +39,7 @@ namespace GaragePlanner.Controllers
 
         public IActionResult BookInformation(BookViewModel model, DateTime dateAndTime, Car selectedCar, Enums.Type selectedTypeOfAppointment, string selectedCustomerEmail)
         {
-            AppointmentCollection appointmentCollection = new AppointmentCollection(_appointmentDal);
+            Agenda agenda = new Agenda(_appointmentDal);
             CustomerCollection customerCollection = new CustomerCollection(_customerDal);
             List<String> customerEmails = customerCollection.GetCustomerEmails();
             model.CustomerEmails = customerEmails;
@@ -62,13 +62,13 @@ namespace GaragePlanner.Controllers
 
 
             // Create a new appointment using the chosen date and time
-            AppointmentCollection appointmentCollection = new AppointmentCollection(_appointmentDal);
+            Agenda agenda = new Agenda(_appointmentDal);
             CustomerCollection customerCollection = new CustomerCollection(_customerDal);
             int id = customerCollection.GetCustomerIdByEmail(model.selectedEmail);
 
 
 
-            appointmentCollection.TryCreateAppointment(id,model.ChosenDateTime,model.SelectedTypeOfAppointment);
+            agenda.TryCreateAppointment(id,model.ChosenDateTime,model.SelectedTypeOfAppointment);
 
             // Redirect to the confirmation page with the model
             return RedirectToAction("Confirmation",model);

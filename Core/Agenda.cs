@@ -1,18 +1,16 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using DAL.dto;
-using Domain.dto;
 using Domain.interfaces;
 
 namespace Domain
 {
-    public class AppointmentCollection
+    public class Agenda
     {
         private readonly IAppointmentDal _appointmentDal;
-        private readonly List<DateTime> _availableDatesAndTimeSlots = new List<DateTime>();
         private readonly List<DateTime> _datesAndTimeSlots = new List<DateTime>();
 
-        public AppointmentCollection(IAppointmentDal appointmentDal)
+        public Agenda(IAppointmentDal appointmentDal)
         {
             _appointmentDal = appointmentDal;
             _datesAndTimeSlots = GenerateDatesAndTimeSlots();
@@ -37,23 +35,22 @@ namespace Domain
 
         public List<DateTime> GetAvailableDateAndTimeSlots(List<DateTime> datesAndTimeSlots)
         {
-           
-
+            List<DateTime> availableDatesAndTimeSlots = new List<DateTime>();
             foreach (DateTime dateAndTime in datesAndTimeSlots)
             {
                 if (!_appointmentDal.AppointmentExistsByDateAndTime(dateAndTime))
                 {
-                    _availableDatesAndTimeSlots.Add(dateAndTime);
+                    availableDatesAndTimeSlots.Add(dateAndTime);
                 }
             }
-            return _availableDatesAndTimeSlots;
+            return availableDatesAndTimeSlots;
         }
-        public List<AgendaDto> getAgenda()
+        public List<Timeslot> GetAgenda()
         {
             List<DateTime> dateTimes = GenerateDatesAndTimeSlots();
             HashSet<DateTime> availableDateTimes = new HashSet<DateTime>(GetAvailableDateAndTimeSlots(dateTimes));
 
-            return dateTimes.Select(dateAndTime => new AgendaDto(dateAndTime, availableDateTimes.Contains(dateAndTime))).ToList();
+            return dateTimes.Select(dateAndTime => new Timeslot(dateAndTime, availableDateTimes.Contains(dateAndTime))).ToList();
         }
 
 

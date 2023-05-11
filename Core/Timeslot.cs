@@ -4,15 +4,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.dto
+namespace Domain
 {
-    public class AgendaDto
+    public class Timeslot
+
     {
+
         public DateTime Date { get; set; }
         public bool IsAvailable { get; set; }
 
 
-        public AgendaDto(DateTime date, bool isAvailable)
+
+        public Timeslot(DateTime date, bool isAvailable)
         {
             Date = date;
             IsAvailable = isAvailable;

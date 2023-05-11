@@ -61,7 +61,7 @@ namespace DAL
             var connection = new DbConnection();
             MySqlParameter[] parameters =
             {
-                new("@customer_id", MySqlDbType.Int32) { Value = appointment.CustomerId },
+                new("@customer_id", MySqlDbType.Int32) { Value = appointment.Customer.Email },
                 new("@vehicle_id", MySqlDbType.Int32) { Value = appointment.CarId },
                 new("@date", MySqlDbType.DateTime) { Value = appointment.DateAndTime },
                 new("@type", MySqlDbType.VarChar, 50) { Value = appointment.ServiceType},
