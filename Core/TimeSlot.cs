@@ -18,19 +18,14 @@ namespace Domain
             return _appointment == null;
         }
 
-
-
         public bool TryAddAppointment(Appointment appointment)
         {
             if (!HasAppointment())
             {
-                return false;
+                throw new Exception("Timeslot already occupied");
             }
             _appointment = appointment;
             return true;
         }
-
-
-
     }
 }

@@ -12,8 +12,8 @@
 <body>
 
 <form method="post" action="@Url.Action("Book", "Agenda")">
-    <label for="customer">Customer:</label>
-    <select name="selectedEmail" id="customerName">
+    <label for="customer">Your email:</label>
+    <select name="SelectedEmail" id="customerName">
         @foreach (var customerEmail in Model.CustomerEmails)
         {
             <option value="@customerEmail">@customerEmail</option>
@@ -22,7 +22,7 @@
 
     <br>
 
-    <label for="car">Car:</label>
+    <label for="car">Select your car:</label>
     <select id="car" name="selectedCar">
         <option value="car1">Car 1</option>
         <option value="car2">Car 2</option>
@@ -31,7 +31,7 @@
 
     <br>
 
-    <label for="type">Type:</label>
+    <label for="type">Select the service your car needs:</label>
     <select id="type" name="selectedTypeOfAppointment">
         @foreach (var typeName in Enum.GetNames(typeof(Enums.Type)))
         {
@@ -42,13 +42,14 @@
 
     <br>
 
-<label for="chosenDateTime">Chosen DateOfDay Time:</label>
-<input type="text" id="chosenDateTime" name="chosenDateOfDayTime" value="@Model.ChosenDateTime" readonly>
+    <label for="chosenDateTime">Chosen date and time:</label>
+    <input type="text" id="chosenDateTime" name="ChosenDateTime" value="@Model.ChosenDateTime" readonly>
+
 
 
     <br>
 
-    <button type="submit">Submit</button>
+    <button type="submit">Submit appointment</button>
 </form>
 
 </body>

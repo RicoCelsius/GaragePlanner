@@ -13,8 +13,6 @@ namespace DAL
 {
     public class AppointmentDal : IAppointmentDal
     {
-
-
         public bool AppointmentExistsByDateAndTime(DateTime dateAndTime)
         {
             var mysqlDateTime = dateAndTime.ToString("yyyy-MM-dd HH:mm:ss");
@@ -35,12 +33,12 @@ namespace DAL
             List<AppointmentDto> appointments = new List<AppointmentDto>();
 
             var query = @"
-        SELECT appointment.date, appointment.type, appointment.status, 
-            customers.first_name, customers.last_name, customers.Address, customers.Email, customers.Password, 
-            car.license_plate, car.color, car.model, car.year 
-        FROM appointment 
-        INNER JOIN customers ON appointment.customer_id = customers.id 
-        INNER JOIN car ON appointment.car_id = car.id";
+                SELECT appointment.date, appointment.type, appointment.status, 
+                    customers.id, customers.first_name, customers.last_name, customers.Address, customers.Email, customers.Password, car.id,
+                    car.license_plate, car.color, car.model, car.year 
+                FROM appointment 
+                INNER JOIN customers ON appointment.customer_id = customers.id 
+                INNER JOIN car ON appointment.car_id = car.id";
 
             var connection = new DbConnection();
             var dataTable = connection.ExecuteQuery(query, null);
@@ -48,6 +46,7 @@ namespace DAL
             foreach (DataRow row in dataTable.Rows)
             {
                 CustomerDto customer = new CustomerDto(
+                    row.Field<int>("id"),
                     row.Field<string>("first_name"),
                     row.Field<string>("last_name"),
                     row.Field<string>("Address"),
@@ -56,6 +55,7 @@ namespace DAL
                 );
 
                 CarDto car = new CarDto(
+                    row.Field<int>("id"),
                     row.Field<string>("license_plate"),
                     row.Field<string>("color"),
                     row.Field<string>("model"),
@@ -73,27 +73,26 @@ namespace DAL
                 appointments.Add(appointment);
             }
 
-
             return appointments;
         }
 
-
-
-
-        public void InsertAppointment(Appointment appointment)
+        public void InsertAppointment(int? id, AppointmentDto appointment)
         {
-            var query = "INSERT INTO appointment (date, type, status) " +
-                        "VALUES (@customer_id, @vehicle_id, @date, @type, @status)";
+            var query = "INSERT INTO appointment (customer_id, car_id, date, type, status) " +
+                        "VALUES (@customer_id, @car_id, @date, @type, @status)";
+
             var connection = new DbConnection();
+
             MySqlParameter[] parameters =
             {
+                new MySqlParameter("@customer_id", MySqlDbType.Int32) { Value = id },
+                new MySqlParameter("@car_id", MySqlDbType.Int32) { Value = appointment.Car.Id },
+                new MySqlParameter("@date", MySqlDbType.DateTime) { Value = appointment.Date },
+                new MySqlParameter("@type", MySqlDbType.VarChar, 50) { Value = appointment.ServiceType },
+                new MySqlParameter("@status", MySqlDbType.VarChar, 50) { Value = appointment.Status }
+            };
 
-                new("@type", MySqlDbType.VarChar, 50) { Value = appointment.ServiceType},
-                new("@status", MySqlDbType.VarChar, 50) { Value = appointment.Status }
-            };  
             connection.ExecuteQuery(query, parameters);
-
-
         }
     }
 }

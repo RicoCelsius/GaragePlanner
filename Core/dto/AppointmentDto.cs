@@ -9,6 +9,7 @@ namespace Domain
 {
     public class AppointmentDto
     {
+        public int? Id { get; set; }
         public DateTime Date { get; set; }
         public Enums.Type ServiceType { get; set; }
         public Enums.Status Status { get; set; }

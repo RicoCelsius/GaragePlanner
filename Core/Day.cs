@@ -15,13 +15,10 @@ namespace Domain
 
         public Day(DateOnly dateOfDay)
         {
-
             DateOfDay = dateOfDay;
             TimeSlots = new List<TimeSlot>();
             InitializeTimeSlots();
         }
-
-
 
         public TimeSlot FindTimeSlot(TimeOnly time)
         {

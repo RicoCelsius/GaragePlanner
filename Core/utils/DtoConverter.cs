@@ -26,7 +26,5 @@ namespace Domain.utils
             Appointment appointment = new Appointment(appointmentDto.ServiceType, appointmentDto.Status, ConvertCustomerDtoToCustomer(appointmentDto.Customer), ConvertCarDtoToCar(appointmentDto.Car));
             return appointment;
         }
-
-
     }
 }

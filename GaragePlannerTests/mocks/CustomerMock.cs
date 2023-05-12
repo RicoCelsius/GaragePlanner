@@ -1,5 +1,4 @@
 ﻿using DAL;
-using DAL.dto;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,14 +11,6 @@ namespace GaragePlannerTests.mocks
 {
     internal class Mock
     {
-        public Customer GetCustomerByEmail(string email)
-        {
-            throw new NotImplementedException();
-        }
 
-        public void InsertCustomer(Customer customerDto)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

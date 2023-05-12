@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Domain.dto;
 
 namespace Domain
 {
@@ -18,60 +19,52 @@ namespace Domain
             Days = new List<Day>();
             GenerateDays(14);
             _appointmentDal = appointmentDal;
-            this.LoadAgenda(_appointmentDal.GetAgenda());
+            LoadAgenda(_appointmentDal.GetAgenda());
         }
-
 
         public void LoadAgenda(List<AppointmentDto> appointments)
         {
             foreach (AppointmentDto appointment in appointments)
             {
-                Customer customer = DtoConverter.ConvertCustomerDtoToCustomer(appointment.Customer);
-                Car car = DtoConverter.ConvertCarDtoToCar(appointment.Car);
                 Appointment appointmentToAdd = DtoConverter.ConvertAppointmentDtoToAppointment(appointment);
-                this.TryCreateAppointment(appointment.Date, appointmentToAdd,false);
+
+                DateOnly appointmentDate = DateOnly.FromDateTime(appointment.Date);
+                TimeOnly appointmentTime = TimeOnly.FromDateTime(appointment.Date);
+
+                Day targetDay = Days.FirstOrDefault(day => day.DateOfDay.Equals(appointmentDate));
+
+                TimeSlot targetTimeSlot = targetDay.FindTimeSlot(appointmentTime);
+
+                targetTimeSlot.TryAddAppointment(appointmentToAdd);
             }
         }
 
-
-        public bool TryCreateAppointment(DateTime appointmentDateTime, Appointment appointment, bool updateDb = true)
+        public bool CreateAppointment(AppointmentDto appointmentDto, CustomerDto customer)
         {
-            DateOnly appointmentDate = DateOnly.FromDateTime(appointmentDateTime);
-            TimeOnly appointmentTime = TimeOnly.FromDateTime(appointmentDateTime);
+            DateOnly appointmentDate = DateOnly.FromDateTime(appointmentDto.Date);
+            TimeOnly appointmentTime = TimeOnly.FromDateTime(appointmentDto.Date);
+            Appointment appointment = DtoConverter.ConvertAppointmentDtoToAppointment(appointmentDto);
 
             Day targetDay = Days.FirstOrDefault(day => day.DateOfDay.Equals(appointmentDate));
 
             TimeSlot targetTimeSlot = targetDay.FindTimeSlot(appointmentTime);
 
-            
-
             if (targetTimeSlot.TryAddAppointment(appointment))
             {
-                if (updateDb)
-                {
-                    _appointmentDal.InsertAppointment(appointment);
-                }
+                _appointmentDal.InsertAppointment(customer.Id, appointmentDto);
                 return true;
             }
             return false;
         }
 
-
-
-
-
-
-
-
         private void GenerateDays(int amountOfDays)
         {
             DateOnly startDate = DateOnly.FromDateTime(DateTime.Now);
-            for (int i = 0; i < 14; i++)
+            for (int i = 0; i < amountOfDays; i++)
             {
                 Days.Add(new Day(startDate));
                 startDate = startDate.AddDays(1);
             }
         }
-
     }
 }

@@ -11,20 +11,17 @@ namespace Domain.utils
     {
         public static CustomerDto ConvertCustomerToCustomerDto(Customer customer)
         {
-            return new CustomerDto(customer.FirstName, customer.LastName, customer.Email, customer.Address, customer.Password);
+            return new CustomerDto(null, customer.FirstName, customer.LastName, customer.Email, customer.Address, customer.Password);
         }
 
         public static CarDto ConvertCarToCarDto(Car car)
         {
-            return new CarDto(car.LicensePlate, car.Color, car.Model, car.Year);
+            return new CarDto(null, car.LicensePlate, car.Color, car.Model, car.Year);
         }
 
         public static AppointmentDto ConvertAppointmentToAppointmentDto(Appointment appointment, DateTime Date)
         {
             return new AppointmentDto(Date, appointment.ServiceType, appointment.Status, ConvertCustomerToCustomerDto(appointment.Customer), ConvertCarToCarDto(appointment.Car));
         }
-
     }
-
-
 }

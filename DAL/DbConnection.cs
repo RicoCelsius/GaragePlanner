@@ -5,17 +5,13 @@ using System.Configuration;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.Json;
 
-
-
 namespace DAL
 {
     public class DbConnection
     {
-
         private readonly MySqlConnection _sqlConnection;
         private readonly string _connectionString;
         private bool isConnected;
-
 
         public DbConnection()
         {
@@ -39,8 +35,6 @@ namespace DAL
             }
         }
 
-
-
         private void Disconnect()
         {
             if (!isConnected)
@@ -51,8 +45,6 @@ namespace DAL
             _sqlConnection.Close();
             isConnected = false;
         }
-
-
 
         public DataTable ExecuteQuery(string query, MySqlParameter[] parameters)
         {
@@ -71,8 +63,3 @@ namespace DAL
         }
     }
 }
-
-
-
-
-

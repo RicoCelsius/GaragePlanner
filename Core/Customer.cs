@@ -14,17 +14,13 @@ namespace Domain
         public string Email { get; set; }
         public string Password { get; set; }
 
-     
-
-        public Customer(string firstName,string lastName,string address, string email, string password)
+        public Customer(string firstName, string lastName, string address, string email, string password)
         {
-            this.FirstName = firstName;
-            this.LastName = lastName;
-            this.Address = address;
-            this.Email = email;
-            this.Password = password;
+            FirstName = firstName;
+            LastName = lastName;
+            Address = address;
+            Email = email;
+            Password = password;
         }
-
-
     }
 }

@@ -19,21 +19,8 @@ namespace GaragePlanner.Controllers
             _customerDal = customerDal;
         }
 
-        public ActionResult Index()
-        {
-            return View();
-        }
-
-        // GET: CarController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-
-
-        // GET: CarController/Create
-        public ActionResult Create(CarViewModel carViewModel, [FromForm] string customerEmail)
+        [HttpGet]
+        public ActionResult Index(CarViewModel carViewModel, [FromForm] string customerEmail)
         {
             List<string> customerEmails = new List<string>();
             CustomerCollection customerCollection = new CustomerCollection(_customerDal);
@@ -58,6 +45,8 @@ namespace GaragePlanner.Controllers
 
             return View(carViewModel);
         }
+
+
     }
 }
 

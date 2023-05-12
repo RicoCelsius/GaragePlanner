@@ -28,8 +28,7 @@ namespace DAL
             connection.ExecuteQuery(query, parameters);
         }
 
-
-        public List<Car> GetCarsByCustomerId(int customerId)
+        public List<CarDto> GetCarsByCustomerId(int customerId)
         {
             var query = "SELECT * FROM cars WHERE customer_id = @customer_id";
             var parameters = new MySqlParameter[]
@@ -38,10 +37,11 @@ namespace DAL
             };
             var connection = new DbConnection();
             var dataTable = connection.ExecuteQuery(query, parameters);
-            var cars = new List<Car>();
+            var cars = new List<CarDto>();
             foreach (DataRow row in dataTable.Rows)
             {
-                var car = new Car(
+                var car = new CarDto(
+                    row.Field<int>("id"),
                     row.Field<string>("license_plate"),
                     row.Field<string>("color"),
                     row.Field<string>("model"),
@@ -51,7 +51,6 @@ namespace DAL
             }
             return cars;
         }
-
 
         public CarDto GetCarByLicensePlate(string licensePlate)
         {
@@ -68,6 +67,7 @@ namespace DAL
             }
             var row = dataTable.Rows[0];
             var carDto = new CarDto(
+                row.Field<int>("id"),
                 row.Field<string>("license_plate"),
                 row.Field<string>("color"),
                 row.Field<string>("model"),
@@ -75,11 +75,5 @@ namespace DAL
             );
             return carDto;
         }
-
-
-
-
-
-
     }
 }

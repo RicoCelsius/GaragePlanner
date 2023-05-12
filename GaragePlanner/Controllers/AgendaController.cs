@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Reflection;
 using DAL;
 using Domain.dto;
+using Domain.utils;
 
 namespace GaragePlanner.Controllers
 {
@@ -13,11 +14,13 @@ namespace GaragePlanner.Controllers
     {
         private readonly IAppointmentDal _appointmentDal;
         private readonly ICustomerDal _customerDal;
+        private readonly ICarDal _carDal;
 
-        public AgendaController(IAppointmentDal appointmentDal, ICustomerDal customerDal)
+        public AgendaController(IAppointmentDal appointmentDal, ICustomerDal customerDal, ICarDal carDal)
         {
-            this._appointmentDal = appointmentDal;
-            this._customerDal = customerDal;
+            _appointmentDal = appointmentDal;
+            _customerDal = customerDal;
+            _carDal = carDal;
         }
         public IActionResult Index(DateTime dataAndTime)
         {
@@ -55,17 +58,18 @@ namespace GaragePlanner.Controllers
         [HttpGet]
         [HttpPost]
 
-        public IActionResult BookInformation(BookViewModel model, DateTime dateAndTime, Car selectedCar, Enums.Type selectedTypeOfAppointment, string selectedCustomerEmail)
+        public IActionResult BookInformation(BookViewModel model, DateTime dateAndTime, Enums.Type selectedTypeOfAppointment, string selectedCustomerEmail)
         {
-            AppointmentCollection appointmentCollection = new AppointmentCollection(_appointmentDal);
             CustomerCollection customerCollection = new CustomerCollection(_customerDal);
+            CarCollection carCollection = new CarCollection(_carDal);
             List<String> customerEmails = customerCollection.GetCustomerEmails();
+
             model.CustomerEmails = customerEmails;
             model.ChosenDateTime = dateAndTime;
             model.SelectedTypeOfAppointment = selectedTypeOfAppointment;
-            model.selectedEmail = selectedCustomerEmail;
+            model.SelectedEmail = selectedCustomerEmail;
 
-
+          
 
 
 
@@ -79,17 +83,29 @@ namespace GaragePlanner.Controllers
         {
 
 
-            // Create a new appointment using the chosen date and time
             Agenda agenda = new(_appointmentDal);
             CustomerCollection customerCollection = new CustomerCollection(_customerDal);
-            CustomerDto customerDto = _customerDal.GetCustomerByEmail(model.selectedEmail);
+            
+            CustomerDto customerDto = customerCollection.GetCustomerByEmail(model.SelectedEmail);
+            AppointmentDto appointmentDto = new(model.ChosenDateTime, model.SelectedTypeOfAppointment, Enums.Status.Scheduled, customerDto,new CarDto(1,"s","s","s",1990));
 
-            appointmentCollection.TryCreateAppointment(id,model.ChosenDateTime,model.SelectedTypeOfAppointment);*/
-            Appointment appointment = new(model.ChosenDateTime, model.SelectedTypeOfAppointment,customer,car);
-            Car car = new(model.SelectedCar);
-            agenda.TryCreateAppointment(model.ChosenDateTime, appointment);
 
-            // Redirect to the confirmation page with the model
+            try
+            {
+
+                agenda.CreateAppointment(appointmentDto, customerDto);
+            }
+            catch
+            {
+                var errorViewModel = new ErrorViewModel()
+                {
+                    ErrorMessage = "Something unexpected happened. Please try again later."
+                };
+
+                return View("Error", errorViewModel);
+            }
+
+
             return RedirectToAction("Confirmation",model);
 
         }

@@ -6,12 +6,8 @@ using Domain.dto;
 using Domain.interfaces;
 using MySqlConnector;
 
-
-
-
 namespace DAL
 {
-
     public class CustomerDal : ICustomerDal
     {
         public void InsertCustomer(Customer customer)
@@ -57,7 +53,6 @@ namespace DAL
             }
 
             throw new Exception("Customer not found");
-
         }
 
         public int GetCustomerIdByEmail(string email)
@@ -78,19 +73,15 @@ namespace DAL
             }
 
             throw new Exception("Customer not found");
-
         }
 
         public List<CustomerDto> GetAllCustomers()
         {
             var query = "SELECT * FROM customers";
             var connection = new DbConnection();
-            var parameters = new MySqlParameter[]
-            {
-                new MySqlParameter()
-            };
+            var parameters = new MySqlParameter[0];
 
-            var dataTable = connection.ExecuteQuery(query,parameters);
+            var dataTable = connection.ExecuteQuery(query, parameters);
 
             List<CustomerDto> customers = new List<CustomerDto>();
             foreach (DataRow row in dataTable.Rows)
@@ -99,15 +90,13 @@ namespace DAL
                     row.Field<int>("id"),
                     row.Field<string>("first_name"),
                     row.Field<string>("last_name"),
-                    row.Field<string>("Address"),
                     row.Field<string>("Email"),
+                    row.Field<string>("Address"),
                     row.Field<string>("Password"));
                 customers.Add(customer);
             }
 
             return customers;
         }
-
-
     }
 }

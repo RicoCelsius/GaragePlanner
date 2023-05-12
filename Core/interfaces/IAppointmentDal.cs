@@ -5,7 +5,7 @@ public interface IAppointmentDal
 {
 
     bool AppointmentExistsByDateAndTime(DateTime dateAndTime);
-    void InsertAppointment(Appointment appointment);
+    void InsertAppointment(int? id,AppointmentDto appointmentDto);
 
     List<AppointmentDto> GetAgenda();
 }
