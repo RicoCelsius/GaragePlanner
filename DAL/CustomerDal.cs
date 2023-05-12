@@ -2,6 +2,7 @@
 using System.Data.SqlClient;
 using Core;
 using Domain;
+using Domain.dto;
 using Domain.interfaces;
 using MySqlConnector;
 
@@ -30,7 +31,7 @@ namespace DAL
             connection.ExecuteQuery(query, parameters);
         }
 
-        public Customer GetCustomerByEmail(string email)
+        public CustomerDto GetCustomerByEmail(string email)
         {
             var query = "SELECT * FROM customers WHERE Email = @Email";
             var parameters = new MySqlParameter[]
@@ -44,7 +45,8 @@ namespace DAL
             if (dataTable.Rows.Count > 0)
             {
                 var row = dataTable.Rows[0];
-                var customerData = new Customer(
+                var customerData = new CustomerDto(
+                    row.Field<int>("id"),
                     row.Field<string>("first_name"),
                     row.Field<string>("last_name"),
                     row.Field<string>("Address"),
@@ -58,7 +60,7 @@ namespace DAL
 
         }
 
-        public static int GetCustomerIdByEmail(string email)
+        public int GetCustomerIdByEmail(string email)
         {
             var query = "SELECT * FROM customers WHERE Email = @Email";
             var parameters = new MySqlParameter[]
@@ -79,7 +81,7 @@ namespace DAL
 
         }
 
-        public List<Customer> GetAllCustomers()
+        public List<CustomerDto> GetAllCustomers()
         {
             var query = "SELECT * FROM customers";
             var connection = new DbConnection();
@@ -90,10 +92,11 @@ namespace DAL
 
             var dataTable = connection.ExecuteQuery(query,parameters);
 
-            List<Customer> customers = new List<Customer>();
+            List<CustomerDto> customers = new List<CustomerDto>();
             foreach (DataRow row in dataTable.Rows)
             {
-                Customer customer = new(
+                CustomerDto customer = new(
+                    row.Field<int>("id"),
                     row.Field<string>("first_name"),
                     row.Field<string>("last_name"),
                     row.Field<string>("Address"),

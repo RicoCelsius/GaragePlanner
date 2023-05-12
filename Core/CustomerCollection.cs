@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Domain;
+using Domain.dto;
 using Domain.interfaces;
 
 namespace Core
@@ -35,7 +36,7 @@ namespace Core
         {
             try
             {
-                Customer customerInfo = _iCustomerDal.GetCustomerByEmail(email);
+                CustomerDto customerInfo = _iCustomerDal.GetCustomerByEmail(email);
                 return true;
             }
             catch (Exception)
@@ -49,7 +50,7 @@ namespace Core
 
         public Customer AuthenticateCustomer(string email, string inputPassword)
         {
-            Customer customerInfo = _iCustomerDal.GetCustomerByEmail(email);
+            CustomerDto customerInfo = _iCustomerDal.GetCustomerByEmail(email);
             string hashedPassword = customerInfo.Password;
             string hashedInputPassword = PasswordEncryptor.EncryptPassword(inputPassword);
 
@@ -67,23 +68,23 @@ namespace Core
 
         public Customer GetCustomerByEmail(string email)
         {
-            Customer customerInfo = _iCustomerDal.GetCustomerByEmail(email);
+            CustomerDto customerInfo = _iCustomerDal.GetCustomerByEmail(email);
             Customer customer = new(customerInfo.FirstName, customerInfo.LastName, customerInfo.Address,
                                customerInfo.Email, customerInfo.Password);
             return customer;
         }
 
-       /*public int GetCustomerIdByEmail(string emailAddress)
+       public int? GetCustomerIdByEmail(string emailAddress)
         {
-            Customer customerDto = _iCustomerDal.GetCustomerByEmail(emailAddress);
-            int id = customerDto.Id;
+            CustomerDto customerDto = _iCustomerDal.GetCustomerByEmail(emailAddress);
+            int? id = customerDto.Id;
 
             return id;
-        }*/
+        }
 
         public List<string> GetCustomerEmails()
         {
-            List<Customer> customers = _iCustomerDal.GetAllCustomers();
+            List<CustomerDto> customers = _iCustomerDal.GetAllCustomers();
             List<string> customerEmails = customers.Select(c => c.Email).ToList();
             return customerEmails;
         }

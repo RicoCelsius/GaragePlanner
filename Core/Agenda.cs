@@ -28,12 +28,13 @@ namespace Domain
             {
                 Customer customer = DtoConverter.ConvertCustomerDtoToCustomer(appointment.Customer);
                 Car car = DtoConverter.ConvertCarDtoToCar(appointment.Car);
-                this.TryCreateAppointment(appointment.Date, appointment.ServiceType, appointment.Status, customer, car,false);
+                Appointment appointmentToAdd = DtoConverter.ConvertAppointmentDtoToAppointment(appointment);
+                this.TryCreateAppointment(appointment.Date, appointmentToAdd,false);
             }
         }
 
 
-        public bool TryCreateAppointment(DateTime appointmentDateTime, Enums.Type type, Enums.Status status, Customer customer, Car car, bool updateDb = true)
+        public bool TryCreateAppointment(DateTime appointmentDateTime, Appointment appointment, bool updateDb = true)
         {
             DateOnly appointmentDate = DateOnly.FromDateTime(appointmentDateTime);
             TimeOnly appointmentTime = TimeOnly.FromDateTime(appointmentDateTime);
@@ -42,7 +43,7 @@ namespace Domain
 
             TimeSlot targetTimeSlot = targetDay.FindTimeSlot(appointmentTime);
 
-            Appointment appointment = new(type, status, customer, car);
+            
 
             if (targetTimeSlot.TryAddAppointment(appointment))
             {

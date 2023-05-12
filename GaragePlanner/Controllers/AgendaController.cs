@@ -5,6 +5,7 @@ using GaragePlanner.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Reflection;
 using DAL;
+using Domain.dto;
 
 namespace GaragePlanner.Controllers
 {
@@ -81,11 +82,12 @@ namespace GaragePlanner.Controllers
             // Create a new appointment using the chosen date and time
             Agenda agenda = new(_appointmentDal);
             CustomerCollection customerCollection = new CustomerCollection(_customerDal);
-            /*int id = customerCollection.GetCustomerIdByEmail(model.selectedEmail);
+            CustomerDto customerDto = _customerDal.GetCustomerByEmail(model.selectedEmail);
 
             appointmentCollection.TryCreateAppointment(id,model.ChosenDateTime,model.SelectedTypeOfAppointment);*/
-
-            agenda.TryCreateAppointment(model.ChosenDateTime, model.SelectedTypeOfAppointment, Enums.Status.Scheduled, customerCollection.GetCustomerByEmail(model.selectedEmail), model.SelectedCar);
+            Appointment appointment = new(model.ChosenDateTime, model.SelectedTypeOfAppointment,customer,car);
+            Car car = new(model.SelectedCar);
+            agenda.TryCreateAppointment(model.ChosenDateTime, appointment);
 
             // Redirect to the confirmation page with the model
             return RedirectToAction("Confirmation",model);
