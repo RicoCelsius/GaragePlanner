@@ -1,4 +1,5 @@
 ﻿using Domain.interfaces;
+using Domain.utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,24 +18,27 @@ namespace Domain
             Days = new List<Day>();
             GenerateDays(14);
             _appointmentDal = appointmentDal;
+            this.LoadAgenda(_appointmentDal.GetAgenda());
         }
 
-        public Agenda()
+
+        public void LoadAgenda(List<AppointmentDto> appointments)
         {
-            Days = new List<Day>();
-            GenerateDays(14);
+            foreach (AppointmentDto appointment in appointments)
+            {
+                Customer customer = DtoConverter.ConvertCustomerDtoToCustomer(appointment.Customer);
+                Car car = DtoConverter.ConvertCarDtoToCar(appointment.Car);
+                this.TryCreateAppointment(appointment.Date, appointment.ServiceType, appointment.Status, customer, car,false);
+            }
         }
 
 
-
-
-        public bool TryCreateAppointment(DateTime appointmentDateTime, Enums.Type type, Enums.Status status, Customer customer, Car car)
+        public bool TryCreateAppointment(DateTime appointmentDateTime, Enums.Type type, Enums.Status status, Customer customer, Car car, bool updateDb = true)
         {
             DateOnly appointmentDate = DateOnly.FromDateTime(appointmentDateTime);
             TimeOnly appointmentTime = TimeOnly.FromDateTime(appointmentDateTime);
-            
-            Day targetDay = Days.FirstOrDefault(day => day.DateOfDay.Equals(appointmentDate));
 
+            Day targetDay = Days.FirstOrDefault(day => day.DateOfDay.Equals(appointmentDate));
 
             TimeSlot targetTimeSlot = targetDay.FindTimeSlot(appointmentTime);
 
@@ -42,19 +46,16 @@ namespace Domain
 
             if (targetTimeSlot.TryAddAppointment(appointment))
             {
-               /* _appointmentDal.InsertAppointment(appointment);*/
+                if (updateDb)
+                {
+                    _appointmentDal.InsertAppointment(appointment);
+                }
                 return true;
             }
             return false;
         }
-        public void LoadAgenda(List<DateTime> dates, List<Appointment> appointments)
-        {
-            var pairs = dates.Zip(appointments, (date, appointment) => (date, appointment));
-            foreach (var pair in pairs)
-            {
-                TryCreateAppointment(pair.date, pair.appointment.ServiceType, pair.appointment.Status, pair.appointment.Customer, pair.appointment.Car);
-            }
-        }
+
+
 
 
 

@@ -23,7 +23,7 @@ namespace Core
 
         public void CreateCustomer(string firstName, string lastName, string address, string email, string password)
         {
-            /*if(DoesCustomerExist(email))
+            /*if(DoesCustomerExist(Email))
                 throw new Exception("Customer already exists");*/
 
             string encryptedPassword = PasswordEncryptor.EncryptPassword(password);
@@ -60,7 +60,7 @@ namespace Core
                 return customer;
             }
 
-            throw new Exception("Incorrect password");
+            throw new Exception("Incorrect Password");
 
 
         }

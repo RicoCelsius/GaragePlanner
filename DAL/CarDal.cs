@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Domain;
+using Domain.dto;
 using Domain.interfaces;
 using MySqlConnector;
 
@@ -52,7 +53,7 @@ namespace DAL
         }
 
 
-        public Car GetCarByLicensePlate(string licensePlate)
+        public CarDto GetCarByLicensePlate(string licensePlate)
         {
             var query = "SELECT * FROM cars WHERE license_plate = @license_plate";
             var parameters = new MySqlParameter[]
@@ -66,13 +67,13 @@ namespace DAL
                 throw new Exception("Car not found");
             }
             var row = dataTable.Rows[0];
-            var car = new Car(
+            var carDto = new CarDto(
                 row.Field<string>("license_plate"),
                 row.Field<string>("color"),
                 row.Field<string>("model"),
                 row.Field<int>("year")
             );
-            return car;
+            return carDto;
         }
 
 

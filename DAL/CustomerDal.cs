@@ -15,15 +15,15 @@ namespace DAL
     {
         public void InsertCustomer(Customer customer)
         {
-            var query = "INSERT INTO customers (first_name, last_name, address, email, password) " +
-                        "VALUES (@first_name, @last_name, @address, @email, @password)";
+            var query = "INSERT INTO customers (first_name, last_name, Address, Email, Password) " +
+                        "VALUES (@first_name, @last_name, @Address, @Email, @Password)";
             MySqlParameter[] parameters =
             {
                 new("@first_name", MySqlDbType.VarChar, 50) { Value = customer.FirstName },
                 new("@last_name", MySqlDbType.VarChar, 50) { Value = customer.LastName },
-                new("@address", MySqlDbType.VarChar, 100) { Value = customer.Address },
-                new("@email", MySqlDbType.VarChar, 50) { Value = customer.Email },
-                new("@password", MySqlDbType.VarChar, 50) { Value = customer.Password }
+                new("@Address", MySqlDbType.VarChar, 100) { Value = customer.Address },
+                new("@Email", MySqlDbType.VarChar, 50) { Value = customer.Email },
+                new("@Password", MySqlDbType.VarChar, 50) { Value = customer.Password }
             };
 
             var connection = new DbConnection();
@@ -32,10 +32,10 @@ namespace DAL
 
         public Customer GetCustomerByEmail(string email)
         {
-            var query = "SELECT * FROM customers WHERE email = @email";
+            var query = "SELECT * FROM customers WHERE Email = @Email";
             var parameters = new MySqlParameter[]
             {
-                new MySqlParameter("@email", email)
+                new MySqlParameter("@Email", email)
             };
 
             var connection = new DbConnection();
@@ -47,9 +47,9 @@ namespace DAL
                 var customerData = new Customer(
                     row.Field<string>("first_name"),
                     row.Field<string>("last_name"),
-                    row.Field<string>("address"),
-                    row.Field<string>("email"),
-                    row.Field<string>("password"));
+                    row.Field<string>("Address"),
+                    row.Field<string>("Email"),
+                    row.Field<string>("Password"));
 
                 return customerData;
             }
@@ -60,10 +60,10 @@ namespace DAL
 
         public static int GetCustomerIdByEmail(string email)
         {
-            var query = "SELECT * FROM customers WHERE email = @email";
+            var query = "SELECT * FROM customers WHERE Email = @Email";
             var parameters = new MySqlParameter[]
             {
-                new MySqlParameter("@email", email)
+                new MySqlParameter("@Email", email)
             };
 
             var connection = new DbConnection();
@@ -96,9 +96,9 @@ namespace DAL
                 Customer customer = new(
                     row.Field<string>("first_name"),
                     row.Field<string>("last_name"),
-                    row.Field<string>("address"),
-                    row.Field<string>("email"),
-                    row.Field<string>("password"));
+                    row.Field<string>("Address"),
+                    row.Field<string>("Email"),
+                    row.Field<string>("Password"));
                 customers.Add(customer);
             }
 

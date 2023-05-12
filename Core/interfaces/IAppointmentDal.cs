@@ -6,4 +6,6 @@ public interface IAppointmentDal
 
     bool AppointmentExistsByDateAndTime(DateTime dateAndTime);
     void InsertAppointment(Appointment appointment);
+
+    List<AppointmentDto> GetAgenda();
 }

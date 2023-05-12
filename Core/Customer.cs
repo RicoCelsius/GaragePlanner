@@ -14,7 +14,7 @@ namespace Domain
         public string Email { get; set; }
         public string Password { get; set; }
 
-        public List<Car> Cars { get; set; }
+     
 
         public Customer(string firstName,string lastName,string address, string email, string password)
         {
@@ -23,12 +23,8 @@ namespace Domain
             this.Address = address;
             this.Email = email;
             this.Password = password;
-            this.Cars = new List<Car>();
         }
 
-        public void AddCar(Car car)
-        {
-            this.Cars.Add(car);
-        }
+
     }
 }

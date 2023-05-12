@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Domain.interfaces;
 using MySqlConnector;
 using Domain;
+using Domain.dto;
 
 namespace DAL
 {
@@ -27,6 +28,53 @@ namespace DAL
             var result = Convert.ToBoolean(dataTable.Rows[0][0]);
 
             return Convert.ToBoolean(result);
+        }
+
+        public List<AppointmentDto> GetAgenda()
+        {
+            List<AppointmentDto> appointments = new List<AppointmentDto>();
+
+            var query = @"
+        SELECT appointment.date, appointment.type, appointment.status, 
+            customers.first_name, customers.last_name, customers.Address, customers.Email, customers.Password, 
+            car.license_plate, car.color, car.model, car.year 
+        FROM appointment 
+        INNER JOIN customers ON appointment.customer_id = customers.id 
+        INNER JOIN car ON appointment.car_id = car.id";
+
+            var connection = new DbConnection();
+            var dataTable = connection.ExecuteQuery(query, null);
+
+            foreach (DataRow row in dataTable.Rows)
+            {
+                CustomerDto customer = new CustomerDto(
+                    row.Field<string>("first_name"),
+                    row.Field<string>("last_name"),
+                    row.Field<string>("Address"),
+                    row.Field<string>("Email"),
+                    row.Field<string>("Password")
+                );
+
+                CarDto car = new CarDto(
+                    row.Field<string>("license_plate"),
+                    row.Field<string>("color"),
+                    row.Field<string>("model"),
+                    row.Field<int>("year")
+                );
+
+                AppointmentDto appointment = new AppointmentDto(
+                    row.Field<DateTime>("date"),
+                    (Enums.Type)Enum.Parse(typeof(Enums.Type), row.Field<string>("type")),
+                    (Enums.Status)Enum.Parse(typeof(Enums.Status), row.Field<string>("status")),
+                    customer,
+                    car
+                );
+
+                appointments.Add(appointment);
+            }
+
+
+            return appointments;
         }
 
 

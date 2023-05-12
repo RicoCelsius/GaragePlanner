@@ -4,24 +4,22 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain
+namespace Domain.dto
 {
-    public class Car
+    public class CarDto
     {
+        public int Id { get; set; }
         public string LicensePlate { get; set; }
         public string Color { get; set; }
         public string Model { get; set; }
         public int Year { get; set; }
 
-        public Car(string licensePlate, string color, string model, int year)
+        public CarDto(string licensePlate, string color, string model, int year)
         {
-            this.LicensePlate = licensePlate;
-            this.Color = color;
-            this.Model = model;
-            this.Year = year;
+            LicensePlate = licensePlate;
+            Color = color;
+            Model = model;
+            Year = year;
         }
     }
-
-
-
 }
