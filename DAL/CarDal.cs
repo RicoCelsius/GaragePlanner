@@ -15,7 +15,7 @@ namespace DAL
     {
         public void InsertCar(Car car)
         {
-            var query = "INSERT INTO cars (license_plate, color, model, year) " +
+            var query = "INSERT INTO car (license_plate, color, model, year) " +
                         "VALUES (@license_plate, @color, @model, @year)";
             MySqlParameter[] parameters =
             {
@@ -30,7 +30,7 @@ namespace DAL
 
         public List<CarDto> GetCarsByCustomerId(int customerId)
         {
-            var query = "SELECT * FROM cars WHERE customer_id = @customer_id";
+            var query = "SELECT * FROM car WHERE customer_id = @customer_id";
             var parameters = new MySqlParameter[]
             {
                 new MySqlParameter("@customer_id", customerId)
@@ -54,7 +54,7 @@ namespace DAL
 
         public CarDto GetCarByLicensePlate(string licensePlate)
         {
-            var query = "SELECT * FROM cars WHERE license_plate = @license_plate";
+            var query = "SELECT * FROM car WHERE license_plate = @license_plate";
             var parameters = new MySqlParameter[]
             {
                 new MySqlParameter("@license_plate", licensePlate)

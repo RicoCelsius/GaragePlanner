@@ -23,7 +23,7 @@ namespace Domain
 
         public void CreateCar(Car car)
         {
-            _iCarDal.GetCarByLicensePlate(car.LicensePlate); // check if car already exists in db.
+            //_iCarDal.GetCarByLicensePlate(car.LicensePlate); // check if car already exists in db.
             _iCarDal.InsertCar(car);
         }
 

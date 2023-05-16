@@ -26,11 +26,15 @@ namespace GaragePlanner.Controllers
             CustomerCollection customerCollection = new CustomerCollection(_customerDal);
             customerEmails = customerCollection.GetCustomerEmails();
             carViewModel.CustomerEmails = customerEmails;
-            if (!ModelState.IsValid)
-            {
-                return View(carViewModel);
-            }
 
+
+            return View(carViewModel);
+        }
+
+        [HttpPost]
+
+        public ActionResult AddCar(CarViewModel carViewModel, [FromForm] string customerEmail)
+        {
             Car car = new Car(
                 carViewModel.LicensePlate,
                 carViewModel.Color,
@@ -42,8 +46,7 @@ namespace GaragePlanner.Controllers
             CarCollection carCollection = new CarCollection(_carDal);
             carCollection.CreateCar(car);
 
-
-            return View(carViewModel);
+            return View("Index",carViewModel);
         }
 
 

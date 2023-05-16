@@ -1,9 +1,7 @@
 ﻿using System.Data;
 using MySqlConnector;
 using Microsoft.Extensions.Configuration;
-using System.Configuration;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Configuration.Json;
+
 
 namespace DAL
 {
@@ -28,10 +26,19 @@ namespace DAL
 
         private void Connect()
         {
-            if (!isConnected)
+            if (isConnected)
+            {
+                throw new Exception("Cannot connect, because the application is already connected.");
+            }
+
+            try
             {
                 _sqlConnection.Open();
                 isConnected = true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
             }
         }
 
@@ -42,8 +49,16 @@ namespace DAL
                 throw new Exception("Cannot disconnect, because the application is not connected.");
             }
 
-            _sqlConnection.Close();
-            isConnected = false;
+            try
+            {
+
+                _sqlConnection.Close();
+                isConnected = false;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
 
         public DataTable ExecuteQuery(string query, MySqlParameter[] parameters)

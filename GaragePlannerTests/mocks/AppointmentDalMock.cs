@@ -20,7 +20,7 @@ namespace GaragePlannerTests.mocks
             throw new NotImplementedException();
         }
 
-        public void InsertAppointment(int? id, AppointmentDto appointmentDto)
+        public void InsertAppointment(AppointmentDto appointmentDto)
         {
             
         }

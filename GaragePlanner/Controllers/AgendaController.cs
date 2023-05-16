@@ -93,7 +93,7 @@ namespace GaragePlanner.Controllers
             try
             {
 
-                agenda.CreateAppointment(appointmentDto, customerDto);
+                agenda.TryAddAppointment(appointmentDto);
             }
             catch
             {

@@ -76,7 +76,7 @@ namespace DAL
             return appointments;
         }
 
-        public void InsertAppointment(int? id, AppointmentDto appointment)
+        public void InsertAppointment(AppointmentDto appointment)
         {
             var query = "INSERT INTO appointment (customer_id, car_id, date, type, status) " +
                         "VALUES (@customer_id, @car_id, @date, @type, @status)";
@@ -85,7 +85,7 @@ namespace DAL
 
             MySqlParameter[] parameters =
             {
-                new MySqlParameter("@customer_id", MySqlDbType.Int32) { Value = id },
+                new MySqlParameter("@customer_id", MySqlDbType.Int32) { Value = appointment.Customer.Id },
                 new MySqlParameter("@car_id", MySqlDbType.Int32) { Value = appointment.Car.Id },
                 new MySqlParameter("@date", MySqlDbType.DateTime) { Value = appointment.Date },
                 new MySqlParameter("@type", MySqlDbType.VarChar, 50) { Value = appointment.ServiceType },

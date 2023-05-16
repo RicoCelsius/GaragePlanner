@@ -39,7 +39,7 @@ namespace Domain
             }
         }
 
-        public bool CreateAppointment(AppointmentDto appointmentDto, CustomerDto customer)
+        public bool TryAddAppointment(AppointmentDto appointmentDto)
         {
             DateOnly appointmentDate = DateOnly.FromDateTime(appointmentDto.Date);
             TimeOnly appointmentTime = TimeOnly.FromDateTime(appointmentDto.Date);
@@ -51,7 +51,7 @@ namespace Domain
 
             if (targetTimeSlot.TryAddAppointment(appointment))
             {
-                _appointmentDal.InsertAppointment(customer.Id, appointmentDto);
+                _appointmentDal.InsertAppointment(appointmentDto);
                 return true;
             }
             return false;
