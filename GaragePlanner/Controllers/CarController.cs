@@ -20,7 +20,7 @@ namespace GaragePlanner.Controllers
         }
 
         [HttpGet]
-        public ActionResult Index(CarViewModel carViewModel, [FromForm] string customerEmail)
+        public ActionResult Index(CarViewModel carViewModel)
         {
             List<string> customerEmails = new List<string>();
             CustomerCollection customerCollection = new CustomerCollection(_customerDal);
@@ -33,7 +33,7 @@ namespace GaragePlanner.Controllers
 
         [HttpPost]
 
-        public ActionResult AddCar(CarViewModel carViewModel, [FromForm] string customerEmail)
+        public ActionResult AddCar(CarViewModel carViewModel)
         {
             Car car = new Car(
                 carViewModel.LicensePlate,
