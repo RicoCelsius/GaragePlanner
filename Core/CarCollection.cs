@@ -21,10 +21,10 @@ namespace Domain
             _iCarDal = iCarDal;
         }
 
-        public void CreateCar(Car car)
+        public void CreateCar(int? customerId, Car car)
         {
             //_iCarDal.GetCarByLicensePlate(car.LicensePlate); // check if car already exists in db.
-            _iCarDal.InsertCar(car);
+            _iCarDal.InsertCar(customerId,car);
         }
 
 

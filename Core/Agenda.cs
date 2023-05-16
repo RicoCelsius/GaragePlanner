@@ -11,7 +11,7 @@ namespace Domain
 {
     public class Agenda
     {
-        public List<Day> Days { get; set; }
+        public List<Day> Days { get;}
         private readonly IAppointmentDal _appointmentDal;
 
         public Agenda(IAppointmentDal appointmentDal)
@@ -26,6 +26,10 @@ namespace Domain
         {
             foreach (AppointmentDto appointment in appointments)
             {
+                if (IsAppointmentDateAlreadyPassed(appointment))
+                {
+                    continue;
+                }
                 Appointment appointmentToAdd = DtoConverter.ConvertAppointmentDtoToAppointment(appointment);
 
                 DateOnly appointmentDate = DateOnly.FromDateTime(appointment.Date);
@@ -37,6 +41,11 @@ namespace Domain
 
                 targetTimeSlot.TryAddAppointment(appointmentToAdd);
             }
+        }
+
+        private bool IsAppointmentDateAlreadyPassed(AppointmentDto appointment)
+        {
+            return appointment.Date < DateTime.Now;
         }
 
         public bool TryAddAppointment(AppointmentDto appointmentDto)

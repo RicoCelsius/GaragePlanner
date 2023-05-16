@@ -1,6 +1,7 @@
 ﻿using Core;
 using DAL;
 using Domain;
+using Domain.dto;
 using Domain.interfaces;
 using GaragePlanner.Models;
 using Microsoft.AspNetCore.Http;
@@ -35,6 +36,10 @@ namespace GaragePlanner.Controllers
 
         public ActionResult AddCar(CarViewModel carViewModel)
         {
+            CustomerCollection customerCollection = new CustomerCollection(_customerDal);
+            CarCollection carCollection = new CarCollection(_carDal);
+            int? customerId = customerCollection.GetCustomerByEmail(carViewModel.SelectedCustomerEmail).Id;
+
             Car car = new Car(
                 carViewModel.LicensePlate,
                 carViewModel.Color,
@@ -42,11 +47,9 @@ namespace GaragePlanner.Controllers
                 carViewModel.Year
             );
 
+            carCollection.CreateCar(customerId,car);
 
-            CarCollection carCollection = new CarCollection(_carDal);
-            carCollection.CreateCar(car);
-
-            return View("Index",carViewModel);
+            return RedirectToAction("Index", "Home");
         }
 
 

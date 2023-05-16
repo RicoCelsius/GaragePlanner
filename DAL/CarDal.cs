@@ -13,15 +13,16 @@ namespace DAL
 {
     public class CarDal : ICarDal
     {
-        public void InsertCar(Car car)
+        public void InsertCar(int? customerId, Car car)
         {
-            var query = "INSERT INTO car (license_plate, color, model, year) " +
-                        "VALUES (@license_plate, @color, @model, @year)";
+            var query = "INSERT INTO car (customer_id, license_plate, model, color, year) " +
+                        "VALUES (@customer_id, @license_plate, @model, @color, @year)";
             MySqlParameter[] parameters =
             {
+                new("@customer_id", MySqlDbType.VarChar, 50) { Value = customerId },
                 new("@license_plate", MySqlDbType.VarChar, 50) { Value = car.LicensePlate },
-                new("@color", MySqlDbType.VarChar, 50) { Value = car.Color },
                 new("@model", MySqlDbType.VarChar, 100) { Value = car.Model },
+                new("@color", MySqlDbType.VarChar, 50) { Value = car.Color },
                 new("@year", MySqlDbType.VarChar, 50) { Value = car.Year }
             };
             var connection = new DbConnection();
