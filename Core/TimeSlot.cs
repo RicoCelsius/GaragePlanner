@@ -13,14 +13,14 @@ namespace Domain
             StartTime = startTime;
         }
 
-        public bool HasAppointment()
+        public bool isAvailable()
         {
             return _appointment == null;
         }
 
         public bool TryAddAppointment(Appointment appointment)
         {
-            if (!HasAppointment())
+            if (!isAvailable())
             {
                 throw new Exception("Timeslot already occupied");
             }

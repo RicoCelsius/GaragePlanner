@@ -38,7 +38,6 @@ namespace GaragePlanner.Controllers
         {
             CustomerCollection customerCollection = new CustomerCollection(_customerDal);
             CarCollection carCollection = new CarCollection(_carDal);
-            int? customerId = customerCollection.GetCustomerByEmail(carViewModel.SelectedCustomerEmail).Id;
 
             Car car = new Car(
                 carViewModel.LicensePlate,
@@ -47,7 +46,7 @@ namespace GaragePlanner.Controllers
                 carViewModel.Year
             );
 
-            carCollection.CreateCar(customerId,car);
+            //carCollection.CreateCar(customerId,car);
 
             return RedirectToAction("Index", "Home");
         }

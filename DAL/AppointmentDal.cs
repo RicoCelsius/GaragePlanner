@@ -76,23 +76,30 @@ namespace DAL
             return appointments;
         }
 
-        public void InsertAppointment(AppointmentDto appointment)
+        public void InsertAppointment(Appointment appointment)
         {
-            var query = "INSERT INTO appointment (customer_id, car_id, date, type, status) " +
-                        "VALUES (@customer_id, @car_id, @date, @type, @status)";
+            var query = @"
+        INSERT INTO appointment (customer_id, car_id, date, type, status) 
+        VALUES (
+            (SELECT id FROM customers WHERE email = @Email),
+            (SELECT id FROM car WHERE license_plate = @LicensePlate),
+            @Date, 
+            @Type, 
+            @Status)";
 
             var connection = new DbConnection();
 
             MySqlParameter[] parameters =
             {
-                new MySqlParameter("@customer_id", MySqlDbType.Int32) { Value = appointment.Customer.Id },
-                new MySqlParameter("@car_id", MySqlDbType.Int32) { Value = appointment.Car.Id },
-                new MySqlParameter("@date", MySqlDbType.DateTime) { Value = appointment.Date },
-                new MySqlParameter("@type", MySqlDbType.VarChar, 50) { Value = appointment.ServiceType },
-                new MySqlParameter("@status", MySqlDbType.VarChar, 50) { Value = appointment.Status }
+                new MySqlParameter("@Email", MySqlDbType.VarChar, 100) { Value = appointment.Customer.Email },
+                new MySqlParameter("@LicensePlate", MySqlDbType.VarChar, 50) { Value = appointment.Car.LicensePlate },
+                new MySqlParameter("@Date", MySqlDbType.DateTime) { Value = appointment.DateAndTime },
+                new MySqlParameter("@Type", MySqlDbType.VarChar, 50) { Value = appointment.ServiceType },
+                new MySqlParameter("@Status", MySqlDbType.VarChar, 50) { Value = appointment.Status }
             };
 
             connection.ExecuteQuery(query, parameters);
         }
+
     }
 }

@@ -16,17 +16,13 @@ namespace GaragePlannerTests
         {
             //arrange
             Agenda agenda = new Agenda(new AppointmentDalMock());
-            CustomerMock customerMock = new CustomerMock();
-            CarMock carMock = new CarMock();
-            List<CustomerDto> customers = customerMock.GenerateCustomers(2);
-            List<CarDto> cars = carMock.GenerateCarDto(2);
+
             DateTime dateTime = new DateTime(2019, 1, 1, 8, 0, 0);
 
-            //agenda.CreateAppointment(new AppointmentDto(dateTime, Enums.Type.BigMaintenance, Enums.Status.Scheduled, customers[0], cars[0]), customers[0]);
 
 
             //act
-           // bool hasAdded = agenda.CreateAppointment(new AppointmentDto(dateTime, Enums.Type.BigMaintenance, Enums.Status.Scheduled, customers[0], cars[0]), customers[0]);
+           //agenda.TryAddAppointment(new AppointmentDto(dateTime, Enums.Type.BigMaintenance, Enums.Status.Scheduled,new Customer(), new CarDto()));
             //assert
            // Assert.False(hasAdded);
         }

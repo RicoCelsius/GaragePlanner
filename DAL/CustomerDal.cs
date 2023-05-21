@@ -16,16 +16,18 @@ namespace DAL
                         "VALUES (@first_name, @last_name, @Address, @Email, @Password)";
             MySqlParameter[] parameters =
             {
-                new("@first_name", MySqlDbType.VarChar, 50) { Value = customer.FirstName },
-                new("@last_name", MySqlDbType.VarChar, 50) { Value = customer.LastName },
-                new("@Address", MySqlDbType.VarChar, 100) { Value = customer.Address },
-                new("@Email", MySqlDbType.VarChar, 50) { Value = customer.Email },
-                new("@Password", MySqlDbType.VarChar, 50) { Value = customer.Password }
+                new("@first_name", MySqlDbType.VarChar) { Value = customer.FirstName },
+                new("@last_name", MySqlDbType.VarChar) { Value = customer.LastName },
+                new("@Address", MySqlDbType.VarChar) { Value = customer.Address },
+                new("@Email", MySqlDbType.VarChar) { Value = customer.Email },
+                new("@Password", MySqlDbType.VarChar) { Value = customer.Password }
             };
 
             var connection = new DbConnection();
             connection.ExecuteQuery(query, parameters);
         }
+
+
 
         public CustomerDto GetCustomerByEmail(string email)
         {
@@ -79,9 +81,9 @@ namespace DAL
         {
             var query = "SELECT * FROM customers";
             var connection = new DbConnection();
-            var parameters = new MySqlParameter[0];
+  
 
-            var dataTable = connection.ExecuteQuery(query, parameters);
+            var dataTable = connection.ExecuteQuery(query, null);
 
             List<CustomerDto> customers = new List<CustomerDto>();
             foreach (DataRow row in dataTable.Rows)

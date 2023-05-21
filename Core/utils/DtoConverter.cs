@@ -11,7 +11,7 @@ namespace Domain.utils
     {
         public static Customer ConvertCustomerDtoToCustomer(CustomerDto customerDto)
         {
-            Customer customer = new Customer(customerDto.Email, customerDto.Password, customerDto.FirstName, customerDto.LastName, customerDto.Password);
+            Customer customer = new Customer(customerDto.FirstName, customerDto.LastName, customerDto.Address, customerDto.Email, customerDto.Password);
             return customer;
         }
 
@@ -23,7 +23,7 @@ namespace Domain.utils
 
         public static Appointment ConvertAppointmentDtoToAppointment(AppointmentDto appointmentDto)
         {
-            Appointment appointment = new Appointment(appointmentDto.ServiceType, appointmentDto.Status, ConvertCustomerDtoToCustomer(appointmentDto.Customer), ConvertCarDtoToCar(appointmentDto.Car));
+            Appointment appointment = new Appointment(appointmentDto.Date,appointmentDto.ServiceType,appointmentDto.Status,ConvertCustomerDtoToCustomer(appointmentDto.Customer),ConvertCarDtoToCar(appointmentDto.Car));
             return appointment;
         }
     }

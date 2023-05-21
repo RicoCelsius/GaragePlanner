@@ -17,7 +17,8 @@ namespace GaragePlannerTests.mocks
 
         public List<AppointmentDto> GetAgenda()
         {
-            throw new NotImplementedException();
+           // AppointmentDto dto = new AppointmentDto()
+           return null;
         }
 
         public void InsertAppointment(AppointmentDto appointmentDto)

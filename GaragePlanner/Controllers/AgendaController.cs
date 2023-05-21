@@ -38,7 +38,7 @@ namespace GaragePlanner.Controllers
                     TimeSlotViewModel timeslotViewModel = new TimeSlotViewModel
                     {
                         Time = timeslot.StartTime,
-                        IsAvailable = timeslot.HasAppointment(),
+                        IsAvailable = timeslot.isAvailable(),
                     };
                     dayViewModel.TimeSlots.Add(timeslotViewModel);
                 }
@@ -51,8 +51,6 @@ namespace GaragePlanner.Controllers
 
 
         }
-
-
 
 
         [HttpGet]
@@ -85,21 +83,22 @@ namespace GaragePlanner.Controllers
 
             Agenda agenda = new(_appointmentDal);
             CustomerCollection customerCollection = new CustomerCollection(_customerDal);
-            
-            CustomerDto customerDto = customerCollection.GetCustomerByEmail(model.SelectedEmail);
-            AppointmentDto appointmentDto = new(model.ChosenDateTime, model.SelectedTypeOfAppointment, Enums.Status.Scheduled, customerDto,new CarDto(1,"s","s","s",1990));
+            Customer customer = customerCollection.GetCustomerByEmail(model.SelectedEmail);
 
+            Appointment appointment = new(model.ChosenDateTime, model.SelectedTypeOfAppointment, Enums.Status.Scheduled,
+                customer, new Car("995295", "s", "d", 1990));
+
+            //995295 is the string that is used to create a car in the database. Needs to exist in the db so has to be taken from the cars a customer has.
 
             try
             {
-
-                agenda.TryAddAppointment(appointmentDto);
+                agenda.AddAppointment(appointment);
             }
-            catch
+            catch(Exception ex)
             {
                 var errorViewModel = new ErrorViewModel()
                 {
-                    ErrorMessage = "Something unexpected happened. Please try again later."
+                    ErrorMessage = ex.Message,
                 };
 
                 return View("Error", errorViewModel);

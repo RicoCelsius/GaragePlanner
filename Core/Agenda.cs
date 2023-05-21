@@ -48,11 +48,10 @@ namespace Domain
             return appointment.Date < DateTime.Now;
         }
 
-        public bool TryAddAppointment(AppointmentDto appointmentDto)
+        public bool AddAppointment(Appointment appointment)
         {
-            DateOnly appointmentDate = DateOnly.FromDateTime(appointmentDto.Date);
-            TimeOnly appointmentTime = TimeOnly.FromDateTime(appointmentDto.Date);
-            Appointment appointment = DtoConverter.ConvertAppointmentDtoToAppointment(appointmentDto);
+            DateOnly appointmentDate = DateOnly.FromDateTime(appointment.DateAndTime);
+            TimeOnly appointmentTime = TimeOnly.FromDateTime(appointment.DateAndTime);
 
             Day targetDay = Days.FirstOrDefault(day => day.DateOfDay.Equals(appointmentDate));
 
@@ -60,7 +59,7 @@ namespace Domain
 
             if (targetTimeSlot.TryAddAppointment(appointment))
             {
-                _appointmentDal.InsertAppointment(appointmentDto);
+                _appointmentDal.InsertAppointment(appointment);
                 return true;
             }
             return false;
