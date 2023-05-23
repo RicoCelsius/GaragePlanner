@@ -13,27 +13,43 @@ namespace DAL
 {
     public class CarDal : ICarDal
     {
-        public void InsertCar(int? customerId, Car car)
+        public void InsertCar(string email, Car car)
         {
-            var query = "INSERT INTO car (customer_id, license_plate, model, color, year) " +
-                        "VALUES (@customer_id, @license_plate, @model, @color, @year)";
-            MySqlParameter[] parameters =
+            var insertCarQuery = "INSERT INTO car (customer_id, license_plate, model, color, year) " +
+                                 "SELECT id, @license_plate, @model, @color, @year " +
+                                 "FROM customers WHERE Email = @Email";
+
+            MySqlParameter[] insertCarParameters =
             {
-                new("@customer_id", MySqlDbType.VarChar) { Value = customerId },
-                new("@license_plate", MySqlDbType.VarChar) { Value = car.LicensePlate },
-                new("@model", MySqlDbType.VarChar) { Value = car.Model },
-                new("@color", MySqlDbType.VarChar) { Value = car.Color },
-                new("@year", MySqlDbType.VarChar) { Value = car.Year }
+                new MySqlParameter("@Email", MySqlDbType.VarChar) { Value = email },
+                new MySqlParameter("@license_plate", MySqlDbType.VarChar) { Value = car.LicensePlate },
+                new MySqlParameter("@model", MySqlDbType.VarChar) { Value = car.Model },
+                new MySqlParameter("@color", MySqlDbType.VarChar) { Value = car.Color },
+                new MySqlParameter("@year", MySqlDbType.Int32) { Value = car.Year },
+            };
+
+            var connection = new DbConnection();
+            connection.ExecuteQuery(insertCarQuery, insertCarParameters);
+        }
+
+        public void DeleteCar(string licensePlate)
+        {
+            var query = "DELETE FROM car WHERE license_plate = @license_plate";
+            var parameters = new MySqlParameter[]
+            {
+                new MySqlParameter("@license_plate", licensePlate)
             };
             var connection = new DbConnection();
             connection.ExecuteQuery(query, parameters);
         }
 
+
+
         public List<CarDto> GetCarsByEmail(string email)
         {
             var query = "SELECT car.* FROM car " +
-                        "INNER JOIN customers ON car.customer_id = customers.id " + // Corrected this line
-                        "WHERE customers.email = @Email"; // It's good to specify the table name here too
+                        "INNER JOIN customers ON car.customer_id = customers.id " + 
+                        "WHERE customers.email = @Email"; 
             var parameters = new MySqlParameter[]
             {
                 new MySqlParameter("@Email", email)

@@ -22,16 +22,29 @@ namespace Domain
             _iCarDal = iCarDal;
         }
 
-        public void CreateCar(int? customerId, Car car)
+        public void CreateCar(string email, Car car)
         {
             //_iCarDal.GetCarByLicensePlate(car.LicensePlate); // check if car already exists in db.
-            _iCarDal.InsertCar(customerId,car);
+            _iCarDal.InsertCar(email,car);
         }
 
-
-        public List<CarDto> GetCustomerCarsByCustomerEmail(string email)
+        public void DeleteCar(string licensePlate)
         {
-            List<CarDto> customerCars = _iCarDal.GetCarsByEmail(email);
+            _iCarDal.DeleteCar(licensePlate);
+        }
+
+      
+
+
+        public List<Car> GetCustomerCarsByCustomerEmail(string email)
+        {
+            List<CarDto> customerCarsDto = _iCarDal.GetCarsByEmail(email);
+            List<Car> customerCars = new List<Car>();
+
+            foreach (CarDto car in customerCarsDto)
+            {
+                customerCars.Add(DtoConverter.ConvertCarDtoToCar(car));
+            }
            
             return customerCars;
         }

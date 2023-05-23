@@ -1,4 +1,5 @@
-﻿using Domain.dto;
+﻿using Domain;
+using Domain.dto;
 
 namespace GaragePlanner.Models
 {
@@ -7,12 +8,12 @@ namespace GaragePlanner.Models
         public List<string> CustomerEmails { get; set; }
         public string SelectedCustomerEmail { get; set; }
 
-        public List<CarDto> Cars { get; set; }
-
+        public List<Car> Cars { get; set; }
+        int CarId { get; set; }
         public OverviewCarViewModel()
         {
             CustomerEmails = new List<string>();
-            Cars = new List<CarDto>();
+            Cars = new List<Car>();
         }
     }
 }

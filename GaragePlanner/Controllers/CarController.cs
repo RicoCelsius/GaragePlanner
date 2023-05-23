@@ -39,6 +39,7 @@ namespace GaragePlanner.Controllers
         {
             CustomerCollection customerCollection = new CustomerCollection(_customerDal);
             CarCollection carCollection = new CarCollection(_carDal);
+            
 
             Car car = new Car(
                 carViewModel.LicensePlate,
@@ -46,8 +47,26 @@ namespace GaragePlanner.Controllers
                 carViewModel.Model,
                 carViewModel.Year
             );
+            string email = carViewModel.SelectedCustomerEmail;
+            carCollection.CreateCar(email,car);
 
-            //carCollection.CreateCar(customerId,car);
+            return RedirectToAction("Index", "Home");
+        }
+
+        public ActionResult DeleteCar(string licensePlate)
+        {
+            CarCollection carCollection = new CarCollection(_carDal);
+            carCollection.DeleteCar(licensePlate);
+
+
+            return RedirectToAction("Index", "Home");
+        }
+
+        public ActionResult EditCar(string licensePlate)
+        {
+            CarCollection carCollection = new CarCollection(_carDal);
+            /*carCollection.EditCar(licensePlate);*/
+
 
             return RedirectToAction("Index", "Home");
         }
@@ -57,25 +76,17 @@ namespace GaragePlanner.Controllers
             CustomerCollection customerCollection = new CustomerCollection(_customerDal);
             CarCollection carCollection = new CarCollection(_carDal);
 
-            foreach (var modelState in ViewData.ModelState.Values)
-            {
-                foreach (var error in modelState.Errors)
-                {
-                    Console.WriteLine(error.ErrorMessage);
-                }
-            }
+ 
 
 
             if (!ModelState.IsValid)
             {
                 model.CustomerEmails = customerCollection.GetCustomerEmails();   
                 // Retrieve the cars of the customer with the selected email
-                var customerCars = carCollection.GetCustomerCarsByCustomerEmail("fefefefefefefe@gmail.com");
+                List<Car> customerCars = carCollection.GetCustomerCarsByCustomerEmail("fefefefefefefe@gmail.com");
 
-                // Add the retrieved cars to the model
                 model.Cars = customerCars;
 
-                // Return the updated model to the view
                 return View(model);
             }
             return RedirectToAction("Index", "Home");
