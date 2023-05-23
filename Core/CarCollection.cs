@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using DAL;
 using Domain.dto;
 using Domain.interfaces;
+using Domain.utils;
 using MySqlConnector;
 
 namespace Domain
@@ -28,9 +29,10 @@ namespace Domain
         }
 
 
-        public List<CarDto> GetCustomerCars(int id)
+        public List<CarDto> GetCustomerCarsByCustomerEmail(string email)
         {
-            List<CarDto> customerCars = _iCarDal.GetCarsByCustomerId(id);
+            List<CarDto> customerCars = _iCarDal.GetCarsByEmail(email);
+           
             return customerCars;
         }
 

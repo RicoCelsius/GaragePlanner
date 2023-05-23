@@ -1,0 +1,12 @@
+﻿@model GaragePlanner.Models.OverviewCarViewModel
+
+@using (Html.BeginForm("Overview", "Car", FormMethod.Post))
+{
+    <label for="SelectedCustomerEmail">Customer Email:</label>
+    @Html.DropDownListFor(model => model.SelectedCustomerEmail, 
+        new SelectList(Model.CustomerEmails), 
+        "Select a customer", 
+        new { @class = "form-control" })
+
+    <input type="submit" value="Get Cars" />
+}

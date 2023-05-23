@@ -6,6 +6,6 @@ namespace DAL;
 public interface ICarDal
 {
     void InsertCar(int? CustomerId, Car car);
-    List<CarDto> GetCarsByCustomerId(int customerId);
+    List<CarDto> GetCarsByEmail(string email);
     CarDto GetCarByLicensePlate(string licensePlate);
 }

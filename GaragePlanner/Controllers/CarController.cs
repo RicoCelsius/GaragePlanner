@@ -6,6 +6,7 @@ using Domain.interfaces;
 using GaragePlanner.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Reflection;
 
 namespace GaragePlanner.Controllers
 {
@@ -48,6 +49,35 @@ namespace GaragePlanner.Controllers
 
             //carCollection.CreateCar(customerId,car);
 
+            return RedirectToAction("Index", "Home");
+        }
+
+        public ActionResult Overview(OverviewCarViewModel model)
+        {
+            CustomerCollection customerCollection = new CustomerCollection(_customerDal);
+            CarCollection carCollection = new CarCollection(_carDal);
+
+            foreach (var modelState in ViewData.ModelState.Values)
+            {
+                foreach (var error in modelState.Errors)
+                {
+                    Console.WriteLine(error.ErrorMessage);
+                }
+            }
+
+
+            if (!ModelState.IsValid)
+            {
+                model.CustomerEmails = customerCollection.GetCustomerEmails();   
+                // Retrieve the cars of the customer with the selected email
+                var customerCars = carCollection.GetCustomerCarsByCustomerEmail("fefefefefefefe@gmail.com");
+
+                // Add the retrieved cars to the model
+                model.Cars = customerCars;
+
+                // Return the updated model to the view
+                return View(model);
+            }
             return RedirectToAction("Index", "Home");
         }
 

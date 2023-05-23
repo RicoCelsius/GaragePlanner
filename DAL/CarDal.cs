@@ -19,22 +19,24 @@ namespace DAL
                         "VALUES (@customer_id, @license_plate, @model, @color, @year)";
             MySqlParameter[] parameters =
             {
-                new("@customer_id", MySqlDbType.VarChar, 50) { Value = customerId },
-                new("@license_plate", MySqlDbType.VarChar, 50) { Value = car.LicensePlate },
-                new("@model", MySqlDbType.VarChar, 100) { Value = car.Model },
-                new("@color", MySqlDbType.VarChar, 50) { Value = car.Color },
-                new("@year", MySqlDbType.VarChar, 50) { Value = car.Year }
+                new("@customer_id", MySqlDbType.VarChar) { Value = customerId },
+                new("@license_plate", MySqlDbType.VarChar) { Value = car.LicensePlate },
+                new("@model", MySqlDbType.VarChar) { Value = car.Model },
+                new("@color", MySqlDbType.VarChar) { Value = car.Color },
+                new("@year", MySqlDbType.VarChar) { Value = car.Year }
             };
             var connection = new DbConnection();
             connection.ExecuteQuery(query, parameters);
         }
 
-        public List<CarDto> GetCarsByCustomerId(int customerId)
+        public List<CarDto> GetCarsByEmail(string email)
         {
-            var query = "SELECT * FROM car WHERE customer_id = @customer_id";
+            var query = "SELECT car.* FROM car " +
+                        "INNER JOIN customers ON car.customer_id = customers.id " + // Corrected this line
+                        "WHERE customers.email = @Email"; // It's good to specify the table name here too
             var parameters = new MySqlParameter[]
             {
-                new MySqlParameter("@customer_id", customerId)
+                new MySqlParameter("@Email", email)
             };
             var connection = new DbConnection();
             var dataTable = connection.ExecuteQuery(query, parameters);
@@ -52,6 +54,7 @@ namespace DAL
             }
             return cars;
         }
+
 
         public CarDto GetCarByLicensePlate(string licensePlate)
         {
