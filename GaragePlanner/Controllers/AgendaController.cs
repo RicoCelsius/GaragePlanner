@@ -38,7 +38,7 @@ namespace GaragePlanner.Controllers
                     TimeSlotViewModel timeslotViewModel = new TimeSlotViewModel
                     {
                         Time = timeslot.StartTime,
-                        IsAvailable = timeslot.isAvailable(),
+                        IsAvailable = timeslot.IsAvailable(),
                     };
                     dayViewModel.TimeSlots.Add(timeslotViewModel);
                 }

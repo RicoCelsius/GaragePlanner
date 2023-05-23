@@ -13,11 +13,12 @@ namespace Domain
     {
         public List<Day> Days { get;}
         private readonly IAppointmentDal _appointmentDal;
+        private const int AmountOfDays = 14;
 
         public Agenda(IAppointmentDal appointmentDal)
         {
-            Days = new List<Day>();
-            GenerateDays(14);
+            Days = DayGenerator.GenerateDays(AmountOfDays);
+            
             _appointmentDal = appointmentDal;
             LoadAgenda(_appointmentDal.GetAgenda());
         }
@@ -39,7 +40,10 @@ namespace Domain
 
                 TimeSlot targetTimeSlot = targetDay.FindTimeSlot(appointmentTime);
 
-                targetTimeSlot.TryAddAppointment(appointmentToAdd);
+                if (!targetTimeSlot.CanAddAppointment(appointmentToAdd))
+                {
+                    throw new Exception("Appointment cant be added to timeslot");
+                };
             }
         }
 
@@ -57,7 +61,7 @@ namespace Domain
 
             TimeSlot targetTimeSlot = targetDay.FindTimeSlot(appointmentTime);
 
-            if (targetTimeSlot.TryAddAppointment(appointment))
+            if (targetTimeSlot.CanAddAppointment(appointment))
             {
                 _appointmentDal.InsertAppointment(appointment);
                 return true;
@@ -65,14 +69,5 @@ namespace Domain
             return false;
         }
 
-        private void GenerateDays(int amountOfDays)
-        {
-            DateOnly startDate = DateOnly.FromDateTime(DateTime.Now);
-            for (int i = 0; i < amountOfDays; i++)
-            {
-                Days.Add(new Day(startDate));
-                startDate = startDate.AddDays(1);
-            }
-        }
     }
 }

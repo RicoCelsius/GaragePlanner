@@ -22,16 +22,17 @@ namespace Core
             FillListWithCustomers();
         }
 
-        public void CreateCustomer(string firstName, string lastName, string address, string email, string password)
+        public bool CreateCustomer(string firstName, string lastName, string address, string email, string password)
         {
             if (DoesEmailAlreadyExist(email))
             {
-                throw new Exception("Email address is already registered");
+                return false;
             }
 
             string encryptedPassword = PasswordEncryptor.EncryptPassword(password);
             Customer customer = new(firstName, lastName, address, email, encryptedPassword);
             _iCustomerDal.InsertCustomer(customer);
+            return true;
         }
 
 
@@ -75,8 +76,11 @@ namespace Core
         public Customer GetCustomerByEmail(string email)
         {
             Customer customer = Customers.FirstOrDefault(c => c.Email == email);
+
             return customer;
         }
+
+
 
         public List<string> GetCustomerEmails()
         {
