@@ -11,7 +11,7 @@ public class BookViewModel
     public DateTime ChosenDateTime { get; set; }
     public List<string> CustomerEmails { get; set; }
     
-    public List<CarDto> CustomerCars { get; set; }
+    public List<Car> CustomerCars { get; set; }
     public Car SelectedCar { get; set; }
 
     public string SelectedEmail { get; set; }

@@ -28,13 +28,22 @@ namespace Domain
             _iCarDal.InsertCar(email,car);
         }
 
-        public void DeleteCar(string licensePlate)
+        public void DeleteCar(int id)
         {
-            _iCarDal.DeleteCar(licensePlate);
+            _iCarDal.DeleteCar(id);
         }
 
-      
+        public void EditCar(Car car)
+        {
+            _iCarDal.UpdateCar(car);
+        }
 
+
+       /* public bool doesLicensePlateAlreadyExist(string licenseplate)
+        {
+          
+
+        }*/
 
         public List<Car> GetCustomerCarsByCustomerEmail(string email)
         {

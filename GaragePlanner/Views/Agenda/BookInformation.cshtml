@@ -24,10 +24,12 @@
 
     <label for="car">Select your car:</label>
     <select id="car" name="selectedCar">
-        <option value="car1">Car 1</option>
-        <option value="car2">Car 2</option>
-        <option value="car3">Car 3</option>
+        @foreach (var car in Model.CustomerCars)
+        {
+            <option value="@car.Id">@car.LicensePlate</option>
+        }
     </select>
+
 
     <br>
 

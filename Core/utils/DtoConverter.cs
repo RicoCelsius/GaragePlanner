@@ -17,7 +17,7 @@ namespace Domain.utils
 
         public static Car ConvertCarDtoToCar(CarDto carDto)
         {
-            Car car = new Car(carDto.LicensePlate, carDto.Color, carDto.Model, carDto.Year);
+            Car car = new Car(carDto.Id,carDto.LicensePlate, carDto.Color, carDto.Model, carDto.Year);
             return car;
         }
 

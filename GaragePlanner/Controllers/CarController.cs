@@ -53,22 +53,30 @@ namespace GaragePlanner.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        public ActionResult DeleteCar(string licensePlate)
+        public ActionResult DeleteCar(OverviewCarViewModel model)
         {
             CarCollection carCollection = new CarCollection(_carDal);
-            carCollection.DeleteCar(licensePlate);
+            carCollection.DeleteCar(model.Id);
 
 
             return RedirectToAction("Index", "Home");
         }
 
-        public ActionResult EditCar(string licensePlate)
+        public ActionResult EditCar(OverviewCarViewModel model)
         {
+            Car car = new Car(
+                model.Id,
+                model.LicensePlate,
+                model.Color,
+                model.CarModel,
+                model.Year
+                );
+
             CarCollection carCollection = new CarCollection(_carDal);
-            /*carCollection.EditCar(licensePlate);*/
+            carCollection.EditCar(car);
 
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Overview");
         }
 
         public ActionResult Overview(OverviewCarViewModel model)
@@ -76,21 +84,12 @@ namespace GaragePlanner.Controllers
             CustomerCollection customerCollection = new CustomerCollection(_customerDal);
             CarCollection carCollection = new CarCollection(_carDal);
 
- 
-
-
-            if (!ModelState.IsValid)
-            {
-                model.CustomerEmails = customerCollection.GetCustomerEmails();   
-                // Retrieve the cars of the customer with the selected email
-                List<Car> customerCars = carCollection.GetCustomerCarsByCustomerEmail("fefefefefefefe@gmail.com");
-
-                model.Cars = customerCars;
-
-                return View(model);
-            }
-            return RedirectToAction("Index", "Home");
+            model.CustomerEmails = customerCollection.GetCustomerEmails();
+            List<Car> customerCars = carCollection.GetCustomerCarsByCustomerEmail("fefefefefefefe@gmail.com");
+            model.Cars = customerCars;
+            return View(model);
         }
+
 
 
     }

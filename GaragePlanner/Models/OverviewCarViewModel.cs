@@ -7,13 +7,17 @@ namespace GaragePlanner.Models
     {
         public List<string> CustomerEmails { get; set; }
         public string SelectedCustomerEmail { get; set; }
-
         public List<Car> Cars { get; set; }
-        int CarId { get; set; }
+
+        public int Id { get; set; }
+        public string LicensePlate { get; set; }
+        public string Color { get; set; }
+        public string CarModel { get; set; }
+        public int Year { get; set; }
+
         public OverviewCarViewModel()
         {
-            CustomerEmails = new List<string>();
-            Cars = new List<Car>();
+
         }
     }
 }

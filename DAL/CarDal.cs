@@ -32,12 +32,27 @@ namespace DAL
             connection.ExecuteQuery(insertCarQuery, insertCarParameters);
         }
 
-        public void DeleteCar(string licensePlate)
+        public void DeleteCar(int id)
         {
-            var query = "DELETE FROM car WHERE license_plate = @license_plate";
+            var query = "DELETE FROM car WHERE id = @id";
             var parameters = new MySqlParameter[]
             {
-                new MySqlParameter("@license_plate", licensePlate)
+                new MySqlParameter("@id", id)
+            };
+            var connection = new DbConnection();
+            connection.ExecuteQuery(query, parameters);
+        }
+
+        public void UpdateCar(Car car)
+        {
+            var query = "UPDATE car SET license_plate = @license_plate, model = @model, color = @color, year = @year WHERE id = @id";
+            var parameters = new MySqlParameter[]
+            {
+                new MySqlParameter("@id", car.Id),
+                new MySqlParameter("@license_plate", car.LicensePlate),
+                new MySqlParameter("@model", car.Model),
+                new MySqlParameter("@color", car.Color),
+                new MySqlParameter("@year", car.Year)
             };
             var connection = new DbConnection();
             connection.ExecuteQuery(query, parameters);
@@ -95,5 +110,9 @@ namespace DAL
             );
             return carDto;
         }
+
+
+
+
     }
 }

@@ -62,18 +62,17 @@ namespace GaragePlanner.Controllers
             CarCollection carCollection = new CarCollection(_carDal);
             List<String> customerEmails = customerCollection.GetCustomerEmails();
 
+            List<Car> customerCars = carCollection.GetCustomerCarsByCustomerEmail("fefefefefefefe@gmail.com");
+
             model.CustomerEmails = customerEmails;
             model.ChosenDateTime = dateAndTime;
             model.SelectedTypeOfAppointment = selectedTypeOfAppointment;
             model.SelectedEmail = selectedCustomerEmail;
-
-          
-
-
-
+            model.CustomerCars = customerCars;
 
             return View(model);
         }
+
 
 
         [HttpPost]
@@ -86,23 +85,14 @@ namespace GaragePlanner.Controllers
             Customer customer = customerCollection.GetCustomerByEmail(model.SelectedEmail);
 
             Appointment appointment = new(model.ChosenDateTime, model.SelectedTypeOfAppointment, Enums.Status.Scheduled,
-                customer, new Car("995295", "s", "d", 1990));
+                customer, new Car(10,"995295", "s", "d", 1990));
 
             //995295 is the string that is used to create a car in the database. Needs to exist in the db so has to be taken from the cars a customer has.
 
-            try
-            {
-                agenda.AddAppointment(appointment);
-            }
-            catch(Exception ex)
-            {
-                var errorViewModel = new ErrorViewModel()
-                {
-                    ErrorMessage = ex.Message,
-                };
 
-                return View("Error", errorViewModel);
-            }
+            agenda.AddAppointment(appointment);
+            
+
 
 
             return RedirectToAction("Confirmation",model);
