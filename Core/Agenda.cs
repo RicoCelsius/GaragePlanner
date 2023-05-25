@@ -11,13 +11,14 @@ namespace Domain
 {
     public class Agenda
     {
-        public List<Day> Days { get; set; }
+        public List<Day> Days { get;}
         private readonly IAppointmentDal _appointmentDal;
+        private const int AmountOfDays = 14;
 
         public Agenda(IAppointmentDal appointmentDal)
         {
-            Days = new List<Day>();
-            GenerateDays(14);
+            Days = DayGenerator.GenerateDays(AmountOfDays);
+            
             _appointmentDal = appointmentDal;
             LoadAgenda(_appointmentDal.GetAgenda());
         }
@@ -26,6 +27,10 @@ namespace Domain
         {
             foreach (AppointmentDto appointment in appointments)
             {
+                if (IsAppointmentDateAlreadyPassed(appointment))
+                {
+                    continue;
+                }
                 Appointment appointmentToAdd = DtoConverter.ConvertAppointmentDtoToAppointment(appointment);
 
                 DateOnly appointmentDate = DateOnly.FromDateTime(appointment.Date);
@@ -35,36 +40,34 @@ namespace Domain
 
                 TimeSlot targetTimeSlot = targetDay.FindTimeSlot(appointmentTime);
 
-                targetTimeSlot.TryAddAppointment(appointmentToAdd);
+                if (!targetTimeSlot.CanAddAppointment(appointmentToAdd))
+                {
+                    throw new Exception("Appointment cant be added to timeslot");
+                };
             }
         }
 
-        public bool TryAddAppointment(AppointmentDto appointmentDto)
+        private bool IsAppointmentDateAlreadyPassed(AppointmentDto appointment)
         {
-            DateOnly appointmentDate = DateOnly.FromDateTime(appointmentDto.Date);
-            TimeOnly appointmentTime = TimeOnly.FromDateTime(appointmentDto.Date);
-            Appointment appointment = DtoConverter.ConvertAppointmentDtoToAppointment(appointmentDto);
+            return appointment.Date < DateTime.Now;
+        }
+
+        public bool AddAppointment(Appointment appointment)
+        {
+            DateOnly appointmentDate = DateOnly.FromDateTime(appointment.DateAndTime);
+            TimeOnly appointmentTime = TimeOnly.FromDateTime(appointment.DateAndTime);
 
             Day targetDay = Days.FirstOrDefault(day => day.DateOfDay.Equals(appointmentDate));
 
             TimeSlot targetTimeSlot = targetDay.FindTimeSlot(appointmentTime);
 
-            if (targetTimeSlot.TryAddAppointment(appointment))
+            if (targetTimeSlot.CanAddAppointment(appointment))
             {
-                _appointmentDal.InsertAppointment(appointmentDto);
+                _appointmentDal.InsertAppointment(appointment);
                 return true;
             }
             return false;
         }
 
-        private void GenerateDays(int amountOfDays)
-        {
-            DateOnly startDate = DateOnly.FromDateTime(DateTime.Now);
-            for (int i = 0; i < amountOfDays; i++)
-            {
-                Days.Add(new Day(startDate));
-                startDate = startDate.AddDays(1);
-            }
-        }
     }
 }

@@ -14,6 +14,7 @@ namespace Domain
         public string Email { get; set; }
         public string Password { get; set; }
 
+
         public Customer(string firstName, string lastName, string address, string email, string password)
         {
             FirstName = firstName;
@@ -22,5 +23,7 @@ namespace Domain
             Email = email;
             Password = password;
         }
+
+
     }
 }

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Domain;
 using Domain.dto;
 using Domain.interfaces;
+using Domain.utils;
 
 namespace Core
 {
@@ -18,13 +19,20 @@ namespace Core
         {
             _iCustomerDal = iCustomerDal;
             Customers = new List<Customer>();
+            FillListWithCustomers();
         }
 
-        public void CreateCustomer(string firstName, string lastName, string address, string email, string password)
+        public bool CreateCustomer(string firstName, string lastName, string address, string email, string password)
         {
+            if (DoesEmailAlreadyExist(email))
+            {
+                return false;
+            }
+
             string encryptedPassword = PasswordEncryptor.EncryptPassword(password);
             Customer customer = new(firstName, lastName, address, email, encryptedPassword);
             _iCustomerDal.InsertCustomer(customer);
+            return true;
         }
 
 
@@ -48,17 +56,39 @@ namespace Core
             throw new Exception("Incorrect Password");
         }
 
-        public CustomerDto GetCustomerByEmail(string email)
+        public void FillListWithCustomers()
         {
-            CustomerDto customerDto = _iCustomerDal.GetCustomerByEmail(email);
-            return customerDto;
+            List<CustomerDto> customerDtos = _iCustomerDal.GetAllCustomers();
+            foreach (CustomerDto customerDto in customerDtos)
+            {
+                Customer customer = DtoConverter.ConvertCustomerDtoToCustomer(customerDto);
+                Customers.Add(customer);
+            }
         }
+
+        public bool DoesEmailAlreadyExist(string email)
+        {
+            bool customerExists = Customers.Any(c => c.Email == email);
+            return customerExists;
+        }
+
+
+        public Customer GetCustomerByEmail(string email)
+        {
+            Customer customer = Customers.FirstOrDefault(c => c.Email == email);
+
+            return customer;
+        }
+
+
 
         public List<string> GetCustomerEmails()
         {
-            List<CustomerDto> customers = _iCustomerDal.GetAllCustomers();
-            List<string> customerEmails = customers.Select(c => c.Email).ToList();
+            FillListWithCustomers();
+            List<string> customerEmails = Customers.Select(c => c.Email).ToList();
             return customerEmails;
         }
+
+
     }
 }

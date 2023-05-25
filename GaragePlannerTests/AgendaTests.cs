@@ -5,30 +5,71 @@ using System.Text;
 using System.Threading.Tasks;
 using Domain;
 using Domain.dto;
+using Domain.utils;
 using GaragePlannerTests.mocks;
 
 namespace GaragePlannerTests
 {
     public class AgendaTests
     {
+
         [Fact]
-        public void AddAppointmentButTimeslotIsFull()
+        public void AddAppointmentInEmptyTimeSlot()
         {
             //arrange
-            Agenda agenda = new Agenda(new AppointmentDalMock());
-            CustomerMock customerMock = new CustomerMock();
-            CarMock carMock = new CarMock();
-            List<CustomerDto> customers = customerMock.GenerateCustomers(2);
-            List<CarDto> cars = carMock.GenerateCarDto(2);
-            DateTime dateTime = new DateTime(2019, 1, 1, 8, 0, 0);
+            AppointmentDalMock appointmentDalMock = new AppointmentDalMock(new List<AppointmentDto>());
+            DateTime now = DateTime.Now;
+            DateTime targetDateTime = new DateTime(now.Year, now.Month, now.Day, 10, 0, 0);
 
-            //agenda.CreateAppointment(new AppointmentDto(dateTime, Enums.Type.BigMaintenance, Enums.Status.Scheduled, customers[0], cars[0]), customers[0]);
-
+            Agenda agenda = new Agenda(appointmentDalMock);
+            Customer customer = new Customer("Rico","Aarntzen","Straatnaam 10","ricoaarntzen@gmail.com","lol123456");
+            Car car = new Car("AB-12-CD","Blue","Audi",2019);
 
             //act
-           // bool hasAdded = agenda.CreateAppointment(new AppointmentDto(dateTime, Enums.Type.BigMaintenance, Enums.Status.Scheduled, customers[0], cars[0]), customers[0]);
+            bool hasAdded = agenda.AddAppointment(new Appointment(targetDateTime, Enums.Type.BigMaintenance, Enums.Status.Scheduled, customer, car));
+            
             //assert
-           // Assert.False(hasAdded);
+            Assert.True(hasAdded);
         }
+
+        [Fact]
+        public void AddAppointmentInNonEmptyTimeSlot()
+        {
+            //arrange
+
+            DateTime now = DateTime.Now;
+            DateTime targetDateTime = new DateTime(now.Year, now.Month, now.Day, now.Hour+1, 0, 0);
+
+
+
+            CustomerDto customerDto = new CustomerDto(1, "Rico", "Aarntzen", "Straatnaam", "Straatnaam 10", "lol123456");
+            CarDto carDto = new CarDto(1, "AB-12-CD", "Blue", "Audi", 2019);
+            AppointmentDto appointmentDto = new AppointmentDto(targetDateTime,Enums.Type.BigMaintenance, Enums.Status.Scheduled, customerDto, carDto);
+            List<AppointmentDto> appointmentDtos = new List<AppointmentDto>();
+            appointmentDtos.Add(appointmentDto);
+            AppointmentDalMock appointmentDalMock = new AppointmentDalMock(appointmentDtos);
+
+            Agenda agenda = new Agenda(appointmentDalMock);
+
+            Customer customer = new Customer("Rico", "Aarntzen", "Straatnaam 10", "ricoaarntzen@gmail.com", "lol123456");
+            Car car = new Car("AB-12-CD", "Blue", "Audi", 2019);
+            bool hasAdded = agenda.AddAppointment(new Appointment(targetDateTime, Enums.Type.BigMaintenance, Enums.Status.Scheduled, customer, car));
+
+            Assert.False(hasAdded);
+        }
+
+        [Fact]
+        public void AreDaysGeneratedProperly()
+        {
+            //arrange
+            AppointmentDalMock appointmentDalMock = new AppointmentDalMock(new List<AppointmentDto>());
+            Agenda agenda = new Agenda(appointmentDalMock);
+            int amountOfDays = agenda.Days.Count;
+            //act
+            List<Day> days = DayGenerator.GenerateDays(amountOfDays);
+            //assert
+            Assert.Equal(amountOfDays, days.Count);
+        }
+
     }
 }

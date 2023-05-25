@@ -16,7 +16,7 @@ namespace Domain.utils
 
         public static CarDto ConvertCarToCarDto(Car car)
         {
-            return new CarDto(null, car.LicensePlate, car.Color, car.Model, car.Year);
+            return new CarDto(car.Id, car.LicensePlate, car.Color, car.Model, car.Year);
         }
 
         public static AppointmentDto ConvertAppointmentToAppointmentDto(Appointment appointment, DateTime Date)

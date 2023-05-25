@@ -38,7 +38,7 @@ namespace GaragePlanner.Controllers
                     TimeSlotViewModel timeslotViewModel = new TimeSlotViewModel
                     {
                         Time = timeslot.StartTime,
-                        IsAvailable = timeslot.HasAppointment(),
+                        IsAvailable = timeslot.IsAvailable(),
                     };
                     dayViewModel.TimeSlots.Add(timeslotViewModel);
                 }
@@ -53,29 +53,31 @@ namespace GaragePlanner.Controllers
         }
 
 
-
-
         [HttpGet]
         [HttpPost]
 
-        public IActionResult BookInformation(BookViewModel model, DateTime dateAndTime, Enums.Type selectedTypeOfAppointment, string selectedCustomerEmail)
+        public IActionResult BookInformation(BookViewModel model, string selectedCustomerEmail, DateTime dateAndTime)
         {
             CustomerCollection customerCollection = new CustomerCollection(_customerDal);
             CarCollection carCollection = new CarCollection(_carDal);
             List<String> customerEmails = customerCollection.GetCustomerEmails();
 
+            // Only fetch cars if an email was selected.
+            if (!string.IsNullOrEmpty(selectedCustomerEmail))
+            {
+                List<Car> customerCars = carCollection.GetCustomerCarsByCustomerEmail(selectedCustomerEmail);
+                model.CustomerCars = customerCars;
+            }
+
             model.CustomerEmails = customerEmails;
-            model.ChosenDateTime = dateAndTime;
-            model.SelectedTypeOfAppointment = selectedTypeOfAppointment;
             model.SelectedEmail = selectedCustomerEmail;
-
-          
-
-
-
+            model.ChosenDateTime = dateAndTime;
 
             return View(model);
         }
+
+
+
 
 
         [HttpPost]
@@ -85,27 +87,14 @@ namespace GaragePlanner.Controllers
 
             Agenda agenda = new(_appointmentDal);
             CustomerCollection customerCollection = new CustomerCollection(_customerDal);
+            CarCollection carCollection = new CarCollection(_carDal);
+            Customer customer = customerCollection.GetCustomerByEmail(model.SelectedEmail);
+            Car car = carCollection.GetCarById(model.SelectedCarId);
+
+            Appointment appointment = new(model.ChosenDateTime, model.SelectedTypeOfAppointment, Enums.Status.Scheduled,
+                customer, car);
+            agenda.AddAppointment(appointment);
             
-            CustomerDto customerDto = customerCollection.GetCustomerByEmail(model.SelectedEmail);
-            AppointmentDto appointmentDto = new(model.ChosenDateTime, model.SelectedTypeOfAppointment, Enums.Status.Scheduled, customerDto,new CarDto(1,"s","s","s",1990));
-
-
-            try
-            {
-
-                agenda.TryAddAppointment(appointmentDto);
-            }
-            catch
-            {
-                var errorViewModel = new ErrorViewModel()
-                {
-                    ErrorMessage = "Something unexpected happened. Please try again later."
-                };
-
-                return View("Error", errorViewModel);
-            }
-
-
             return RedirectToAction("Confirmation",model);
 
         }

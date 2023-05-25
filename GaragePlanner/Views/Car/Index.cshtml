@@ -43,8 +43,8 @@
 <body>
 <h1>Add Car</h1>
     <form action="@Url.Action("AddCar", "Car")" method="POST">
-    <label for="customerName">Customer Name:</label>
-    <select name="customerName" id="customerName">
+    <label for="customerName">Customer Email:</label>
+        <select name="SelectedCustomerEmail" id="customerName">
         @foreach (var customerName in Model.CustomerEmails)
         {
             <option value="@customerName">@customerName</option>

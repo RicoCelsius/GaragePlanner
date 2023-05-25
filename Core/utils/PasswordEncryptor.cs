@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using BCrypt.Net;
 
-namespace Domain
+namespace Domain.utils
 {
     public static class PasswordEncryptor
     {

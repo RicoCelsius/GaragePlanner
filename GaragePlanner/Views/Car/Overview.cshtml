@@ -1,0 +1,193 @@
+﻿@using Domain
+@model GaragePlanner.Models.OverviewCarViewModel
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Car</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+
+        select,
+        input[type="text"] {
+            width: 100%;
+            padding: 5px;
+            font-size: 16px;
+        }
+
+        form {
+            margin-bottom: 10px;
+        }
+
+
+        input[type="submit"] {
+            margin-top: 20px;
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+        }
+
+        .car-container {
+            border: 2px solid black;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        .delete-button {
+            background-color: #FF0000;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            margin-right: 5px;
+        }
+
+        .edit-button {
+            background-color: #008CBA;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+
+        }
+
+
+
+        /* Add styles for the overlay and popup window */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .popup {
+            background-color: white;
+            padding: 20px;
+            max-width: 400px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: none;
+            z-index: 9999;
+        }
+
+            .popup h3 {
+                margin-top: 0;
+            }
+
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #FF0000;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            cursor: pointer;
+        }
+
+        .car-image {
+            width: 200px;
+            height: auto;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h2>
+        Overview of your cars
+    </h2>
+    <div class="main">
+        @foreach (Car car in Model.Cars)
+        {
+            <div class="car-container">
+                <img src="@(!string.IsNullOrEmpty(car.ImageUrl) ? car.ImageUrl : Url.Content("~/img/no-image-found-360x250.png"))" alt="Car Image" class="car-image">
+                <p>
+                    License plate: @car.LicensePlate
+                </p>
+                <p>
+                    Color: @car.Color
+                </p>
+                <p>
+                    Model: @car.Model
+                </p>
+        
+                <form method="get" action="javascript:void(0);">
+                    <button class="edit-button" onclick="showPopup('@car.Id', '@car.LicensePlate', '@car.Color', '@car.Model', '@car.Year')">Edit</button>
+                </form>
+                <form method="post" action="@Url.Action("DeleteCar", "Car")">
+                        @Html.Hidden("id", car.Id) 
+                        <button class="delete-button" type="submit">Delete</button>
+                    </form>
+          
+
+            </div>
+        }
+    </div>
+
+    <!-- Overlay and popup window HTML -->
+    <div class="overlay" id="overlay">
+        <div class="popup" id="popup">
+            <h3>Edit Car</h3>
+            <form method="post" action="@Url.Action("EditCar", "Car")">
+                <input type="hidden" name="Id" id="editId" />
+                <input type="hidden" name="LicensePlate" id="editLicensePlate" />
+                <label for="editColor">Color:</label>
+                <input type="text" name="Color" id="editColor" />
+
+                <label for="editCarModel">Car Model:</label>
+                <input type="text" name="CarModel" id="editCarModel" />
+
+                <label for="editYear">Year:</label>
+                <input type="text" name="Year" id="editYear" />
+
+                <button type="submit">Save</button>
+            </form>
+            <button class="close-btn" onclick="hidePopup()">Close</button>
+        </div>
+    </div>
+
+    <script>
+        function showPopup(id, licensePlate, color, carModel, year) {
+            document.getElementsByName('Id')[0].value = id;
+            document.getElementsByName('LicensePlate')[0].value = licensePlate;
+            document.getElementsByName('Color')[0].value = color;
+            document.getElementsByName('CarModel')[0].value = carModel;
+            document.getElementsByName('Year')[0].value = year;
+            document.getElementById('overlay').style.display = 'flex';
+            document.getElementById('popup').style.display = 'block';
+        }
+
+        function hidePopup() {
+            document.getElementById('overlay').style.display = 'none';
+            document.getElementById('popup').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

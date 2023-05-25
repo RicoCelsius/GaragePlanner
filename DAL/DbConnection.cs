@@ -9,7 +9,6 @@ namespace DAL
     {
         private readonly MySqlConnection _sqlConnection;
         private readonly string _connectionString;
-        private bool isConnected;
 
         public DbConnection()
         {
@@ -21,44 +20,16 @@ namespace DAL
 
             _sqlConnection = new MySqlConnection(_connectionString);
 
-            isConnected = false;
         }
 
         private void Connect()
         {
-            if (isConnected)
-            {
-                throw new Exception("Cannot connect, because the application is already connected.");
-            }
-
-            try
-            {
-                _sqlConnection.Open();
-                isConnected = true;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
+            _sqlConnection.Open();
         }
 
         private void Disconnect()
         {
-            if (!isConnected)
-            {
-                throw new Exception("Cannot disconnect, because the application is not connected.");
-            }
-
-            try
-            {
-
-                _sqlConnection.Close();
-                isConnected = false;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
+            _sqlConnection.Close();
         }
 
         public DataTable ExecuteQuery(string query, MySqlParameter[] parameters)

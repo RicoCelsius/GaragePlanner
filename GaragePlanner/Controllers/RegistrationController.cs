@@ -46,11 +46,11 @@ namespace GaragePlanner.Controllers
                 );
             }
 
-            catch 
+            catch(Exception ex)
             {
                 var errorViewModel = new ErrorViewModel()
                 {
-                    ErrorMessage = "Something unexpected happened. Please try again later."
+                    ErrorMessage = ex.Message
                 };
                
                 return View("Error",errorViewModel);
