@@ -11,48 +11,57 @@
 </head>
 <body>
 
-<form method="post" action="@Url.Action("Book", "Agenda")">
-    <label for="customer">Your email:</label>
-    <select name="SelectedEmail" id="customerName">
-        @foreach (var customerEmail in Model.CustomerEmails)
+    <form method="post" action="@Url.Action("BookInformation", "Agenda")">
+        <label for="customer">Your email:</label>
+        <select name="selectedCustomerEmail" id="customerName" onchange="this.form.submit()">
+            <option value="">Select an email...</option>
+            @foreach (var customerEmail in Model.CustomerEmails)
+            {
+                if (Model.SelectedEmail == customerEmail)
+                {
+                    <option value="@customerEmail" selected>@customerEmail</option>
+                }
+                else
+                {
+                    <option value="@customerEmail">@customerEmail</option>
+                }
+            }
+        </select>
+    </form>
+
+    <br>
+
+    <form method="post" action="@Url.Action("Book", "Agenda")">
+        @if (Model.CustomerCars != null && Model.CustomerCars.Any())
         {
-            <option value="@customerEmail">@customerEmail</option>
+            <label for="car">Select your car:</label>
+            <select id="car" name="selectedCar">
+                @foreach (var car in Model.CustomerCars)
+                {
+                    <option value="@car.Id">@car.LicensePlate</option>
+                }
+            </select>
+
+            <br>
+
+            <label for="type">Select the service your car needs:</label>
+            <select id="type" name="selectedTypeOfAppointment">
+                @foreach (var typeName in Enum.GetNames(typeof(Enums.Type)))
+                {
+                    <option value="@typeName">@typeName</option>
+                }
+            </select>
+
+            <br>
+
+            <label for="chosenDateTime">Chosen date and time:</label>
+            <input type="text" id="chosenDateTime" name="ChosenDateTime" value="@Model.ChosenDateTime" readonly>
+
+            <br>
         }
-    </select>
 
-    <br>
-
-    <label for="car">Select your car:</label>
-    <select id="car" name="selectedCar">
-        @foreach (var car in Model.CustomerCars)
-        {
-            <option value="@car.Id">@car.LicensePlate</option>
-        }
-    </select>
-
-
-    <br>
-
-    <label for="type">Select the service your car needs:</label>
-    <select id="type" name="selectedTypeOfAppointment">
-        @foreach (var typeName in Enum.GetNames(typeof(Enums.Type)))
-        {
-            <option value="@typeName">@typeName</option>
-        }
-    </select>
-
-
-    <br>
-
-    <label for="chosenDateTime">Chosen date and time:</label>
-    <input type="text" id="chosenDateTime" name="ChosenDateTime" value="@Model.ChosenDateTime" readonly>
-
-
-
-    <br>
-
-    <button type="submit">Submit appointment</button>
-</form>
+        <button type="submit">Submit appointment</button>
+    </form>
 
 </body>
 </html>

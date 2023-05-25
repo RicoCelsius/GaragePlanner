@@ -56,22 +56,25 @@ namespace GaragePlanner.Controllers
         [HttpGet]
         [HttpPost]
 
-        public IActionResult BookInformation(BookViewModel model, DateTime dateAndTime, Enums.Type selectedTypeOfAppointment, string selectedCustomerEmail)
+        public IActionResult BookInformation(BookViewModel model, string selectedCustomerEmail)
         {
             CustomerCollection customerCollection = new CustomerCollection(_customerDal);
             CarCollection carCollection = new CarCollection(_carDal);
             List<String> customerEmails = customerCollection.GetCustomerEmails();
 
-            List<Car> customerCars = carCollection.GetCustomerCarsByCustomerEmail("fefefefefefefe@gmail.com");
+            // Only fetch cars if an email was selected.
+            if (!string.IsNullOrEmpty(selectedCustomerEmail))
+            {
+                List<Car> customerCars = carCollection.GetCustomerCarsByCustomerEmail(selectedCustomerEmail);
+                model.CustomerCars = customerCars;
+            }
 
             model.CustomerEmails = customerEmails;
-            model.ChosenDateTime = dateAndTime;
-            model.SelectedTypeOfAppointment = selectedTypeOfAppointment;
             model.SelectedEmail = selectedCustomerEmail;
-            model.CustomerCars = customerCars;
 
             return View(model);
         }
+
 
 
 
