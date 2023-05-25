@@ -56,7 +56,7 @@ namespace GaragePlanner.Controllers
         [HttpGet]
         [HttpPost]
 
-        public IActionResult BookInformation(BookViewModel model, string selectedCustomerEmail)
+        public IActionResult BookInformation(BookViewModel model, string selectedCustomerEmail, DateTime dateAndTime)
         {
             CustomerCollection customerCollection = new CustomerCollection(_customerDal);
             CarCollection carCollection = new CarCollection(_carDal);
@@ -71,9 +71,11 @@ namespace GaragePlanner.Controllers
 
             model.CustomerEmails = customerEmails;
             model.SelectedEmail = selectedCustomerEmail;
+            model.ChosenDateTime = dateAndTime;
 
             return View(model);
         }
+
 
 
 
@@ -85,19 +87,14 @@ namespace GaragePlanner.Controllers
 
             Agenda agenda = new(_appointmentDal);
             CustomerCollection customerCollection = new CustomerCollection(_customerDal);
+            CarCollection carCollection = new CarCollection(_carDal);
             Customer customer = customerCollection.GetCustomerByEmail(model.SelectedEmail);
+            Car car = carCollection.GetCarById(model.SelectedCarId);
 
             Appointment appointment = new(model.ChosenDateTime, model.SelectedTypeOfAppointment, Enums.Status.Scheduled,
-                customer, new Car(10,"995295", "s", "d", 1990));
-
-            //995295 is the string that is used to create a car in the database. Needs to exist in the db so has to be taken from the cars a customer has.
-
-
+                customer, car);
             agenda.AddAppointment(appointment);
             
-
-
-
             return RedirectToAction("Confirmation",model);
 
         }

@@ -12,7 +12,7 @@ public class BookViewModel
     public List<string> CustomerEmails { get; set; }
     
     public List<Car> CustomerCars { get; set; }
-    public Car SelectedCar { get; set; }
+    public int SelectedCarId { get; set; }
 
     public string SelectedEmail { get; set; }
     

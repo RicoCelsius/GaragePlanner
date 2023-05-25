@@ -38,6 +38,13 @@ namespace Domain
             _iCarDal.UpdateCar(car);
         }
 
+        public Car GetCarById(int id)
+        {
+            CarDto carDto = _iCarDal.GetCarById(id);
+            Car car = DtoConverter.ConvertCarDtoToCar(carDto);
+            return car;
+        }
+
 
        /* public bool doesLicensePlateAlreadyExist(string licenseplate)
         {

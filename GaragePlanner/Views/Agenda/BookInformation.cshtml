@@ -1,7 +1,6 @@
 ﻿@using Domain
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @model GaragePlanner.Models.BookViewModel
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -27,6 +26,7 @@
                 }
             }
         </select>
+        <input type="hidden" name="dateAndTime" value="@Model.ChosenDateTime">
     </form>
 
     <br>
@@ -35,7 +35,7 @@
         @if (Model.CustomerCars != null && Model.CustomerCars.Any())
         {
             <label for="car">Select your car:</label>
-            <select id="car" name="selectedCar">
+            <select id="car" name="SelectedCarId">
                 @foreach (var car in Model.CustomerCars)
                 {
                     <option value="@car.Id">@car.LicensePlate</option>
@@ -54,10 +54,22 @@
 
             <br>
 
-            <label for="chosenDateTime">Chosen date and time:</label>
-            <input type="text" id="chosenDateTime" name="ChosenDateTime" value="@Model.ChosenDateTime" readonly>
+            <label for="dateAndTime">Chosen date and time:</label>
+            <input type="text" id="dateAndTime" name="dateAndTime" value="@Model.ChosenDateTime" readonly>
 
             <br>
+
+            <!-- Include hidden inputs for the properties of the model that need to be preserved -->
+            @foreach (var car in Model.CustomerCars)
+            {
+                <input type="hidden" name="customerCars" value="@car" />
+            }
+            @foreach (var customerEmail in Model.CustomerEmails)
+            {
+                <input type="hidden" name="customerEmails" value="@customerEmail" />
+            }
+            <input type="hidden" name="selectedEmail" value="@Model.SelectedEmail" />
+            <input type="hidden" name="chosenDateTime" value="@Model.ChosenDateTime" />
         }
 
         <button type="submit">Submit appointment</button>
@@ -65,3 +77,5 @@
 
 </body>
 </html>
+
+

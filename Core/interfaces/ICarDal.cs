@@ -7,7 +7,7 @@ public interface ICarDal
 {
     void InsertCar(string email, Car car);
     List<CarDto> GetCarsByEmail(string email);
-    CarDto GetCarByLicensePlate(string licensePlate);
+    CarDto GetCarById(int id);
 
     void UpdateCar(Car car);
     void DeleteCar(int id);

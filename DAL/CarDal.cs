@@ -86,6 +86,28 @@ namespace DAL
             return cars;
         }
 
+        public CarDto GetCarById(int id)
+        {
+            var query = "SELECT * FROM car WHERE id = @id";
+            var parameters = new MySqlParameter[]
+            {
+                new MySqlParameter("@id", id)
+            };
+            var connection = new DbConnection();
+            var dataTable = connection.ExecuteQuery(query, parameters);
+            if (dataTable.Rows.Count == 0)
+            {
+                throw new Exception("Car not found");
+            }
+            var row = dataTable.Rows[0];
+            var carDto = new CarDto(
+                               row.Field<int>("id"),
+                               row.Field<string>("license_plate"), 
+                               row.Field<string>("color"),
+                               row.Field<string>("model"), row.Field<int>("year"));
+            return carDto;
+        }
+
 
         public CarDto GetCarByLicensePlate(string licensePlate)
         {

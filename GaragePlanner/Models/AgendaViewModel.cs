@@ -12,6 +12,7 @@ public class AgendaViewModel
 
 
 
+
     public AgendaViewModel()
     {
         Days = new List<DayViewModel>();
