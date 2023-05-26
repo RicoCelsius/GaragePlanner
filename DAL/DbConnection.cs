@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using System.Data.Common;
 using MySqlConnector;
 using Microsoft.Extensions.Configuration;
 
@@ -34,18 +35,29 @@ namespace DAL
 
         public DataTable ExecuteQuery(string query, MySqlParameter[] parameters)
         {
-            Connect();
-            MySqlCommand command = new(query, _sqlConnection);
-            if (parameters != null)
+            try
             {
-                command.Parameters.AddRange(parameters);
-            }
+                Connect();
+                MySqlCommand command = new(query, _sqlConnection);
+                if (parameters != null)
+                {
+                    command.Parameters.AddRange(parameters);
+                }
 
-            MySqlDataAdapter adapter = new(command);
-            DataTable dataTable = new();
-            adapter.Fill(dataTable);
-            Disconnect();
-            return dataTable;
+                MySqlDataAdapter adapter = new(command);
+                DataTable dataTable = new();
+                adapter.Fill(dataTable);
+                return dataTable;
+            }
+            catch (DbException e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+            finally
+            {
+                Disconnect();
+            }
         }
     }
 }
