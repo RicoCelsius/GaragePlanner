@@ -49,9 +49,9 @@ namespace DAL
                 adapter.Fill(dataTable);
                 return dataTable;
             }
-            catch (DbException e)
+            catch (DbException exception)
             {
-                Console.WriteLine(e);
+                Console.WriteLine(exception);
                 throw;
             }
             finally
