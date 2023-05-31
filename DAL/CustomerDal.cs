@@ -10,6 +10,12 @@ namespace DAL
 {
     public class CustomerDal : ICustomerDal
     {
+
+        private readonly DbConnection _dbConnection;
+        public CustomerDal(DbConnection dbConnection)
+        {
+            _dbConnection = dbConnection;
+        }
         public void InsertCustomer(Customer customer)
         {
             var query = "INSERT INTO customers (first_name, last_name, Address, Email, Password) " +
@@ -23,7 +29,7 @@ namespace DAL
                 new("@Password", MySqlDbType.VarChar) { Value = customer.Password }
             };
 
-            var connection = new DbConnection();
+            var connection = _dbConnection;
             connection.ExecuteQuery(query, parameters);
         }
 
@@ -37,7 +43,7 @@ namespace DAL
                 new MySqlParameter("@Email", email)
             };
 
-            var connection = new DbConnection();
+            var connection = _dbConnection;
             var dataTable = connection.ExecuteQuery(query, parameters);
 
             if (dataTable.Rows.Count > 0)
@@ -57,30 +63,11 @@ namespace DAL
             throw new Exception("Customer not found");
         }
 
-        public int GetCustomerIdByEmail(string email)
-        {
-            var query = "SELECT * FROM customers WHERE Email = @Email";
-            var parameters = new MySqlParameter[]
-            {
-                new MySqlParameter("@Email", email)
-            };
-
-            var connection = new DbConnection();
-            var dataTable = connection.ExecuteQuery(query, parameters);
-
-            if (dataTable.Rows.Count > 0)
-            {
-                var row = dataTable.Rows[0];
-                return row.Field<int>("id");
-            }
-
-            throw new Exception("Customer not found");
-        }
 
         public List<CustomerDto> GetAllCustomers()
         {
             var query = "SELECT * FROM customers";
-            var connection = new DbConnection();
+            var connection = _dbConnection;
   
 
             var dataTable = connection.ExecuteQuery(query, null);

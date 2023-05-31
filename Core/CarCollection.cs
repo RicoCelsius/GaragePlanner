@@ -14,7 +14,6 @@ namespace Domain
 {
     public class CarCollection
     {
-        public List<Car> Cars { get; set; }
         private ICarDal _iCarDal;
 
         public CarCollection(ICarDal iCarDal)
@@ -22,10 +21,14 @@ namespace Domain
             _iCarDal = iCarDal;
         }
 
-        public void CreateCar(string email, Car car)
+        public Result CreateCar(string email, Car car)
         {
-            //_iCarDal.GetCarByLicensePlate(car.LicensePlate); // check if car already exists in db.
+            if (_iCarDal.DoesCarAlreadyExist(car.LicensePlate))
+            {
+                return new Result(false, "License plate already exists");
+            }
             _iCarDal.InsertCar(email,car);
+            return new Result(true, "Car created");
         }
 
         public void DeleteCar(int id)
@@ -45,12 +48,6 @@ namespace Domain
             return car;
         }
 
-
-       /* public bool doesLicensePlateAlreadyExist(string licenseplate)
-        {
-          
-
-        }*/
 
         public List<Car> GetCustomerCarsByCustomerEmail(string email)
         {

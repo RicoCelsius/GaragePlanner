@@ -2,6 +2,7 @@
 using DAL;
 using Domain;
 using Domain.interfaces;
+using Domain.utils;
 using GaragePlanner.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -33,7 +34,7 @@ namespace GaragePlanner.Controllers
             {
                 return View("Index");
             }
-            Customer authenticatedCustomer = _customerFile.AuthenticateCustomer(model.Email,model.Password);
+            Result authenticatedCustomer = _customerFile.AuthenticateCustomer(model.Email,model.Password);
 
            
 

@@ -7,6 +7,7 @@ using GaragePlanner.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Reflection;
+using Domain.utils;
 
 namespace GaragePlanner.Controllers
 {
@@ -22,7 +23,7 @@ namespace GaragePlanner.Controllers
         }
 
         [HttpGet]
-        public ActionResult Index(CarViewModel carViewModel)
+        public ActionResult Index(AddCarViewModel carViewModel)
         {
             List<string> customerEmails = new List<string>();
             CustomerCollection customerCollection = new CustomerCollection(_customerDal);
@@ -35,28 +36,33 @@ namespace GaragePlanner.Controllers
 
         [HttpPost]
 
-        public ActionResult AddCar(CarViewModel carViewModel)
+        public ActionResult AddCar(AddCarViewModel carViewModel)
         {
-            CustomerCollection customerCollection = new CustomerCollection(_customerDal);
             CarCollection carCollection = new CarCollection(_carDal);
             
 
             Car car = new Car(
                 carViewModel.LicensePlate,
-                carViewModel.Color,
+                carViewModel.SelectedColor,
                 carViewModel.Model,
                 carViewModel.Year
             );
             string email = carViewModel.SelectedCustomerEmail;
-            carCollection.CreateCar(email,car);
+
+
+            Result result = carCollection.CreateCar(email,car);
+            if (result.Success == false)
+            {
+                return RedirectToAction("Index");
+            }
 
             return RedirectToAction("Index", "Home");
         }
 
-        public ActionResult DeleteCar(OverviewCarViewModel model)
+        public ActionResult DeleteCar(int id)
         {
             CarCollection carCollection = new CarCollection(_carDal);
-            carCollection.DeleteCar(model.Id);
+            carCollection.DeleteCar(id);
 
 
             return RedirectToAction("Index", "Home");

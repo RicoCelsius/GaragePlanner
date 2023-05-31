@@ -4,20 +4,18 @@ using Domain.interfaces;
 using GaragePlanner.Controllers;
 using Microsoft.Extensions.Configuration;
 var builder = WebApplication.CreateBuilder(args);
+var configuration = new ConfigurationBuilder()
+    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+    .Build();
+string connectionString = configuration.GetConnectionString("DefaultConnection");
+
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddSingleton<ICustomerDal, CustomerDal>();
 builder.Services.AddSingleton<ICarDal, CarDal>();
 builder.Services.AddSingleton<IAppointmentDal, AppointmentDal>();
-
-
-
-
-
-var configuration = new ConfigurationBuilder()
-    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-    .Build();
+builder.Services.AddSingleton(new DbConnection(connectionString));
 
 
 

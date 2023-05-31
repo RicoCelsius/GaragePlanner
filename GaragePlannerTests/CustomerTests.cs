@@ -1,6 +1,7 @@
 using Core;
 using Domain;
 using Domain.dto;
+using Domain.utils;
 using GaragePlannerTests.mocks;
 
 namespace GaragePlannerTests
@@ -17,11 +18,10 @@ namespace GaragePlannerTests
             var customerDalMock = new CustomerDalMock(customerDtos);
             var customerCollection = new CustomerCollection(customerDalMock);
             //Act
-            bool hasAdded = customerCollection.CreateCustomer("test", "test", "test", "rico", "test");
+            Result AddResult = customerCollection.CreateCustomer("test", "test", "test", "rico", "test");
             //Assert
             Assert.Single(customerCollection.Customers);
-            Assert.False(hasAdded);
-
+            Assert.False(AddResult.Success);
 
         }
     }

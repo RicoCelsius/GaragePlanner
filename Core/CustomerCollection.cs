@@ -22,21 +22,21 @@ namespace Core
             FillListWithCustomers();
         }
 
-        public bool CreateCustomer(string firstName, string lastName, string address, string email, string password)
+        public Result CreateCustomer(string firstName, string lastName, string address, string email, string password)
         {
             if (DoesEmailAlreadyExist(email))
             {
-                return false;
+                return new Result(false, "Email already exists");
             }
 
             string encryptedPassword = PasswordEncryptor.EncryptPassword(password);
             Customer customer = new(firstName, lastName, address, email, encryptedPassword);
             _iCustomerDal.InsertCustomer(customer);
-            return true;
+            return new Result(true, "Customer created");
         }
 
 
-        public Customer AuthenticateCustomer(string email, string inputPassword)
+        public Result AuthenticateCustomer(string email, string inputPassword)
         {
             CustomerDto customerInfo = _iCustomerDal.GetCustomerByEmail(email);
             string hashedPassword = customerInfo.Password;
@@ -50,10 +50,10 @@ namespace Core
                     customerInfo.Address,
                     customerInfo.Email,
                     customerInfo.Password);
-                return customer;
+                return new Result(true, "Customer authenticated");
             }
 
-            throw new Exception("Incorrect Password");
+            return new Result(false, "Wrong password");
         }
 
         public void FillListWithCustomers()

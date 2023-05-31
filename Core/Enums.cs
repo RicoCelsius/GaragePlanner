@@ -22,5 +22,19 @@ namespace Domain
             Completed,
             Cancelled
         }
+
+        public enum Color{
+            Red,
+            Blue,
+            Green,
+            Yellow,
+            Black,
+            White,
+            Grey,
+            Orange,
+            Purple,
+            Pink,
+            Brown
+        }
     }
 }

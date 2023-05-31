@@ -159,7 +159,12 @@
                 <input type="hidden" name="Id" id="editId" />
                 <input type="hidden" name="LicensePlate" id="editLicensePlate" />
                 <label for="editColor">Color:</label>
-                <input type="text" name="Color" id="editColor" />
+                <select name="Color" id="Color">
+                    @foreach (var color in Enum.GetValues(typeof(Enums.Color)))
+                    {
+                        <option value="@color.ToString()">@color.ToString()</option>
+                    }
+                </select>
 
                 <label for="editCarModel">Car Model:</label>
                 <input type="text" name="CarModel" id="editCarModel" />
@@ -177,7 +182,6 @@
         function showPopup(id, licensePlate, color, carModel, year) {
             document.getElementsByName('Id')[0].value = id;
             document.getElementsByName('LicensePlate')[0].value = licensePlate;
-            document.getElementsByName('Color')[0].value = color;
             document.getElementsByName('CarModel')[0].value = carModel;
             document.getElementsByName('Year')[0].value = year;
             document.getElementById('overlay').style.display = 'flex';

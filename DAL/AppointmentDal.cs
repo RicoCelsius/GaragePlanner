@@ -13,20 +13,12 @@ namespace DAL
 {
     public class AppointmentDal : IAppointmentDal
     {
-        public bool AppointmentExistsByDateAndTime(DateTime dateAndTime)
+        private readonly DbConnection _dbConnection;
+        public AppointmentDal(DbConnection dbConnection)
         {
-            var mysqlDateTime = dateAndTime.ToString("yyyy-MM-dd HH:mm:ss");
-            var query = "SELECT EXISTS(SELECT 1 FROM appointment WHERE date = @dateAndTime)";
-            var parameters = new MySqlParameter[]
-            {
-                new MySqlParameter("@dateAndTime", MySqlDbType.DateTime) { Value = dateAndTime },
-            };
-            var connection = new DbConnection();
-            var dataTable = connection.ExecuteQuery(query, parameters);
-            var result = Convert.ToBoolean(dataTable.Rows[0][0]);
-
-            return Convert.ToBoolean(result);
+            _dbConnection = dbConnection;
         }
+
 
         public List<AppointmentDto> GetAgenda()
         {
@@ -40,7 +32,7 @@ namespace DAL
                 INNER JOIN customers ON appointment.customer_id = customers.id 
                 INNER JOIN car ON appointment.car_id = car.id";
 
-            var connection = new DbConnection();
+            var connection = _dbConnection;
             var dataTable = connection.ExecuteQuery(query, null);
 
             foreach (DataRow row in dataTable.Rows)
@@ -79,23 +71,23 @@ namespace DAL
         public void InsertAppointment(Appointment appointment)
         {
             var query = @"
-        INSERT INTO appointment (customer_id, car_id, date, type, status) 
-        VALUES (
+             INSERT INTO appointment (customer_id, car_id, date, type, status) 
+             VALUES (
             (SELECT id FROM customers WHERE email = @Email),
             (SELECT id FROM car WHERE license_plate = @LicensePlate),
             @Date, 
             @Type, 
             @Status)";
 
-            var connection = new DbConnection();
+            var connection = _dbConnection;
 
             MySqlParameter[] parameters =
             {
-                new MySqlParameter("@Email", MySqlDbType.VarChar, 100) { Value = appointment.Customer.Email },
-                new MySqlParameter("@LicensePlate", MySqlDbType.VarChar, 50) { Value = appointment.Car.LicensePlate },
+                new MySqlParameter("@Email", MySqlDbType.VarChar) { Value = appointment.Customer.Email },
+                new MySqlParameter("@LicensePlate", MySqlDbType.VarChar) { Value = appointment.Car.LicensePlate },
                 new MySqlParameter("@Date", MySqlDbType.DateTime) { Value = appointment.DateAndTime },
-                new MySqlParameter("@Type", MySqlDbType.VarChar, 50) { Value = appointment.ServiceType },
-                new MySqlParameter("@Status", MySqlDbType.VarChar, 50) { Value = appointment.Status }
+                new MySqlParameter("@Type", MySqlDbType.VarChar) { Value = appointment.ServiceType },
+                new MySqlParameter("@Status", MySqlDbType.VarChar) { Value = appointment.Status }
             };
 
             connection.ExecuteQuery(query, parameters);

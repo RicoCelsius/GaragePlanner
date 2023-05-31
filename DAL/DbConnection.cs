@@ -9,28 +9,35 @@ namespace DAL
     public class DbConnection
     {
         private readonly MySqlConnection _sqlConnection;
-        private readonly string _connectionString;
 
-        public DbConnection()
+        public DbConnection(string connectionString)
         {
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
-            IConfigurationRoot configuration = builder.Build();
-            _connectionString = configuration.GetConnectionString("DefaultConnection");
-
-            _sqlConnection = new MySqlConnection(_connectionString);
-
+            _sqlConnection = new MySqlConnection(connectionString);
         }
 
         private void Connect()
         {
-            _sqlConnection.Open();
+            if (_sqlConnection == null)
+            {
+                return;
+            }
+            if (_sqlConnection.State == ConnectionState.Closed)
+            {
+                _sqlConnection.Open();
+            }
+
         }
 
         private void Disconnect()
         {
-            _sqlConnection.Close();
+            if (_sqlConnection == null)
+            {
+                return;
+            }
+            if (_sqlConnection.State == ConnectionState.Open)
+            {
+                _sqlConnection.Close();
+            }
         }
 
         public DataTable ExecuteQuery(string query, MySqlParameter[] parameters)
@@ -48,11 +55,6 @@ namespace DAL
                 DataTable dataTable = new();
                 adapter.Fill(dataTable);
                 return dataTable;
-            }
-            catch (DbException exception)
-            {
-                Console.WriteLine(exception);
-                throw;
             }
             finally
             {

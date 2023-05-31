@@ -13,6 +13,12 @@ namespace DAL
 {
     public class CarDal : ICarDal
     {
+        private readonly DbConnection _dbConnection;
+        public CarDal(DbConnection dbConnection)
+        {
+            _dbConnection = dbConnection;
+        }
+
         public void InsertCar(string email, Car car)
         {
             var insertCarQuery = "INSERT INTO car (customer_id, license_plate, model, color, year) " +
@@ -28,7 +34,7 @@ namespace DAL
                 new MySqlParameter("@year", MySqlDbType.Int32) { Value = car.Year },
             };
 
-            var connection = new DbConnection();
+            var connection = _dbConnection;
             connection.ExecuteQuery(insertCarQuery, insertCarParameters);
         }
 
@@ -39,7 +45,7 @@ namespace DAL
             {
                 new MySqlParameter("@id", id)
             };
-            var connection = new DbConnection();
+            var connection = _dbConnection;
             connection.ExecuteQuery(query, parameters);
         }
 
@@ -54,7 +60,7 @@ namespace DAL
                 new MySqlParameter("@color", car.Color),
                 new MySqlParameter("@year", car.Year)
             };
-            var connection = new DbConnection();
+            var connection = _dbConnection;
             connection.ExecuteQuery(query, parameters);
         }
 
@@ -69,7 +75,7 @@ namespace DAL
             {
                 new MySqlParameter("@Email", email)
             };
-            var connection = new DbConnection();
+            var connection = _dbConnection;
             var dataTable = connection.ExecuteQuery(query, parameters);
             var cars = new List<CarDto>();
             foreach (DataRow row in dataTable.Rows)
@@ -93,7 +99,7 @@ namespace DAL
             {
                 new MySqlParameter("@id", id)
             };
-            var connection = new DbConnection();
+            var connection = _dbConnection;
             var dataTable = connection.ExecuteQuery(query, parameters);
             if (dataTable.Rows.Count == 0)
             {
@@ -108,30 +114,24 @@ namespace DAL
             return carDto;
         }
 
-
-        public CarDto GetCarByLicensePlate(string licensePlate)
+        public bool DoesCarAlreadyExist(string licensePlate)
         {
             var query = "SELECT * FROM car WHERE license_plate = @license_plate";
             var parameters = new MySqlParameter[]
             {
                 new MySqlParameter("@license_plate", licensePlate)
             };
-            var connection = new DbConnection();
+            var connection = _dbConnection;
             var dataTable = connection.ExecuteQuery(query, parameters);
             if (dataTable.Rows.Count == 0)
             {
-                throw new Exception("Car not found");
+                return false;
             }
-            var row = dataTable.Rows[0];
-            var carDto = new CarDto(
-                row.Field<int>("id"),
-                row.Field<string>("license_plate"),
-                row.Field<string>("color"),
-                row.Field<string>("model"),
-                row.Field<int>("year")
-            );
-            return carDto;
+            return true;
         }
+
+
+
 
 
 

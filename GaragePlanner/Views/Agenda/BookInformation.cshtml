@@ -7,6 +7,21 @@
     <title>Book</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+        function handleCarSelection() {
+            var selectBox = document.getElementById('car');
+            var selectedValue = selectBox ? selectBox.value : '';
+            var submitButton = document.getElementById('submitButton');
+
+            if (selectedValue === "") {
+                submitButton.style.display = 'none';
+            } else {
+                submitButton.style.display = 'block';
+            }
+        }
+
+        window.onload = handleCarSelection;
+    </script>
 </head>
 <body>
 
@@ -35,7 +50,8 @@
         @if (Model.CustomerCars != null && Model.CustomerCars.Any())
         {
             <label for="car">Select your car:</label>
-            <select id="car" name="SelectedCarId">
+            <select id="car" name="SelectedCarId" onchange="handleCarSelection()">
+                <option value="">Select a car...</option>
                 @foreach (var car in Model.CustomerCars)
                 {
                     <option value="@car.Id">@car.LicensePlate</option>
@@ -59,7 +75,6 @@
 
             <br>
 
-            <!-- Include hidden inputs for the properties of the model that need to be preserved -->
             @foreach (var car in Model.CustomerCars)
             {
                 <input type="hidden" name="customerCars" value="@car" />
@@ -72,10 +87,8 @@
             <input type="hidden" name="chosenDateTime" value="@Model.ChosenDateTime" />
         }
 
-        <button type="submit">Submit appointment</button>
+        <button type="submit" id="submitButton">Submit appointment</button>
     </form>
 
 </body>
 </html>
-
-

@@ -52,7 +52,7 @@ namespace Domain
             return appointment.Date < DateTime.Now;
         }
 
-        public bool AddAppointment(Appointment appointment)
+        public Result AddAppointment(Appointment appointment)
         {
             DateOnly appointmentDate = DateOnly.FromDateTime(appointment.DateAndTime);
             TimeOnly appointmentTime = TimeOnly.FromDateTime(appointment.DateAndTime);
@@ -61,12 +61,16 @@ namespace Domain
 
             TimeSlot targetTimeSlot = targetDay.FindTimeSlot(appointmentTime);
 
-            if (targetTimeSlot.CanAddAppointment(appointment))
+            if (!targetTimeSlot.CanAddAppointment(appointment))
             {
-                _appointmentDal.InsertAppointment(appointment);
-                return true;
+                return new Result(false, "Timeslot already full");
             }
-            return false;
+
+            _appointmentDal.InsertAppointment(appointment);
+            return new Result(true, "Appointment added");
+             
+            
+        
         }
 
     }
