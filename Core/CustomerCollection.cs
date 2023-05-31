@@ -84,7 +84,6 @@ namespace Core
 
         public List<string> GetCustomerEmails()
         {
-            FillListWithCustomers();
             List<string> customerEmails = Customers.Select(c => c.Email).ToList();
             return customerEmails;
         }

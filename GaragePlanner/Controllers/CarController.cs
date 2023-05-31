@@ -51,10 +51,7 @@ namespace GaragePlanner.Controllers
 
 
             Result result = carCollection.CreateCar(email,car);
-            if (result.Success == false)
-            {
-                return RedirectToAction("Index");
-            }
+
 
             return RedirectToAction("Index", "Home");
         }
