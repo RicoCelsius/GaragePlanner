@@ -19,6 +19,7 @@ namespace Domain
         {
             Days = DayGenerator.GenerateDays(AmountOfDays);
             
+            
             _appointmentDal = appointmentDal;
             LoadAgenda(_appointmentDal.GetAgenda());
         }
@@ -33,26 +34,24 @@ namespace Domain
                 }
                 Appointment appointmentToAdd = DtoConverter.ConvertAppointmentDtoToAppointment(appointment);
 
-                DateOnly appointmentDate = DateOnly.FromDateTime(appointment.Date);
-                TimeOnly appointmentTime = TimeOnly.FromDateTime(appointment.Date);
+                DateOnly appointmentDate = DateOnly.FromDateTime(appointment.DateAndTime);
+                TimeOnly appointmentTime = TimeOnly.FromDateTime(appointment.DateAndTime);
 
                 Day targetDay = Days.FirstOrDefault(day => day.DateOfDay.Equals(appointmentDate));
 
                 TimeSlot targetTimeSlot = targetDay.FindTimeSlot(appointmentTime);
+                targetTimeSlot.AddAppointment(appointmentToAdd);
 
-                if (!targetTimeSlot.CanAddAppointment(appointmentToAdd))
-                {
-                    throw new Exception("Appointment cant be added to timeslot");
-                };
+
             }
         }
 
         private bool IsAppointmentDateAlreadyPassed(AppointmentDto appointment)
         {
-            return appointment.Date < DateTime.Now;
+            return appointment.DateAndTime < DateTime.Now;
         }
 
-        public Result AddAppointment(Appointment appointment)
+        public Result CreateAppointment(Appointment appointment)
         {
             DateOnly appointmentDate = DateOnly.FromDateTime(appointment.DateAndTime);
             TimeOnly appointmentTime = TimeOnly.FromDateTime(appointment.DateAndTime);
@@ -60,17 +59,14 @@ namespace Domain
             Day targetDay = Days.FirstOrDefault(day => day.DateOfDay.Equals(appointmentDate));
 
             TimeSlot targetTimeSlot = targetDay.FindTimeSlot(appointmentTime);
-
-            if (!targetTimeSlot.CanAddAppointment(appointment))
-            {
-                return new Result(false, "Timeslot already full");
-            }
-
-            _appointmentDal.InsertAppointment(appointment);
-            return new Result(true, "Appointment added");
-             
             
-        
+
+            AppointmentDto appointmentDto = DomainConverter.ConvertAppointmentToAppointmentDto(appointment);
+            _appointmentDal.InsertAppointment(appointmentDto);
+            return targetTimeSlot.AddAppointment(appointment);
+
+
+
         }
 
     }

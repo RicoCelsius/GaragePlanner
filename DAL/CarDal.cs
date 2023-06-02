@@ -13,8 +13,8 @@ namespace DAL
 {
     public class CarDal : ICarDal
     {
-        private readonly DbConnection _dbConnection;
-        public CarDal(DbConnection dbConnection)
+        private readonly IDbConnection _dbConnection;
+        public CarDal(IDbConnection dbConnection)
         {
             _dbConnection = dbConnection;
         }

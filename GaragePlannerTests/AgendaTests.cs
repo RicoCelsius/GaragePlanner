@@ -26,7 +26,7 @@ namespace GaragePlannerTests
             Car car = new Car("AB-12-CD","Blue","Audi",2019);
 
             //act
-            Result hasAdded = agenda.AddAppointment(new Appointment(targetDateTime, Enums.Type.BigMaintenance, Enums.Status.Scheduled, customer, car));
+            Result hasAdded = agenda.CreateAppointment(new Appointment(targetDateTime, Enums.Type.BigMaintenance, Enums.Status.Scheduled, customer, car));
             
             //assert
             Assert.True(hasAdded.Success);
@@ -56,7 +56,7 @@ namespace GaragePlannerTests
 
 
             //act
-            Result hasAdded = agenda.AddAppointment(new Appointment(targetDateTime, Enums.Type.BigMaintenance, Enums.Status.Scheduled, customer, car));
+            Result hasAdded = agenda.CreateAppointment(new Appointment(targetDateTime, Enums.Type.BigMaintenance, Enums.Status.Scheduled, customer, car));
 
             Assert.False(hasAdded.Success);
         }

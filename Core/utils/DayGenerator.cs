@@ -10,7 +10,7 @@ namespace Domain.utils
     {
         public static List<Day> GenerateDays(int amountOfDays)
         {
-            List<Day> Days = new List<Day>();
+            List<Day> Days = new ();
             DateOnly startDate = DateOnly.FromDateTime(DateTime.Now);
             for (int i = 0; i < amountOfDays; i++)
             {

@@ -19,9 +19,9 @@ namespace Domain.utils
             return new CarDto(car.Id, car.LicensePlate, car.Color, car.Model, car.Year);
         }
 
-        public static AppointmentDto ConvertAppointmentToAppointmentDto(Appointment appointment, DateTime Date)
+        public static AppointmentDto ConvertAppointmentToAppointmentDto(Appointment appointment)
         {
-            return new AppointmentDto(Date, appointment.ServiceType, appointment.Status, ConvertCustomerToCustomerDto(appointment.Customer), ConvertCarToCarDto(appointment.Car));
+            return new AppointmentDto(appointment.DateAndTime,appointment.ServiceType, appointment.Status, ConvertCustomerToCustomerDto(appointment.Customer), ConvertCarToCarDto(appointment.Car));
         }
     }
 }

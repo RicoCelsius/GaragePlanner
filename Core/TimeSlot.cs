@@ -1,4 +1,5 @@
 ﻿using Domain.interfaces;
+using Domain.utils;
 
 namespace Domain
 {
@@ -18,14 +19,14 @@ namespace Domain
             return _appointment == null;
         }
 
-        public bool CanAddAppointment(Appointment appointment)
+        public Result AddAppointment(Appointment appointment)
         {
             if (!IsAvailable())
             {
-                return false;
+                return new Result(false, "Timeslot already full");
             }
             _appointment = appointment;
-            return true;
+            return new Result(true, "Appointment added");
         }
     }
 }

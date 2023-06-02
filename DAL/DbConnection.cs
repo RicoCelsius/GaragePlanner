@@ -1,12 +1,13 @@
 ﻿using System.Data;
 using System.Data.Common;
+using Domain.utils;
 using MySqlConnector;
 using Microsoft.Extensions.Configuration;
 
 
 namespace DAL
 {
-    public class DbConnection
+    public class DbConnection : IDbConnection
     {
         private readonly MySqlConnection _sqlConnection;
 
@@ -21,6 +22,7 @@ namespace DAL
             {
                 return;
             }
+
             if (_sqlConnection.State == ConnectionState.Closed)
             {
                 _sqlConnection.Open();
@@ -34,6 +36,7 @@ namespace DAL
             {
                 return;
             }
+
             if (_sqlConnection.State == ConnectionState.Open)
             {
                 _sqlConnection.Close();
@@ -49,12 +52,17 @@ namespace DAL
                 if (parameters != null)
                 {
                     command.Parameters.AddRange(parameters);
-                }
+                } 
 
                 MySqlDataAdapter adapter = new(command);
                 DataTable dataTable = new();
                 adapter.Fill(dataTable);
                 return dataTable;
+            }
+            catch (DbException ex)
+            {
+                ex.Data.Add("Query", query);
+                throw new CouldNotReadDataException("Error while executing query", ex);
             }
             finally
             {
