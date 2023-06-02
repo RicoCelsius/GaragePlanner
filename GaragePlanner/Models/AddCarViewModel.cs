@@ -18,7 +18,6 @@ namespace GaragePlanner.Models
         [RegularExpression("([1-9]+)", ErrorMessage = "Please enter a valid year")]
         public int Year { get; set; }
 
-        public AddCarViewModel(){
-        }   
+
     }
 }

@@ -2,11 +2,11 @@
 {
     public class Appointment
     {
-        public DateTime DateAndTime { get; set; }
-        public Enums.Type ServiceType { get; set; }
-        public Enums.Status Status { get; set; }
-        public Customer Customer { get; set; }
-        public Car Car { get; set; }
+        public DateTime DateAndTime { get; }
+        public Enums.Type ServiceType { get;}
+        public Enums.Status Status { get; }
+        public Customer Customer { get; }
+        public Car Car { get; }
 
         public Appointment(DateTime dateAndTime,Enums.Type serviceType, Enums.Status status, Customer customer, Car car)
         {

@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace Domain
 {
@@ -35,6 +38,11 @@ namespace Domain
             Purple,
             Pink,
             Brown
+        }
+
+        public static string GetDisplayName(Enum value)
+        {
+            return Regex.Replace(value.ToString(), "(?<!^)([A-Z])", " $1").ToLowerInvariant();
         }
     }
 }

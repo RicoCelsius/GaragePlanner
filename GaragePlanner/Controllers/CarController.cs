@@ -13,8 +13,8 @@ namespace GaragePlanner.Controllers
 {
     public class CarController : Controller
     {
-        private ICarDal _carDal;
-        private ICustomerDal _customerDal;
+        private readonly ICarDal _carDal;
+        private readonly ICustomerDal _customerDal;
 
         public CarController(ICarDal carDal, ICustomerDal customerDal)
         {
@@ -25,8 +25,8 @@ namespace GaragePlanner.Controllers
         [HttpGet]
         public ActionResult Index(AddCarViewModel carViewModel)
         {
-            List<string> customerEmails = new List<string>();
-            CustomerCollection customerCollection = new CustomerCollection(_customerDal);
+            List<string> customerEmails = new ();
+            CustomerCollection customerCollection = new (_customerDal);
             customerEmails = customerCollection.GetCustomerEmails();
             carViewModel.CustomerEmails = customerEmails;
 
@@ -38,10 +38,10 @@ namespace GaragePlanner.Controllers
 
         public ActionResult AddCar(AddCarViewModel carViewModel)
         {
-            CarCollection carCollection = new CarCollection(_carDal);
+            CarCollection carCollection = new (_carDal);
             
 
-            Car car = new Car(
+            Car car = new(
                 carViewModel.LicensePlate,
                 carViewModel.SelectedColor,
                 carViewModel.Model,
@@ -58,7 +58,7 @@ namespace GaragePlanner.Controllers
 
         public ActionResult DeleteCar(int id)
         {
-            CarCollection carCollection = new CarCollection(_carDal);
+            CarCollection carCollection = new (_carDal);
             carCollection.DeleteCar(id);
 
 
@@ -67,7 +67,7 @@ namespace GaragePlanner.Controllers
 
         public ActionResult EditCar(OverviewCarViewModel model)
         {
-            Car car = new Car(
+            Car car = new (
                 model.Id,
                 model.LicensePlate,
                 model.Color,
@@ -75,7 +75,7 @@ namespace GaragePlanner.Controllers
                 model.Year
                 );
 
-            CarCollection carCollection = new CarCollection(_carDal);
+            CarCollection carCollection = new (_carDal);
             carCollection.EditCar(car);
 
 
@@ -84,8 +84,8 @@ namespace GaragePlanner.Controllers
 
         public ActionResult Overview(OverviewCarViewModel model)
         {
-            CustomerCollection customerCollection = new CustomerCollection(_customerDal);
-            CarCollection carCollection = new CarCollection(_carDal);
+            CustomerCollection customerCollection = new (_customerDal);
+            CarCollection carCollection = new (_carDal);
 
             model.CustomerEmails = customerCollection.GetCustomerEmails();
             List<Car> customerCars = carCollection.GetCustomerCarsByCustomerEmail("fefefefefefefe@gmail.com");

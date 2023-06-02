@@ -11,13 +11,13 @@ namespace GaragePlanner.Controllers
     public class LoginController : Controller
     {
         ICustomerDal _customerDal;
-        private readonly CustomerCollection _customerFile;
+        private readonly CustomerCollection _customerCollection;
 
 
         public LoginController(ICustomerDal customerDal)
         {
             _customerDal = customerDal;
-            _customerFile = new CustomerCollection(_customerDal);
+            _customerCollection = new CustomerCollection(_customerDal);
         }
         
     
@@ -34,7 +34,7 @@ namespace GaragePlanner.Controllers
             {
                 return View("Index");
             }
-            Result authenticatedCustomer = _customerFile.AuthenticateCustomer(model.Email,model.Password);
+            Result authenticatedCustomer = _customerCollection.AuthenticateCustomer(model.Email,model.Password);
 
            
 

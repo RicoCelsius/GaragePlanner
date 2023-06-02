@@ -24,32 +24,41 @@ namespace GaragePlanner.Controllers
         }
         public IActionResult Index(DateTime dataAndTime)
         {
-            Agenda agenda = new Agenda(_appointmentDal);
-            AgendaViewModel model = new();
-
-            List <Day> days = agenda.Days;
-            
-
-            foreach (var day in days)
+            try
             {
-                DayViewModel dayViewModel = new DayViewModel { Date = day.DateOfDay };
-                foreach (TimeSlot timeslot in day.TimeSlots)
+                Agenda agenda = new(_appointmentDal);
+                AgendaViewModel model = new();
+
+                List<Day> days = agenda.Days;
+
+
+                foreach (var day in days)
                 {
-                    TimeSlotViewModel timeslotViewModel = new TimeSlotViewModel
+                    DayViewModel dayViewModel = new() { Date = day.DateOfDay };
+                    foreach (TimeSlot timeslot in day.TimeSlots)
                     {
-                        Time = timeslot.StartTime,
-                        IsAvailable = timeslot.IsAvailable(),
-                    };
-                    dayViewModel.TimeSlots.Add(timeslotViewModel);
+                        TimeSlotViewModel timeslotViewModel = new()
+                        {
+                            Time = timeslot.StartTime,
+                            IsAvailable = timeslot.IsAvailable(),
+                        };
+                        dayViewModel.TimeSlots.Add(timeslotViewModel);
+                    }
+
+                    model.Days.Add(dayViewModel);
                 }
-                model.Days.Add(dayViewModel);
+
+                return View(model);
             }
+            catch (CouldNotReadDataException)
+            {
+                var errorViewModel = new ErrorViewModel()
+                {
+                    ErrorMessage = "Technical issues, please try again later."
+                };
 
-            return View(model);
-
-
-
-
+                return View("Error", errorViewModel);
+            }
         }
 
 
@@ -58,11 +67,10 @@ namespace GaragePlanner.Controllers
 
         public IActionResult BookInformation(BookViewModel model, string selectedCustomerEmail, DateTime dateAndTime)
         {
-            CustomerCollection customerCollection = new CustomerCollection(_customerDal);
-            CarCollection carCollection = new CarCollection(_carDal);
+            CustomerCollection customerCollection = new(_customerDal);
+            CarCollection carCollection = new (_carDal);
             List<String> customerEmails = customerCollection.GetCustomerEmails();
 
-            // Only fetch cars if an email was selected.
             if (!string.IsNullOrEmpty(selectedCustomerEmail))
             {
                 List<Car> customerCars = carCollection.GetCustomerCarsByCustomerEmail(selectedCustomerEmail);
@@ -86,14 +94,14 @@ namespace GaragePlanner.Controllers
 
 
             Agenda agenda = new(_appointmentDal);
-            CustomerCollection customerCollection = new CustomerCollection(_customerDal);
-            CarCollection carCollection = new CarCollection(_carDal);
+            CustomerCollection customerCollection = new(_customerDal);
+            CarCollection carCollection = new (_carDal);
             Customer customer = customerCollection.GetCustomerByEmail(model.SelectedEmail);
             Car car = carCollection.GetCarById(model.SelectedCarId);
 
             Appointment appointment = new(model.ChosenDateTime, model.SelectedTypeOfAppointment, Enums.Status.Scheduled,
                 customer, car);
-            agenda.AddAppointment(appointment);
+            agenda.CreateAppointment(appointment);
             
             return RedirectToAction("Confirmation",model);
 

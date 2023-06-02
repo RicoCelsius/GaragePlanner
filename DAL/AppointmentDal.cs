@@ -13,8 +13,8 @@ namespace DAL
 {
     public class AppointmentDal : IAppointmentDal
     {
-        private readonly DbConnection _dbConnection;
-        public AppointmentDal(DbConnection dbConnection)
+        private readonly IDbConnection _dbConnection;
+        public AppointmentDal(IDbConnection dbConnection)
         {
             _dbConnection = dbConnection;
         }
@@ -22,7 +22,7 @@ namespace DAL
 
         public List<AppointmentDto> GetAgenda()
         {
-            List<AppointmentDto> appointments = new List<AppointmentDto>();
+            List<AppointmentDto> appointments = new ();
 
             var query = @"
                 SELECT appointment.date, appointment.type, appointment.status, 
@@ -37,7 +37,7 @@ namespace DAL
 
             foreach (DataRow row in dataTable.Rows)
             {
-                CustomerDto customer = new CustomerDto(
+                CustomerDto customer = new(
                     row.Field<int>("id"),
                     row.Field<string>("first_name"),
                     row.Field<string>("last_name"),
@@ -46,7 +46,7 @@ namespace DAL
                     row.Field<string>("Password")
                 );
 
-                CarDto car = new CarDto(
+                CarDto car = new(
                     row.Field<int>("id"),
                     row.Field<string>("license_plate"),
                     row.Field<string>("color"),
@@ -54,7 +54,7 @@ namespace DAL
                     row.Field<int>("year")
                 );
 
-                AppointmentDto appointment = new AppointmentDto(
+                AppointmentDto appointment = new (
                     row.Field<DateTime>("date"),
                     (Enums.Type)Enum.Parse(typeof(Enums.Type), row.Field<string>("type")),
                     (Enums.Status)Enum.Parse(typeof(Enums.Status), row.Field<string>("status")),
@@ -68,7 +68,7 @@ namespace DAL
             return appointments;
         }
 
-        public void InsertAppointment(Appointment appointment)
+        public void InsertAppointment(AppointmentDto appointment)
         {
             var query = @"
              INSERT INTO appointment (customer_id, car_id, date, type, status) 

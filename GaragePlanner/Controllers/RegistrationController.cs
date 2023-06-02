@@ -36,7 +36,7 @@ namespace GaragePlanner.Controllers
 
             try
             {
-                CustomerCollection _customerCollection = new CustomerCollection(_customerDal);
+                CustomerCollection _customerCollection = new (_customerDal);
                 _customerCollection.CreateCustomer(
                     registrationViewModel.FirstName,
                     registrationViewModel.LastName,

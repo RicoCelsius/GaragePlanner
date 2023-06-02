@@ -30,13 +30,11 @@ namespace GaragePlannerTests.mocks
         {
             
 
-            
-            //appointments.Add(new AppointmentDto(new DateTime(2023, 5, 22, 10, 0, 0), Enums.Type.BigMaintenance, Enums.Status.Scheduled, customer, car));
-           // AppointmentDto dto = new AppointmentDto()
+     
            return _appointmentsInAgenda;
         }
 
-        public void InsertAppointment(Appointment appointmentDto)
+        public void InsertAppointment(AppointmentDto appointmentDto)
         {
             
         }
