@@ -19,7 +19,7 @@ namespace DAL
             _dbConnection = dbConnection;
         }
 
-        public void InsertCar(string email, Car car)
+        public void InsertCar(string email, CarDto car)
         {
             var insertCarQuery = "INSERT INTO car (customer_id, license_plate, model, color, year) " +
                                  "SELECT id, @license_plate, @model, @color, @year " +
@@ -83,7 +83,7 @@ namespace DAL
                 var car = new CarDto(
                     row.Field<int>("id"),
                     row.Field<string>("license_plate"),
-                    row.Field<string>("color"),
+                    (Enums.Color)Enum.Parse(typeof(Enums.Color), row.Field<string>("color")),
                     row.Field<string>("model"),
                     row.Field<int>("year")
                 );
@@ -108,8 +108,8 @@ namespace DAL
             var row = dataTable.Rows[0];
             var carDto = new CarDto(
                                row.Field<int>("id"),
-                               row.Field<string>("license_plate"), 
-                               row.Field<string>("color"),
+                               row.Field<string>("license_plate"),
+                               (Enums.Color)Enum.Parse(typeof(Enums.Color), row.Field<string>("color")),
                                row.Field<string>("model"), row.Field<int>("year"));
             return carDto;
         }

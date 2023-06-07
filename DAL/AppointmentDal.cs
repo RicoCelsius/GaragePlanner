@@ -49,7 +49,7 @@ namespace DAL
                 CarDto car = new(
                     row.Field<int>("id"),
                     row.Field<string>("license_plate"),
-                    row.Field<string>("color"),
+                    (Enums.Color)Enum.Parse(typeof(Enums.Color), row.Field<string>("color")),
                     row.Field<string>("model"),
                     row.Field<int>("year")
                 );

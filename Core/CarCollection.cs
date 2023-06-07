@@ -14,7 +14,7 @@ namespace Domain
 {
     public class CarCollection
     {
-        private ICarDal _iCarDal;
+        private readonly ICarDal _iCarDal;
 
         public CarCollection(ICarDal iCarDal)
         {
@@ -27,7 +27,9 @@ namespace Domain
             {
                 return new Result(false, "License plate already exists");
             }
-            _iCarDal.InsertCar(email,car);
+
+            CarDto carDto = DomainConverter.ConvertCarToCarDto(car);
+            _iCarDal.InsertCar(email,carDto);
             return new Result(true, "Car created");
         }
 
