@@ -17,12 +17,12 @@ namespace GaragePlannerTests.mocks
             this._customers = customers;
         }
 
-        public List<CustomerDto> GetAllCustomers()
+        public Task<List<CustomerDto>> GetAllCustomersAsync()
         {
-            return _customers;
+            return Task.FromResult(_customers);
         }
 
-        public CustomerDto GetCustomerByEmail(string email)
+        public Task<CustomerDto> GetCustomerByEmailAsync(string email)
         {
             throw new NotImplementedException();
         }

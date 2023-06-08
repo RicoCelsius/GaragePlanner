@@ -20,7 +20,7 @@ namespace DAL
         }
 
 
-        public List<AppointmentDto> GetAgenda()
+        public async Task<List<AppointmentDto>> GetAgendaAsync()
         {
             List<AppointmentDto> appointments = new ();
 
@@ -33,7 +33,7 @@ namespace DAL
                 INNER JOIN car ON appointment.car_id = car.id";
 
             var connection = _dbConnection;
-            var dataTable = connection.ExecuteQuery(query, null);
+            var dataTable = await connection.ExecuteQuery(query, null);
 
             foreach (DataRow row in dataTable.Rows)
             {

@@ -35,7 +35,7 @@ namespace DAL
 
 
 
-        public CustomerDto GetCustomerByEmail(string email)
+        public async Task<CustomerDto> GetCustomerByEmailAsync(string email)
         {
             var query = "SELECT * FROM customers WHERE Email = @Email";
             var parameters = new MySqlParameter[]
@@ -44,7 +44,7 @@ namespace DAL
             };
 
             var connection = _dbConnection;
-            var dataTable = connection.ExecuteQuery(query, parameters);
+            var dataTable = await connection.ExecuteQuery(query, parameters);
 
             if (dataTable.Rows.Count > 0)
             {
@@ -64,13 +64,13 @@ namespace DAL
         }
 
 
-        public List<CustomerDto> GetAllCustomers()
+        public async Task<List<CustomerDto>> GetAllCustomersAsync()
         {
             var query = "SELECT * FROM customers";
             var connection = _dbConnection;
   
 
-            var dataTable = connection.ExecuteQuery(query, null);
+            var dataTable = await connection.ExecuteQuery(query, null);
 
             List<CustomerDto> customers = new List<CustomerDto>();
             foreach (DataRow row in dataTable.Rows)

@@ -36,7 +36,7 @@ namespace GaragePlanner.Controllers
 
         [HttpPost]
 
-        public ActionResult AddCar(AddCarViewModel carViewModel)
+        public async Task<ActionResult> AddCarAsync(AddCarViewModel carViewModel)
         {
             CarCollection carCollection = new (_carDal);
             
@@ -50,7 +50,7 @@ namespace GaragePlanner.Controllers
             string email = carViewModel.SelectedCustomerEmail;
 
 
-            Result result = carCollection.CreateCar(email,car);
+            Result result = await carCollection.CreateCarAsync(email,car);
 
 
             return RedirectToAction("Index", "Home");
@@ -71,7 +71,7 @@ namespace GaragePlanner.Controllers
                 model.Id,
                 model.LicensePlate,
                 model.Color,
-                model.CarModel,
+                model.Model,
                 model.Year
                 );
 
@@ -82,13 +82,13 @@ namespace GaragePlanner.Controllers
             return RedirectToAction("Overview");
         }
 
-        public ActionResult Overview(OverviewCarViewModel model)
+        public async Task<ActionResult> OverviewAsync(OverviewCarViewModel model)
         {
             CustomerCollection customerCollection = new (_customerDal);
             CarCollection carCollection = new (_carDal);
 
             model.CustomerEmails = customerCollection.GetCustomerEmails();
-            List<Car> customerCars = carCollection.GetCustomerCarsByCustomerEmail("fefefefefefefe@gmail.com");
+            List<Car> customerCars = await carCollection.GetCustomerCarsByCustomerEmailAsync("fefefefefefefe@gmail.com");
             model.Cars = customerCars;
             return View(model);
         }

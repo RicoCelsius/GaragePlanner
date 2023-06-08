@@ -28,13 +28,13 @@ namespace GaragePlanner.Controllers
         }
 
         [HttpPost]
-        public IActionResult Login(LoginViewModel model)
+        public async Task<IActionResult> LoginAsync(LoginViewModel model)
         {
             if (!ModelState.IsValid)
             {
                 return View("Index");
             }
-            Result authenticatedCustomer = _customerCollection.AuthenticateCustomer(model.Email,model.Password);
+            Result authenticatedCustomer = await _customerCollection.AuthenticateCustomerAsync(model.Email,model.Password);
 
            
 

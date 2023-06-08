@@ -21,7 +21,8 @@ namespace Domain
             
             
             _appointmentDal = appointmentDal;
-            LoadAgenda(_appointmentDal.GetAgenda());
+
+            //LoadAgenda(_appointmentDal.GetAgendaAsync());
         }
 
         public void LoadAgenda(List<AppointmentDto> appointments)

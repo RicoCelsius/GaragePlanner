@@ -66,7 +66,7 @@ namespace DAL
 
 
 
-        public List<CarDto> GetCarsByEmail(string email)
+        public async Task<List<CarDto>> GetCarsByEmailAsync(string email)
         {
             var query = "SELECT car.* FROM car " +
                         "INNER JOIN customers ON car.customer_id = customers.id " + 
@@ -76,7 +76,7 @@ namespace DAL
                 new MySqlParameter("@Email", email)
             };
             var connection = _dbConnection;
-            var dataTable = connection.ExecuteQuery(query, parameters);
+            var dataTable = await connection.ExecuteQuery(query, parameters);
             var cars = new List<CarDto>();
             foreach (DataRow row in dataTable.Rows)
             {
@@ -92,7 +92,7 @@ namespace DAL
             return cars;
         }
 
-        public CarDto GetCarById(int id)
+        public async Task<CarDto> GetCarByIdAsync(int id)
         {
             var query = "SELECT * FROM car WHERE id = @id";
             var parameters = new MySqlParameter[]
@@ -100,7 +100,7 @@ namespace DAL
                 new MySqlParameter("@id", id)
             };
             var connection = _dbConnection;
-            var dataTable = connection.ExecuteQuery(query, parameters);
+            var dataTable = await connection.ExecuteQuery(query, parameters);
             if (dataTable.Rows.Count == 0)
             {
                 throw new Exception("Car not found");
@@ -114,7 +114,7 @@ namespace DAL
             return carDto;
         }
 
-        public bool DoesCarAlreadyExist(string licensePlate)
+        public async Task<bool> DoesCarAlreadyExistAsync(string licensePlate)
         {
             var query = "SELECT * FROM car WHERE license_plate = @license_plate";
             var parameters = new MySqlParameter[]
@@ -122,7 +122,7 @@ namespace DAL
                 new MySqlParameter("@license_plate", licensePlate)
             };
             var connection = _dbConnection;
-            var dataTable = connection.ExecuteQuery(query, parameters);
+            var dataTable = await connection.ExecuteQuery(query, parameters);
             if (dataTable.Rows.Count == 0)
             {
                 return false;

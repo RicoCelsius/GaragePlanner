@@ -19,7 +19,7 @@ namespace Core
         {
             _iCustomerDal = iCustomerDal;
             Customers = new List<Customer>();
-            FillListWithCustomers();
+            FillListWithCustomersAsync();
         }
 
         public Result CreateCustomer(string firstName, string lastName, string address, string email, string password)
@@ -36,9 +36,9 @@ namespace Core
         }
 
 
-        public Result AuthenticateCustomer(string email, string inputPassword)
+        public async Task<Result> AuthenticateCustomerAsync(string email, string inputPassword)
         {
-            CustomerDto customerInfo = _iCustomerDal.GetCustomerByEmail(email);
+            CustomerDto customerInfo = await _iCustomerDal.GetCustomerByEmailAsync(email);
             string hashedPassword = customerInfo.Password;
             string hashedInputPassword = PasswordEncryptor.EncryptPassword(inputPassword);
 
@@ -56,9 +56,9 @@ namespace Core
             return new Result(false, "Wrong password");
         }
 
-        public void FillListWithCustomers()
+        public async Task FillListWithCustomersAsync()
         {
-            List<CustomerDto> customerDtos = _iCustomerDal.GetAllCustomers();
+            List<CustomerDto> customerDtos = await _iCustomerDal.GetAllCustomersAsync();
             foreach (CustomerDto customerDto in customerDtos)
             {
                 Customer customer = DtoConverter.ConvertCustomerDtoToCustomer(customerDto);

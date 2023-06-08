@@ -6,10 +6,10 @@ namespace DAL;
 public interface ICarDal
 {
     void InsertCar(string email, CarDto car);
-    List<CarDto> GetCarsByEmail(string email);
-    CarDto GetCarById(int id);
+    Task<List<CarDto>> GetCarsByEmailAsync(string email);
+    Task<CarDto> GetCarByIdAsync(int id);
 
-    bool DoesCarAlreadyExist(string licenseplate);
+    Task<bool> DoesCarAlreadyExistAsync(string licenseplate);
 
     void UpdateCar(Car car);
 

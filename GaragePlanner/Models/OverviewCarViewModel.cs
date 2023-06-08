@@ -7,7 +7,6 @@ namespace GaragePlanner.Models
     public class OverviewCarViewModel
     {
         public List<string> CustomerEmails { get; set; }
-        public string SelectedCustomerEmail { get; set; }
         public List<Car> Cars { get; set; }
 
         public int Id { get; set; }
@@ -16,7 +15,7 @@ namespace GaragePlanner.Models
         [Required(ErrorMessage = "Please enter a color.")]
         public Enums.Color Color { get; set; }
         [Required(ErrorMessage = "Please enter a model.")]
-        public string CarModel { get; set; }
+        public string Model { get; set; }
         [Required(ErrorMessage = "Please enter a year.")]
         [RegularExpression("([1-9]+)", ErrorMessage = "Please enter a valid year")]
         public int Year { get; set; }

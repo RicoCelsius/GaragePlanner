@@ -5,5 +5,5 @@ namespace DAL;
 
 public interface IDbConnection
 {
-    DataTable ExecuteQuery(string query, MySqlParameter[] parameters);
+    Task<DataTable> ExecuteQuery(string query, MySqlParameter[] parameters);
 }

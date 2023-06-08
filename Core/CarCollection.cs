@@ -21,9 +21,9 @@ namespace Domain
             _iCarDal = iCarDal;
         }
 
-        public Result CreateCar(string email, Car car)
+        public async Task<Result> CreateCarAsync(string email, Car car)
         {
-            if (_iCarDal.DoesCarAlreadyExist(car.LicensePlate))
+            if (await _iCarDal.DoesCarAlreadyExistAsync(car.LicensePlate))
             {
                 return new Result(false, "License plate already exists");
             }
@@ -43,17 +43,17 @@ namespace Domain
             _iCarDal.UpdateCar(car);
         }
 
-        public Car GetCarById(int id)
+        public async Task<Car> GetCarByIdAsync(int id)
         {
-            CarDto carDto = _iCarDal.GetCarById(id);
+            CarDto carDto = await _iCarDal.GetCarByIdAsync(id);
             Car car = DtoConverter.ConvertCarDtoToCar(carDto);
             return car;
         }
 
 
-        public List<Car> GetCustomerCarsByCustomerEmail(string email)
+        public async Task<List<Car>> GetCustomerCarsByCustomerEmailAsync(string email)
         {
-            List<CarDto> customerCarsDto = _iCarDal.GetCarsByEmail(email);
+            List<CarDto> customerCarsDto = await _iCarDal.GetCarsByEmailAsync(email);
             List<Car> customerCars = new List<Car>();
 
             foreach (CarDto car in customerCarsDto)

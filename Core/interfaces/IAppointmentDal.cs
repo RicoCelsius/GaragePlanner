@@ -6,5 +6,5 @@ public interface IAppointmentDal
 
     void InsertAppointment(AppointmentDto appointment);
 
-    List<AppointmentDto> GetAgenda();
+    Task<List<AppointmentDto>> GetAgendaAsync();
 }

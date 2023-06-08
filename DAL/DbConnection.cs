@@ -43,7 +43,7 @@ namespace DAL
             }
         }
 
-        public DataTable ExecuteQuery(string query, MySqlParameter[] parameters)
+        public async Task<DataTable> ExecuteQuery(string query, MySqlParameter[] parameters)
         {
             try
             {

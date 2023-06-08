@@ -14,6 +14,7 @@ namespace GaragePlanner.Controllers
         private readonly ICarDal _carDal;
         public ReservationController(IAppointmentDal appointmentDal, ICustomerDal customerDal, ICarDal carDal)
         {
+            _appointmentDal = appointmentDal;
             _customerDal = customerDal;
             _carDal = carDal;
         }
@@ -22,7 +23,7 @@ namespace GaragePlanner.Controllers
         [HttpGet]
         [HttpPost]
 
-        public IActionResult BookInformation(BookViewModel model, string selectedCustomerEmail, DateTime dateAndTime)
+        public async Task<IActionResult> BookInformationAsync(BookViewModel model, string selectedCustomerEmail, DateTime dateAndTime)
         {
             CustomerCollection customerCollection = new(_customerDal);
             CarCollection carCollection = new(_carDal);
@@ -30,7 +31,7 @@ namespace GaragePlanner.Controllers
 
             if (!string.IsNullOrEmpty(selectedCustomerEmail))
             {
-                List<Car> customerCars = carCollection.GetCustomerCarsByCustomerEmail(selectedCustomerEmail);
+                List<Car> customerCars = await carCollection.GetCustomerCarsByCustomerEmailAsync(selectedCustomerEmail);
                 model.CustomerCars = customerCars;
             }
 
@@ -46,7 +47,7 @@ namespace GaragePlanner.Controllers
 
 
         [HttpPost]
-        public IActionResult Book(BookViewModel model)
+        public async Task<IActionResult> BookAsync(BookViewModel model)
         {
 
 
@@ -54,7 +55,7 @@ namespace GaragePlanner.Controllers
             CustomerCollection customerCollection = new(_customerDal);
             CarCollection carCollection = new(_carDal);
             Customer customer = customerCollection.GetCustomerByEmail(model.SelectedEmail);
-            Car car = carCollection.GetCarById(model.SelectedCarId);
+            Car car = await carCollection.GetCarByIdAsync(model.SelectedCarId);
 
             Appointment appointment = new(model.ChosenDateTime, model.SelectedTypeOfAppointment, Enums.Status.Scheduled,
                 customer, car);

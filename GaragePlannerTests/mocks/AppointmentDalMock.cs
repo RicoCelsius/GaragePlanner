@@ -12,6 +12,7 @@ namespace GaragePlannerTests.mocks
     internal class AppointmentDalMock : IAppointmentDal
     {
         private readonly List<AppointmentDto> _appointmentsInAgenda;
+        public bool HasInsertedAppointment = false;
 
         public AppointmentDalMock(List<AppointmentDto> appointmentsInAgenda)
         {
@@ -26,17 +27,17 @@ namespace GaragePlannerTests.mocks
 
         
 
-        public List<AppointmentDto> GetAgenda()
+        public Task<List<AppointmentDto>> GetAgendaAsync()
         {
             
 
      
-           return _appointmentsInAgenda;
+           return Task.FromResult(_appointmentsInAgenda);
         }
 
         public void InsertAppointment(AppointmentDto appointmentDto)
         {
-            
+            HasInsertedAppointment = true;
         }
     }
 }
