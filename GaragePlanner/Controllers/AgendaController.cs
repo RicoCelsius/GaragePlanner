@@ -19,11 +19,11 @@ namespace GaragePlanner.Controllers
         {
             _appointmentDal = appointmentDal;
         }
-        public IActionResult Index(DateTime dataAndTime)
+        public async Task<IActionResult> IndexAsync(DateTime dataAndTime)
         {
             try
             {
-                Agenda agenda = new(_appointmentDal);
+                Agenda agenda = await Agenda.CreateAgenda(_appointmentDal);
                 AgendaViewModel model = new();
 
                 List<Day> days = agenda.Days;

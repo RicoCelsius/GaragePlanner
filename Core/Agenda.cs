@@ -11,21 +11,24 @@ namespace Domain
 {
     public class Agenda
     {
-        public List<Day> Days { get;}
+        public List<Day> Days { get; }
         private readonly IAppointmentDal _appointmentDal;
         private const int AmountOfDays = 14;
 
-        public Agenda(IAppointmentDal appointmentDal)
+        private Agenda(IAppointmentDal appointmentDal)
         {
             Days = DayGenerator.GenerateDays(AmountOfDays);
-            
-            
             _appointmentDal = appointmentDal;
-
-            //LoadAgenda(_appointmentDal.GetAgendaAsync());
         }
 
-        public void LoadAgenda(List<AppointmentDto> appointments)
+        public static async Task<Agenda> CreateAgenda(IAppointmentDal appointmentDal)
+        {
+            var agenda = new Agenda(appointmentDal);
+            await agenda.LoadAgenda(await appointmentDal.GetAgendaAsync());
+            return agenda;
+        }
+
+        private async Task LoadAgenda(List<AppointmentDto> appointments)
         {
             foreach (AppointmentDto appointment in appointments)
             {
@@ -42,8 +45,6 @@ namespace Domain
 
                 TimeSlot targetTimeSlot = targetDay.FindTimeSlot(appointmentTime);
                 targetTimeSlot.AddAppointment(appointmentToAdd);
-
-
             }
         }
 
@@ -60,15 +61,9 @@ namespace Domain
             Day targetDay = Days.FirstOrDefault(day => day.DateOfDay.Equals(appointmentDate));
 
             TimeSlot targetTimeSlot = targetDay.FindTimeSlot(appointmentTime);
-            
-
             AppointmentDto appointmentDto = DomainConverter.ConvertAppointmentToAppointmentDto(appointment);
             _appointmentDal.InsertAppointment(appointmentDto);
             return targetTimeSlot.AddAppointment(appointment);
-
-
-
         }
-
     }
 }

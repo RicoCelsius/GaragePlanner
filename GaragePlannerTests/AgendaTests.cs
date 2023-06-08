@@ -14,14 +14,14 @@ namespace GaragePlannerTests
     {
 
         [Fact]
-        public void AddAppointmentInEmptyTimeSlot()
+        public async void AddAppointmentInEmptyTimeSlot()
         {
             //arrange
             AppointmentDalMock appointmentDalMock = new AppointmentDalMock(new List<AppointmentDto>());
             DateTime now = DateTime.Now;
             DateTime targetDateTime = new DateTime(now.Year, now.Month, now.Day, 10, 0, 0);
 
-            Agenda agenda = new Agenda(appointmentDalMock);
+            Agenda agenda = await Agenda.CreateAgenda(appointmentDalMock);
             Customer customer = new Customer("Rico","Aarntzen","Straatnaam 10","ricoaarntzen@gmail.com","lol123456");
             Car car = new Car("AB-12-CD",Enums.Color.Black,"Audi",2019);
 
@@ -34,7 +34,7 @@ namespace GaragePlannerTests
         }
 
         [Fact]
-        public void AddAppointmentInNonEmptyTimeSlot()
+        public async Task AddAppointmentInNonEmptyTimeSlotAsync()
         {
             //arrange
 
@@ -50,7 +50,7 @@ namespace GaragePlannerTests
             appointmentDtos.Add(appointmentDto);
             AppointmentDalMock appointmentDalMock = new AppointmentDalMock(appointmentDtos);
 
-            Agenda agenda = new Agenda(appointmentDalMock);
+            Agenda agenda = await Agenda.CreateAgenda(appointmentDalMock);
 
             Customer customer = new Customer("Rico", "Aarntzen", "Straatnaam 10", "ricoaarntzen@gmail.com", "lol123456");
             Car car = new Car("AB-12-CD", Enums.Color.Black, "Audi", 2019);
@@ -63,11 +63,11 @@ namespace GaragePlannerTests
         }
 
         [Fact]
-        public void AreDaysGeneratedProperly()
+        public async void AreDaysGeneratedProperly()
         {
             //arrange
             AppointmentDalMock appointmentDalMock = new AppointmentDalMock(new List<AppointmentDto>());
-            Agenda agenda = new Agenda(appointmentDalMock);
+            Agenda agenda = await Agenda.CreateAgenda(appointmentDalMock);
             int amountOfDays = agenda.Days.Count;
             //act
             List<Day> days = DayGenerator.GenerateDays(amountOfDays);

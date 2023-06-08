@@ -51,7 +51,7 @@ namespace GaragePlanner.Controllers
         {
 
 
-            Agenda agenda = new(_appointmentDal);
+            Agenda agenda = await Agenda.CreateAgenda(_appointmentDal);
             CustomerCollection customerCollection = new(_customerDal);
             CarCollection carCollection = new(_carDal);
             Customer customer = customerCollection.GetCustomerByEmail(model.SelectedEmail);

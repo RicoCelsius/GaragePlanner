@@ -11,13 +11,11 @@ namespace GaragePlanner.Controllers
     public class LoginController : Controller
     {
         ICustomerDal _customerDal;
-        private readonly CustomerCollection _customerCollection;
 
 
         public LoginController(ICustomerDal customerDal)
         {
             _customerDal = customerDal;
-            _customerCollection = new CustomerCollection(_customerDal);
         }
         
     
@@ -34,7 +32,8 @@ namespace GaragePlanner.Controllers
             {
                 return View("Index");
             }
-            Result authenticatedCustomer = await _customerCollection.AuthenticateCustomerAsync(model.Email,model.Password);
+            CustomerCollection customerCollection = new CustomerCollection(_customerDal);
+            Result authenticatedCustomer = await customerCollection.AuthenticateCustomerAsync(model.Email,model.Password);
 
            
 
