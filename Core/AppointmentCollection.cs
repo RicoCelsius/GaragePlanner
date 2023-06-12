@@ -59,11 +59,16 @@ namespace Domain
             Day targetDay = Days.FirstOrDefault(day => day.DateOfDay.Equals(appointmentDate));
 
             TimeSlot targetTimeSlot = targetDay.FindTimeSlot(appointmentTime);
+            if (targetTimeSlot.IsAvailable())
+            {
+                AppointmentDto appointmentDto = DomainConverter.ConvertAppointmentToAppointmentDto(appointment);
+                _appointmentDal.InsertAppointment(appointmentDto);
+                return new Result(true, "Appointment created");
+            }
+            return new Result(false, "Appointment could not be created");
+
             
 
-            AppointmentDto appointmentDto = DomainConverter.ConvertAppointmentToAppointmentDto(appointment);
-            _appointmentDal.InsertAppointment(appointmentDto);
-            return targetTimeSlot.AddAppointment(appointment);
 
 
 

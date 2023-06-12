@@ -15,7 +15,7 @@ namespace GaragePlanner.Controllers
         private readonly IAppointmentDal _appointmentDal;
 
 
-        public AgendaController(IAppointmentDal appointmentDal, ICustomerDal customerDal, ICarDal carDal)
+        public AgendaController(IAppointmentDal appointmentDal)
         {
             _appointmentDal = appointmentDal;
         }

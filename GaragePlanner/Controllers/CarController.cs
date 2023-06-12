@@ -13,21 +13,26 @@ namespace GaragePlanner.Controllers
 {
     public class CarController : Controller
     {
-        private readonly ICarDal _carDal;
-        private readonly ICustomerDal _customerDal;
 
-        public CarController(ICarDal carDal, ICustomerDal customerDal)
+        private readonly CustomerCollection _customerCollection;
+        private readonly CarCollection _carCollection;
+        private readonly ICustomerDal _customerDal;
+        private readonly ICarDal _carDal;
+
+        public CarController(ICustomerDal customerDal, ICarDal carDal)
         {
-            _carDal = carDal;
             _customerDal = customerDal;
+            _carDal = carDal;
+            _customerCollection = new(_customerDal); 
+            _carCollection = new(_carDal);
         }
 
         [HttpGet]
         public ActionResult Index(AddCarViewModel carViewModel)
         {
-            List<string> customerEmails = new ();
-            CustomerCollection customerCollection = new (_customerDal);
-            customerEmails = customerCollection.GetCustomerEmails();
+            List<string> customerEmails = _customerCollection.GetCustomerEmails();
+
+
             carViewModel.CustomerEmails = customerEmails;
 
 
@@ -38,7 +43,6 @@ namespace GaragePlanner.Controllers
 
         public ActionResult AddCar(AddCarViewModel carViewModel)
         {
-            CarCollection carCollection = new (_carDal);
             
 
             Car car = new(
@@ -50,7 +54,7 @@ namespace GaragePlanner.Controllers
             string email = carViewModel.SelectedCustomerEmail;
 
 
-            Result result = carCollection.CreateCar(email,car);
+            Result result = _carCollection.CreateCar(email,car);
 
 
             return RedirectToAction("Index", "Home");
@@ -58,10 +62,7 @@ namespace GaragePlanner.Controllers
 
         public ActionResult DeleteCar(int id)
         {
-            CarCollection carCollection = new (_carDal);
-            carCollection.DeleteCar(id);
-
-
+            _carCollection.DeleteCar(id);
             return RedirectToAction("Index", "Home");
         }
 
@@ -75,8 +76,7 @@ namespace GaragePlanner.Controllers
                 model.Year
                 );
 
-            CarCollection carCollection = new (_carDal);
-            carCollection.EditCar(car);
+            _carCollection.EditCar(car);
 
 
             return RedirectToAction("Overview");
@@ -84,11 +84,8 @@ namespace GaragePlanner.Controllers
 
         public ActionResult Overview(OverviewCarViewModel model)
         {
-            CustomerCollection customerCollection = new (_customerDal);
-            CarCollection carCollection = new (_carDal);
-
-            model.CustomerEmails = customerCollection.GetCustomerEmails();
-            List<Car> customerCars = carCollection.GetCustomerCarsByCustomerEmail("fefefefefefefe@gmail.com");
+            model.CustomerEmails = _customerCollection.GetCustomerEmails();
+            List<Car> customerCars = _carCollection.GetCustomerCarsByCustomerEmail("fefefefefefefe@gmail.com");
             model.Cars = customerCars;
             return View(model);
         }

@@ -23,13 +23,14 @@ namespace GaragePlannerTests
 
             Agenda agenda = new Agenda(appointmentDalMock);
             Customer customer = new Customer("Rico","Aarntzen","Straatnaam 10","ricoaarntzen@gmail.com","lol123456");
-            Car car = new Car("AB-12-CD","Blue","Audi",2019);
+            Car car = new Car("AB-12-CD",Enums.Color.Blue,"Audi",2019);
 
             //act
             Result hasAdded = agenda.CreateAppointment(new Appointment(targetDateTime, Enums.Type.BigMaintenance, Enums.Status.Scheduled, customer, car));
             
             //assert
             Assert.True(hasAdded.Success);
+            Assert.True(appointmentDalMock.HasInsertedAppointment);
         }
 
         [Fact]
@@ -43,7 +44,7 @@ namespace GaragePlannerTests
 
 
             CustomerDto customerDto = new CustomerDto(1, "Rico", "Aarntzen", "Straatnaam", "Straatnaam 10", "lol123456");
-            CarDto carDto = new CarDto(1, "AB-12-CD", "Blue", "Audi", 2019);
+            CarDto carDto = new CarDto(1, "AB-12-CD", Enums.Color.Blue, "Audi", 2019);
             AppointmentDto appointmentDto = new AppointmentDto(targetDateTime,Enums.Type.BigMaintenance, Enums.Status.Scheduled, customerDto, carDto);
             List<AppointmentDto> appointmentDtos = new List<AppointmentDto>();
             appointmentDtos.Add(appointmentDto);
@@ -52,13 +53,15 @@ namespace GaragePlannerTests
             Agenda agenda = new Agenda(appointmentDalMock);
 
             Customer customer = new Customer("Rico", "Aarntzen", "Straatnaam 10", "ricoaarntzen@gmail.com", "lol123456");
-            Car car = new Car("AB-12-CD", "Blue", "Audi", 2019);
+            Car car = new Car("AB-12-CD", Enums.Color.Blue, "Audi", 2019);
 
 
             //act
             Result hasAdded = agenda.CreateAppointment(new Appointment(targetDateTime, Enums.Type.BigMaintenance, Enums.Status.Scheduled, customer, car));
 
             Assert.False(hasAdded.Success);
+            Assert.False(appointmentDalMock.HasInsertedAppointment);
+            
         }
 
         [Fact]

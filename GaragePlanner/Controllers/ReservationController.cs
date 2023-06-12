@@ -15,6 +15,7 @@ namespace GaragePlanner.Controllers
         public ReservationController(IAppointmentDal appointmentDal, ICustomerDal customerDal, ICarDal carDal)
         {
             _customerDal = customerDal;
+            _appointmentDal = appointmentDal;
             _carDal = carDal;
         }
 

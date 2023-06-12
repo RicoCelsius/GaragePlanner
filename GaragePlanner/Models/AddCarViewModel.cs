@@ -8,7 +8,6 @@ namespace GaragePlanner.Models
         public List<string> CustomerEmails { get; set; }
         public string SelectedCustomerEmail { get; set; }
 
-
         [Required(ErrorMessage = "Please enter a license plate number.")]
         public string LicensePlate { get; set; }
         [Required(ErrorMessage = "Please enter a color.")]

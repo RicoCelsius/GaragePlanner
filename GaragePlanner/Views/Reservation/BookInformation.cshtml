@@ -25,7 +25,7 @@
 </head>
 <body>
 
-    <form method="post" action="@Url.Action("BookInformation", "Agenda")">
+    <form method="post" action="@Url.Action("BookInformation", "Reservation")">
         <label for="customer">Your email:</label>
         <select name="selectedCustomerEmail" id="customerName" onchange="this.form.submit()">
             <option value="">Select an email...</option>
@@ -46,7 +46,7 @@
 
     <br>
 
-    <form method="post" action="@Url.Action("Book", "Agenda")">
+    <form method="post" action="@Url.Action("Book", "Reservation")">
         @if (Model.CustomerCars != null && Model.CustomerCars.Any())
         {
             <label for="car">Select your car:</label>

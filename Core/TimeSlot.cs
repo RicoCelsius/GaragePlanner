@@ -19,14 +19,10 @@ namespace Domain
             return _appointment == null;
         }
 
-        public Result AddAppointment(Appointment appointment)
+        public void AddAppointment(Appointment appointment)
         {
-            if (!IsAvailable())
-            {
-                return new Result(false, "Timeslot already full");
-            }
+
             _appointment = appointment;
-            return new Result(true, "Appointment added");
         }
     }
 }
