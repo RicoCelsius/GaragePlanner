@@ -12,7 +12,7 @@ namespace GaragePlanner.Controllers
         private readonly IAppointmentDal _appointmentDal;
         private readonly ICustomerDal _customerDal;
         private readonly ICarDal _carDal;
-        public ReservationController(IAppointmentDal appointmentDal, ICustomerDal customerDal, ICarDal carDal)
+        public ReservationController(AppointmentDal appointmentDal, CustomerDal customerDal, CarDal carDal)
         {
             _customerDal = customerDal;
             _appointmentDal = appointmentDal;
@@ -51,7 +51,7 @@ namespace GaragePlanner.Controllers
         {
 
 
-            Agenda agenda = new(_appointmentDal);
+            AppointmentCollection appointmentCollection = new(_appointmentDal);
             CustomerCollection customerCollection = new(_customerDal);
             CarCollection carCollection = new(_carDal);
             Customer customer = customerCollection.GetCustomerByEmail(model.SelectedEmail);
@@ -59,7 +59,7 @@ namespace GaragePlanner.Controllers
 
             Appointment appointment = new(model.ChosenDateTime, model.SelectedTypeOfAppointment, Enums.Status.Scheduled,
                 customer, car);
-            agenda.CreateAppointment(appointment);
+            appointmentCollection.CreateAppointment(appointment);
 
             return RedirectToAction("Confirmation", model);
 

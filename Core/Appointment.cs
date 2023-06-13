@@ -8,6 +8,7 @@
         public Customer Customer { get; }
         public Car Car { get; }
 
+
         public Appointment(DateTime dateAndTime,Enums.Type serviceType, Enums.Status status, Customer customer, Car car)
         {
             DateAndTime = dateAndTime;

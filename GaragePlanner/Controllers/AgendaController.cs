@@ -12,21 +12,21 @@ namespace GaragePlanner.Controllers
 {
     public class AgendaController : Controller
     {
-        private readonly IAppointmentDal _appointmentDal;
+        private readonly AppointmentCollection _appointmentCollection;
 
-
-        public AgendaController(IAppointmentDal appointmentDal)
+        public AgendaController(AppointmentDal appointmentDal)
         {
-            _appointmentDal = appointmentDal;
+            _appointmentCollection = new(appointmentDal);
         }
+
         public IActionResult Index(DateTime dataAndTime)
         {
             try
             {
-                Agenda agenda = new(_appointmentDal);
+                
                 AgendaViewModel model = new();
 
-                List<Day> days = agenda.Days;
+                List<Day> days = _appointmentCollection.Days;
 
 
                 foreach (var day in days)

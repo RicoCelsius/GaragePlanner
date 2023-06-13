@@ -10,14 +10,13 @@ namespace GaragePlanner.Controllers
 {
     public class LoginController : Controller
     {
-        ICustomerDal _customerDal;
         private readonly CustomerCollection _customerCollection;
 
 
-        public LoginController(ICustomerDal customerDal)
+        public LoginController(CustomerDal customerDal)
         {
-            _customerDal = customerDal;
-            _customerCollection = new CustomerCollection(_customerDal);
+         
+            _customerCollection = new CustomerCollection(customerDal);
         }
         
     

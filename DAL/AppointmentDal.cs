@@ -19,6 +19,61 @@ namespace DAL
             _dbConnection = dbConnection;
         }
 
+        public List<AppointmentDto> GetAgendaOfDay(DateOnly date)
+        {
+            List<AppointmentDto> appointments = new();
+
+            var query = @"
+        SELECT appointment.date, appointment.type, appointment.status, 
+            customers.id, customers.first_name, customers.last_name, customers.Address, customers.Email, customers.Password, car.id,
+            car.license_plate, car.color, car.model, car.year 
+        FROM appointment 
+        INNER JOIN customers ON appointment.customer_id = customers.id 
+        INNER JOIN car ON appointment.car_id = car.id
+        WHERE appointment.date = @Date"; // Add WHERE clause to filter by date
+
+            var connection = _dbConnection;
+            var parameters = new MySqlParameter[]
+            {
+                new MySqlParameter("@Date", MySqlDbType.DateTime) { Value = date }
+            };
+
+            var dataTable = connection.ExecuteQuery(query, parameters);
+
+
+            foreach (DataRow row in dataTable.Rows)
+            {
+                CustomerDto customer = new(
+                    row.Field<int>("id"),
+                    row.Field<string>("first_name"),
+                    row.Field<string>("last_name"),
+                    row.Field<string>("Address"),
+                    row.Field<string>("Email"),
+                    row.Field<string>("Password")
+                );
+
+                CarDto car = new(
+                    row.Field<int>("id"),
+                    row.Field<string>("license_plate"),
+                    (Enums.Color)Enum.Parse(typeof(Enums.Color), row.Field<string>("color")),
+                    row.Field<string>("model"),
+                    row.Field<int>("year")
+                );
+
+                AppointmentDto appointment = new(
+                    row.Field<DateTime>("date"),
+                    (Enums.Type)Enum.Parse(typeof(Enums.Type), row.Field<string>("type")),
+                    (Enums.Status)Enum.Parse(typeof(Enums.Status), row.Field<string>("status")),
+                    customer,
+                    car
+                );
+
+                appointments.Add(appointment);
+            }
+
+            return appointments;
+        }
+
 
         public List<AppointmentDto> GetAgenda()
         {

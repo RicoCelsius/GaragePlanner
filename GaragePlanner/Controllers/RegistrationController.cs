@@ -13,7 +13,7 @@ namespace GaragePlanner.Controllers
     public class RegistrationController : Controller
     {
         private ICustomerDal _customerDal;
-        public RegistrationController(ICustomerDal customerDal)
+        public RegistrationController(CustomerDal customerDal)
         {
             _customerDal = customerDal;
         }   

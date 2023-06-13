@@ -18,23 +18,21 @@ namespace DAL
         {
             try
             {
-                using (MySqlConnection sqlConnection = new MySqlConnection(_connectionString))
+                using MySqlConnection sqlConnection = new MySqlConnection(_connectionString);
+                sqlConnection.Open();
+
+                using (MySqlCommand command = new MySqlCommand(query, sqlConnection))
                 {
-                    sqlConnection.Open();
-
-                    using (MySqlCommand command = new MySqlCommand(query, sqlConnection))
+                    if (parameters != null)
                     {
-                        if (parameters != null)
-                        {
-                            command.Parameters.AddRange(parameters);
-                        }
-
-                        MySqlDataAdapter adapter = new MySqlDataAdapter(command);
-                        DataTable dataTable = new DataTable();
-                        adapter.Fill(dataTable);
-
-                        return dataTable;
+                        command.Parameters.AddRange(parameters);
                     }
+
+                    MySqlDataAdapter adapter = new MySqlDataAdapter(command);
+                    DataTable dataTable = new DataTable();
+                    adapter.Fill(dataTable);
+
+                    return dataTable;
                 }
             }
             catch (DbException ex)

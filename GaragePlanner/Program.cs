@@ -2,9 +2,11 @@ using System.Configuration;
 using System.Data;
 using Core;
 using DAL;
+using Domain;
 using Domain.interfaces;
 using GaragePlanner.Controllers;
 using Microsoft.Extensions.Configuration;
+using IDbConnection = DAL.IDbConnection;
 
 var builder = WebApplication.CreateBuilder(args);
 string connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -12,12 +14,13 @@ string connectionString = builder.Configuration.GetConnectionString("DefaultConn
 
 
 // Add services to the container.
-builder.Services.AddTransient<DAL.IDbConnection>(serviceProvider =>
-    new DbConnection(connectionString));
+
 builder.Services.AddControllersWithViews();
-builder.Services.AddScoped<ICustomerDal, CustomerDal>();
-builder.Services.AddScoped<ICarDal, CarDal>();
-builder.Services.AddScoped<IAppointmentDal, AppointmentDal>();
+builder.Services.AddSingleton<IDbConnection>(_ => new DbConnection(connectionString));
+builder.Services.AddScoped<AppointmentDal>();
+builder.Services.AddScoped<CustomerDal>();
+builder.Services.AddScoped<CarDal>();
+
 
 
 

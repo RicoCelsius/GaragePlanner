@@ -9,42 +9,54 @@ using Domain.dto;
 
 namespace Domain
 {
-    public class Agenda
+    public class AppointmentCollection
     {
         public List<Day> Days { get;}
         private readonly IAppointmentDal _appointmentDal;
         private const int AmountOfDays = 14;
 
-        public Agenda(IAppointmentDal appointmentDal)
+        public AppointmentCollection(IAppointmentDal appointmentDal)
         {
             Days = DayGenerator.GenerateDays(AmountOfDays);
             
             
             _appointmentDal = appointmentDal;
-            LoadAgenda(_appointmentDal.GetAgenda());
+            LoadAgenda();
         }
 
-        public void LoadAgenda(List<AppointmentDto> appointments)
+        public void LoadAgenda()
         {
-            foreach (AppointmentDto appointment in appointments)
+            foreach (Day day in Days)
             {
-                if (IsAppointmentDateAlreadyPassed(appointment))
+                List<AppointmentDto> appointments = _appointmentDal.GetAgendaOfDay(day.DateOfDay);
+
+                foreach (AppointmentDto appointment in appointments)
                 {
-                    continue;
+                    if (IsAppointmentDateAlreadyPassed(appointment))
+                    {
+                        continue;
+                    }
+
+                    Appointment appointmentToAdd = DtoConverter.ConvertAppointmentDtoToAppointment(appointment);
+
+                    DateOnly appointmentDate = DateOnly.FromDateTime(appointment.DateAndTime);
+                    TimeOnly appointmentTime = TimeOnly.FromDateTime(appointment.DateAndTime);
+
+                    Day targetDay = Days.FirstOrDefault(d => d.DateOfDay.Equals(appointmentDate));
+
+                    if (targetDay != null)
+                    {
+                        TimeSlot targetTimeSlot = targetDay.FindTimeSlot(appointmentTime);
+
+                        if (targetTimeSlot != null)
+                        {
+                            targetTimeSlot.AddAppointment(appointmentToAdd);
+                        }
+                    }
                 }
-                Appointment appointmentToAdd = DtoConverter.ConvertAppointmentDtoToAppointment(appointment);
-
-                DateOnly appointmentDate = DateOnly.FromDateTime(appointment.DateAndTime);
-                TimeOnly appointmentTime = TimeOnly.FromDateTime(appointment.DateAndTime);
-
-                Day targetDay = Days.FirstOrDefault(day => day.DateOfDay.Equals(appointmentDate));
-
-                TimeSlot targetTimeSlot = targetDay.FindTimeSlot(appointmentTime);
-                targetTimeSlot.AddAppointment(appointmentToAdd);
-
-
             }
         }
+
 
         private bool IsAppointmentDateAlreadyPassed(AppointmentDto appointment)
         {

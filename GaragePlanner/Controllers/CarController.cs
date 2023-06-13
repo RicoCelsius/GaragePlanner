@@ -19,7 +19,7 @@ namespace GaragePlanner.Controllers
         private readonly ICustomerDal _customerDal;
         private readonly ICarDal _carDal;
 
-        public CarController(ICustomerDal customerDal, ICarDal carDal)
+        public CarController(CustomerDal customerDal, CarDal carDal)
         {
             _customerDal = customerDal;
             _carDal = carDal;

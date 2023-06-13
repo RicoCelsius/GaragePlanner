@@ -21,12 +21,12 @@ namespace GaragePlannerTests
             DateTime now = DateTime.Now;
             DateTime targetDateTime = new DateTime(now.Year, now.Month, now.Day, 10, 0, 0);
 
-            Agenda agenda = new Agenda(appointmentDalMock);
+            AppointmentCollection appointmentCollection = new AppointmentCollection(appointmentDalMock);
             Customer customer = new Customer("Rico","Aarntzen","Straatnaam 10","ricoaarntzen@gmail.com","lol123456");
             Car car = new Car("AB-12-CD",Enums.Color.Blue,"Audi",2019);
 
             //act
-            Result hasAdded = agenda.CreateAppointment(new Appointment(targetDateTime, Enums.Type.BigMaintenance, Enums.Status.Scheduled, customer, car));
+            Result hasAdded = appointmentCollection.CreateAppointment(new Appointment(targetDateTime, Enums.Type.BigMaintenance, Enums.Status.Scheduled, customer, car));
             
             //assert
             Assert.True(hasAdded.Success);
@@ -50,14 +50,14 @@ namespace GaragePlannerTests
             appointmentDtos.Add(appointmentDto);
             AppointmentDalMock appointmentDalMock = new AppointmentDalMock(appointmentDtos);
 
-            Agenda agenda = new Agenda(appointmentDalMock);
+            AppointmentCollection appointmentCollection = new AppointmentCollection(appointmentDalMock);
 
             Customer customer = new Customer("Rico", "Aarntzen", "Straatnaam 10", "ricoaarntzen@gmail.com", "lol123456");
             Car car = new Car("AB-12-CD", Enums.Color.Blue, "Audi", 2019);
 
 
             //act
-            Result hasAdded = agenda.CreateAppointment(new Appointment(targetDateTime, Enums.Type.BigMaintenance, Enums.Status.Scheduled, customer, car));
+            Result hasAdded = appointmentCollection.CreateAppointment(new Appointment(targetDateTime, Enums.Type.BigMaintenance, Enums.Status.Scheduled, customer, car));
 
             Assert.False(hasAdded.Success);
             Assert.False(appointmentDalMock.HasInsertedAppointment);
@@ -69,8 +69,8 @@ namespace GaragePlannerTests
         {
             //arrange
             AppointmentDalMock appointmentDalMock = new AppointmentDalMock(new List<AppointmentDto>());
-            Agenda agenda = new Agenda(appointmentDalMock);
-            int amountOfDays = agenda.Days.Count;
+            AppointmentCollection appointmentCollection = new AppointmentCollection(appointmentDalMock);
+            int amountOfDays = appointmentCollection.Days.Count;
             //act
             List<Day> days = DayGenerator.GenerateDays(amountOfDays);
             //assert
