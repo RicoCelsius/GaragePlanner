@@ -67,7 +67,7 @@
                         var timeslot = day.TimeSlots.FirstOrDefault(ts => ts.Time == timeSlot);
                         var bookLink = timeslot?.IsAvailable == true
                         ? $"<a href=\"/reservation/bookinformation?dateAndTime={day.Date:yyyy-MM-dd}T{timeSlot:HH:mm:ss}\" class=\"book-link\">Book</a>"
-                        : "Booked";
+                        : "Not available";
                         <td class="@((timeslot?.IsAvailable == true) ? "available" : "booked")">
                             @Html.Raw(bookLink)
                         </td>
