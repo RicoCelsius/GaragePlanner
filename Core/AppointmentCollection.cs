@@ -18,8 +18,6 @@ namespace Domain
         public AppointmentCollection(IAppointmentDal appointmentDal)
         {
             Days = DayGenerator.GenerateDays(AmountOfDays);
-            
-            
             _appointmentDal = appointmentDal;
             LoadAgenda();
         }
@@ -34,6 +32,7 @@ namespace Domain
                 {
                     appointments = _appointmentDal.GetAgendaOfDay(day.DateOfDay);
                 }
+
                 catch (Exception e)
                 {
                     throw new CouldNotReadDataException("Could not read data", e);
