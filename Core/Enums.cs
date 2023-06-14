@@ -40,9 +40,6 @@ namespace Domain
             Brown
         }
 
-        public static string GetDisplayName(Enum value)
-        {
-            return Regex.Replace(value.ToString(), "(?<!^)([A-Z])", " $1").ToLowerInvariant();
-        }
+
     }
 }

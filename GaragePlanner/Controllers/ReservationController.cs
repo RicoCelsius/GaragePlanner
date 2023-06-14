@@ -23,11 +23,11 @@ namespace GaragePlanner.Controllers
         [HttpGet]
         [HttpPost]
 
-        public IActionResult BookInformation(BookViewModel model, string selectedCustomerEmail, DateTime dateAndTime)
+        public IActionResult BookInformation(BookViewModel model, string selectedCustomerEmail, DateTime dateAndTime, string chosenDate, string chosenTime)
         {
             CustomerCollection customerCollection = new(_customerDal);
             CarCollection carCollection = new(_carDal);
-            List<String> customerEmails = customerCollection.GetCustomerEmails();
+            List<string> customerEmails = customerCollection.GetCustomerEmails();
 
             if (!string.IsNullOrEmpty(selectedCustomerEmail))
             {
@@ -37,10 +37,28 @@ namespace GaragePlanner.Controllers
 
             model.CustomerEmails = customerEmails;
             model.SelectedEmail = selectedCustomerEmail;
-            model.ChosenDateTime = dateAndTime;
+
+            if (!string.IsNullOrEmpty(chosenDate))
+            {
+                model.ChosenDate = chosenDate;
+            }
+            else
+            {
+                model.ChosenDate = dateAndTime.Date.ToString("yyyy-MM-dd");
+            }
+
+            if (!string.IsNullOrEmpty(chosenTime))
+            {
+                model.ChosenTime = chosenTime;
+            }
+            else
+            {
+                model.ChosenTime = dateAndTime.TimeOfDay.ToString("hh\\:mm");
+            }
 
             return View(model);
         }
+
 
 
 
@@ -57,7 +75,8 @@ namespace GaragePlanner.Controllers
             Customer customer = customerCollection.GetCustomerByEmail(model.SelectedEmail);
             Car car = carCollection.GetCarById(model.SelectedCarId);
 
-            Appointment appointment = new(model.ChosenDateTime, model.SelectedTypeOfAppointment, Enums.Status.Scheduled,
+
+            Appointment appointment = new(DateOnly.Parse(model.ChosenDate),TimeOnly.Parse(model.ChosenTime),model.SelectedTypeOfAppointment, Enums.Status.Scheduled,
                 customer, car);
             appointmentCollection.CreateAppointment(appointment);
 

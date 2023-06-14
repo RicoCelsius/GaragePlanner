@@ -16,9 +16,7 @@ namespace DAL
 
         public DataTable ExecuteQuery(string query, MySqlParameter[] parameters)
         {
-            try
-            {
-                using MySqlConnection sqlConnection = new MySqlConnection(_connectionString);
+            using MySqlConnection sqlConnection = new MySqlConnection(_connectionString);
                 sqlConnection.Open();
 
                 using (MySqlCommand command = new MySqlCommand(query, sqlConnection))
@@ -34,12 +32,7 @@ namespace DAL
 
                     return dataTable;
                 }
-            }
-            catch (DbException ex)
-            {
-                ex.Data.Add("Query", query);
-                throw new CouldNotReadDataException("Error while executing query", ex);
-            }
+            
         }
     }
 }

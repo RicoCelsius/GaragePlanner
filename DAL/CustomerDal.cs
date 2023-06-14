@@ -67,8 +67,8 @@ namespace DAL
                 row.Field<int>("id"),
                 row.Field<string>("first_name"),
                 row.Field<string>("last_name"),
-                row.Field<string>("Address"),
                 row.Field<string>("Email"),
+                row.Field<string>("Address"),
                 row.Field<string>("Password"));
             return customerData;
 

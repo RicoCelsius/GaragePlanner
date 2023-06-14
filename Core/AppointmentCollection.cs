@@ -28,19 +28,23 @@ namespace Domain
         {
             foreach (Day day in Days)
             {
-                List<AppointmentDto> appointments = _appointmentDal.GetAgendaOfDay(day.DateOfDay);
+                List<AppointmentDto> appointments;
+
+                try
+                {
+                    appointments = _appointmentDal.GetAgendaOfDay(day.DateOfDay);
+                }
+                catch (Exception e)
+                {
+                    throw new CouldNotReadDataException("Could not read data", e);
+                }
 
                 foreach (AppointmentDto appointment in appointments)
                 {
-                    if (IsAppointmentDateAlreadyPassed(appointment))
-                    {
-                        continue;
-                    }
-
                     Appointment appointmentToAdd = DtoConverter.ConvertAppointmentDtoToAppointment(appointment);
 
-                    DateOnly appointmentDate = DateOnly.FromDateTime(appointment.DateAndTime);
-                    TimeOnly appointmentTime = TimeOnly.FromDateTime(appointment.DateAndTime);
+                    DateOnly appointmentDate = appointment.Date;
+                    TimeOnly appointmentTime = appointment.Time;
 
                     Day targetDay = Days.FirstOrDefault(d => d.DateOfDay.Equals(appointmentDate));
 
@@ -58,30 +62,30 @@ namespace Domain
         }
 
 
-        private bool IsAppointmentDateAlreadyPassed(AppointmentDto appointment)
-        {
-            return appointment.DateAndTime < DateTime.Now;
-        }
 
         public Result CreateAppointment(Appointment appointment)
         {
-            DateOnly appointmentDate = DateOnly.FromDateTime(appointment.DateAndTime);
-            TimeOnly appointmentTime = TimeOnly.FromDateTime(appointment.DateAndTime);
 
-            Day targetDay = Days.FirstOrDefault(day => day.DateOfDay.Equals(appointmentDate));
 
-            TimeSlot targetTimeSlot = targetDay.FindTimeSlot(appointmentTime);
+            Day targetDay = Days.FirstOrDefault(day => day.DateOfDay.Equals(appointment.Date));
+
+            TimeSlot targetTimeSlot = targetDay.FindTimeSlot(appointment.Time);
             if (targetTimeSlot.IsAvailable())
             {
                 AppointmentDto appointmentDto = DomainConverter.ConvertAppointmentToAppointmentDto(appointment);
-                _appointmentDal.InsertAppointment(appointmentDto);
+
+                try
+                {
+                    _appointmentDal.InsertAppointment(appointmentDto);
+                }
+                catch (Exception e)
+                {
+                    throw new CouldNotInsertDataException("Appointment could not be inserted", e);
+                }
+
                 return new Result(true, "Appointment created");
             }
             return new Result(false, "Appointment could not be created");
-
-            
-
-
 
 
         }

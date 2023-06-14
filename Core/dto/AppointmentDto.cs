@@ -10,15 +10,17 @@ namespace Domain
     public class AppointmentDto
     {
         public int? Id { get; set; }
-        public DateTime DateAndTime { get; set; }
+        public DateOnly Date { get; set; }
+        public TimeOnly Time { get; set; }
         public Enums.Type ServiceType { get; set; }
         public Enums.Status Status { get; set; }
         public CustomerDto Customer { get; set; }
         public CarDto Car { get; set; }
 
-        public AppointmentDto(DateTime date, Enums.Type serviceType, Enums.Status status, CustomerDto customer, CarDto car)
+        public AppointmentDto(DateOnly date,TimeOnly time, Enums.Type serviceType, Enums.Status status, CustomerDto customer, CarDto car)
         {
-            DateAndTime = date;
+            Date = date;
+            Time = time;
             ServiceType = serviceType;
             Status = status;
             Customer = customer;

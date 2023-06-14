@@ -1,6 +1,6 @@
 ﻿@using Domain
 @using Microsoft.AspNetCore.Mvc.TagHelpers
-@model GaragePlanner.Models.BookViewModel
+@using System.Linq;
 <!DOCTYPE html>
 <html>
 <head>
@@ -24,7 +24,6 @@
     </script>
 </head>
 <body>
-
     <form method="post" action="@Url.Action("BookInformation", "Reservation")">
         <label for="customer">Your email:</label>
         <select name="selectedCustomerEmail" id="customerName" onchange="this.form.submit()">
@@ -41,13 +40,14 @@
                 }
             }
         </select>
-        <input type="hidden" name="dateAndTime" value="@Model.ChosenDateTime">
+        <input type="hidden" name="ChosenDate" value="@Model.ChosenDate">
+        <input type="hidden" name="ChosenTime" value="@Model.ChosenTime">
     </form>
 
     <br>
 
     <form method="post" action="@Url.Action("Book", "Reservation")">
-        @if (Model.CustomerCars != null && Model.CustomerCars.Any())
+        @if (Model.CustomerCars != null)
         {
             <label for="car">Select your car:</label>
             <select id="car" name="SelectedCarId" onchange="handleCarSelection()">
@@ -70,8 +70,10 @@
 
             <br>
 
-            <label for="dateAndTime">Chosen date and time:</label>
-            <input type="text" id="dateAndTime" name="dateAndTime" value="@Model.ChosenDateTime" readonly>
+            <label for="chosenDate">Chosen date:</label>
+            <input type="text" id="date" name="ChosenDate" value="@Model.ChosenDate" readonly>
+            <label for="chosenTime">Chosen time:</label>
+            <input type="text" id="time" name="ChosenTime" value="@Model.ChosenTime" readonly>
 
             <br>
 
@@ -84,7 +86,8 @@
                 <input type="hidden" name="customerEmails" value="@customerEmail" />
             }
             <input type="hidden" name="selectedEmail" value="@Model.SelectedEmail" />
-            <input type="hidden" name="chosenDateTime" value="@Model.ChosenDateTime" />
+            <input type="hidden" name="chosenDate" value="@Model.ChosenDate" />
+            <input type="hidden" name="chosenTime" value="@Model.ChosenTime" />
         }
 
         <button type="submit" id="submitButton">Submit appointment</button>

@@ -21,7 +21,7 @@ namespace Domain.utils
 
         public static AppointmentDto ConvertAppointmentToAppointmentDto(Appointment appointment)
         {
-            return new AppointmentDto(appointment.DateAndTime,appointment.ServiceType, appointment.Status, ConvertCustomerToCustomerDto(appointment.Customer), ConvertCarToCarDto(appointment.Car));
+            return new AppointmentDto(appointment.Date,appointment.Time,appointment.ServiceType, appointment.Status, ConvertCustomerToCustomerDto(appointment.Customer), ConvertCarToCarDto(appointment.Car));
         }
     }
 }

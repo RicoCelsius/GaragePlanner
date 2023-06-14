@@ -23,7 +23,7 @@ namespace Domain.utils
 
         public static Appointment ConvertAppointmentDtoToAppointment(AppointmentDto appointmentDto)
         {
-            Appointment appointment = new Appointment(appointmentDto.DateAndTime,appointmentDto.ServiceType,appointmentDto.Status,ConvertCustomerDtoToCustomer(appointmentDto.Customer),ConvertCarDtoToCar(appointmentDto.Car));
+            Appointment appointment = new Appointment(appointmentDto.Date,appointmentDto.Time,appointmentDto.ServiceType,appointmentDto.Status,ConvertCustomerDtoToCustomer(appointmentDto.Customer),ConvertCarDtoToCar(appointmentDto.Car));
             return appointment;
         }
     }

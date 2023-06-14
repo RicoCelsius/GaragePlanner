@@ -22,20 +22,22 @@ namespace DAL
         public List<AppointmentDto> GetAgendaOfDay(DateOnly date)
         {
             List<AppointmentDto> appointments = new();
+            string mySqlDate = date.ToString("yyyy-MM-dd");
 
             var query = @"
-        SELECT appointment.date, appointment.type, appointment.status, 
-            customers.id, customers.first_name, customers.last_name, customers.Address, customers.Email, customers.Password, car.id,
-            car.license_plate, car.color, car.model, car.year 
+         SELECT appointment.date, appointment.type, appointment.status, appointment.time, 
+        customers.id, customers.first_name, customers.last_name, customers.Address, customers.Email, customers.Password, car.id,
+        car.license_plate, car.color, car.model, car.year 
         FROM appointment 
         INNER JOIN customers ON appointment.customer_id = customers.id 
         INNER JOIN car ON appointment.car_id = car.id
-        WHERE appointment.date = @Date"; // Add WHERE clause to filter by date
+        WHERE appointment.date = @mySqlDate";
+
 
             var connection = _dbConnection;
             var parameters = new MySqlParameter[]
             {
-                new MySqlParameter("@Date", MySqlDbType.DateTime) { Value = date }
+                new MySqlParameter("@mySqlDate", MySqlDbType.Date) { Value = date }
             };
 
             var dataTable = connection.ExecuteQuery(query, parameters);
@@ -61,7 +63,8 @@ namespace DAL
                 );
 
                 AppointmentDto appointment = new(
-                    row.Field<DateTime>("date"),
+                    DateOnly.FromDateTime(row.Field<DateTime>("date")),
+                    TimeOnly.FromTimeSpan(row.Field<TimeSpan>("time")),
                     (Enums.Type)Enum.Parse(typeof(Enums.Type), row.Field<string>("type")),
                     (Enums.Status)Enum.Parse(typeof(Enums.Status), row.Field<string>("status")),
                     customer,
@@ -110,8 +113,10 @@ namespace DAL
                 );
 
                 AppointmentDto appointment = new (
-                    row.Field<DateTime>("date"),
-                    (Enums.Type)Enum.Parse(typeof(Enums.Type), row.Field<string>("type")),
+                    row.Field<DateOnly>("date"),
+                    row.Field<TimeOnly>("time"),
+                    (Enums.Type)Enum.Parse(typeof(Enums.Type), 
+                        row.Field<string>("type")),
                     (Enums.Status)Enum.Parse(typeof(Enums.Status), row.Field<string>("status")),
                     customer,
                     car
@@ -126,13 +131,14 @@ namespace DAL
         public void InsertAppointment(AppointmentDto appointment)
         {
             var query = @"
-             INSERT INTO appointment (customer_id, car_id, date, type, status) 
-             VALUES (
-            (SELECT id FROM customers WHERE email = @Email),
-            (SELECT id FROM car WHERE license_plate = @LicensePlate),
-            @Date, 
-            @Type, 
-            @Status)";
+         INSERT INTO appointment (customer_id, car_id, date, time, type, status) 
+         VALUES (
+        (SELECT id FROM customers WHERE email = @Email),
+        (SELECT id FROM car WHERE license_plate = @LicensePlate),
+        @Date,
+        @Time, 
+        @Type, 
+        @Status)";
 
             var connection = _dbConnection;
 
@@ -140,13 +146,15 @@ namespace DAL
             {
                 new MySqlParameter("@Email", MySqlDbType.VarChar) { Value = appointment.Customer.Email },
                 new MySqlParameter("@LicensePlate", MySqlDbType.VarChar) { Value = appointment.Car.LicensePlate },
-                new MySqlParameter("@Date", MySqlDbType.DateTime) { Value = appointment.DateAndTime },
+                new MySqlParameter("@Date", MySqlDbType.Date) { Value = appointment.Date },
+                new MySqlParameter("@Time", MySqlDbType.Time) { Value = appointment.Time },
                 new MySqlParameter("@Type", MySqlDbType.VarChar) { Value = appointment.ServiceType },
                 new MySqlParameter("@Status", MySqlDbType.VarChar) { Value = appointment.Status }
             };
 
             connection.ExecuteQuery(query, parameters);
         }
+
 
     }
 }

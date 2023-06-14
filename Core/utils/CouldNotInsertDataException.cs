@@ -6,11 +6,10 @@ using System.Threading.Tasks;
 
 namespace Domain.utils
 {
-    public class CouldNotReadDataException : Exception
+    public class CouldNotInsertDataException : Exception
     {
         private Exception ex;
-
-        public CouldNotReadDataException(string message, Exception ex) : base(message)
+        public CouldNotInsertDataException(string message, Exception ex) : base(message)
         {
             this.ex = ex;
         }

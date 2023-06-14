@@ -28,7 +28,6 @@ namespace GaragePlanner.Controllers
 
                 List<Day> days = _appointmentCollection.Days;
 
-
                 foreach (var day in days)
                 {
                     DayViewModel dayViewModel = new() { Date = day.DateOfDay };

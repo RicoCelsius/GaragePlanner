@@ -16,7 +16,7 @@ string connectionString = builder.Configuration.GetConnectionString("DefaultConn
 // Add services to the container.
 
 builder.Services.AddControllersWithViews();
-builder.Services.AddSingleton<IDbConnection>(_ => new DbConnection(connectionString));
+builder.Services.AddScoped<IDbConnection>(_ => new DbConnection(connectionString));
 builder.Services.AddScoped<AppointmentDal>();
 builder.Services.AddScoped<CustomerDal>();
 builder.Services.AddScoped<CarDal>();
