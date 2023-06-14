@@ -23,7 +23,7 @@ namespace GaragePlanner.Controllers
         {
             try
             {
-                
+
                 AgendaViewModel model = new();
 
                 IReadOnlyList<Day> days = _appointmentCollection.Days;
