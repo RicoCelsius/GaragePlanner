@@ -11,7 +11,7 @@ namespace Domain
 {
     public class AppointmentCollection
     {
-        public List<Day> Days { get;}
+        public IReadOnlyList<Day> Days { get;}
         private readonly IAppointmentDal _appointmentDal;
         private const int AmountOfDays = 14;
 

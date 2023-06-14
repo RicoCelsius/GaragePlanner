@@ -13,8 +13,8 @@ namespace DAL
 {
     public class CarDal : ICarDal
     {
-        private readonly IDbConnection _dbConnection;
-        public CarDal(IDbConnection dbConnection)
+        private readonly DbConnection _dbConnection;
+        public CarDal(DbConnection dbConnection)
         {
             _dbConnection = dbConnection;
         }
@@ -35,7 +35,7 @@ namespace DAL
             };
 
             var connection = _dbConnection;
-            connection.ExecuteQuery(insertCarQuery, insertCarParameters);
+            connection.ExecuteNonQuery(insertCarQuery, insertCarParameters);
         }
 
         public void DeleteCar(int id)
@@ -46,7 +46,7 @@ namespace DAL
                 new MySqlParameter("@id", id)
             };
             var connection = _dbConnection;
-            connection.ExecuteQuery(query, parameters);
+            connection.ExecuteNonQuery(query, parameters);
         }
 
         public void UpdateCar(Car car)
@@ -61,7 +61,7 @@ namespace DAL
                 new MySqlParameter("@year", car.Year)
             };
             var connection = _dbConnection;
-            connection.ExecuteQuery(query, parameters);
+            connection.ExecuteNonQuery(query, parameters);
         }
 
 

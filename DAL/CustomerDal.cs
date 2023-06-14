@@ -11,9 +11,9 @@ namespace DAL
     public class CustomerDal : ICustomerDal
     {
 
-        private readonly IDbConnection _dbConnection;
+        private readonly DbConnection _dbConnection;
 
-        public CustomerDal(IDbConnection dbConnection)
+        public CustomerDal(DbConnection dbConnection)
         {
             _dbConnection = dbConnection;
         }
@@ -32,12 +32,12 @@ namespace DAL
             };
 
             var connection = _dbConnection;
-            connection.ExecuteQuery(query, parameters);
+            connection.ExecuteNonQuery(query, parameters);
         }
 
 
 
-        public bool CheckIfCustomerExists(string email)
+        public bool DoesCustomerExists(string email)
         {
             var query = "SELECT * FROM customers WHERE Email = @Email";
             var parameters = new MySqlParameter[]

@@ -13,8 +13,8 @@ namespace DAL
 {
     public class AppointmentDal : IAppointmentDal
     {
-        private readonly IDbConnection _dbConnection;
-        public AppointmentDal(IDbConnection dbConnection)
+        private readonly DbConnection _dbConnection;
+        public AppointmentDal(DbConnection dbConnection)
         {
             _dbConnection = dbConnection;
         }
@@ -152,7 +152,7 @@ namespace DAL
                 new MySqlParameter("@Status", MySqlDbType.VarChar) { Value = appointment.Status }
             };
 
-            connection.ExecuteQuery(query, parameters);
+            connection.ExecuteNonQuery(query, parameters);
         }
 
 

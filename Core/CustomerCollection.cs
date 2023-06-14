@@ -56,7 +56,7 @@ namespace Core
 
         public bool DoesEmailAlreadyExist(string email)
         {
-            bool customerExists = _iCustomerDal.CheckIfCustomerExists(email);
+            bool customerExists = _iCustomerDal.DoesCustomerExists(email);
             return customerExists;
         }
 

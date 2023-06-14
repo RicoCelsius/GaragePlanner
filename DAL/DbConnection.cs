@@ -5,7 +5,7 @@ using MySqlConnector;
 
 namespace DAL
 {
-    public class DbConnection : IDbConnection
+    public class DbConnection
     {
         private readonly string _connectionString;
 
@@ -33,6 +33,23 @@ namespace DAL
                     return dataTable;
                 }
             
+        }
+
+        public int ExecuteNonQuery(string query, MySqlParameter[] parameters)
+        {
+            using MySqlConnection sqlConnection = new MySqlConnection(_connectionString);
+            sqlConnection.Open();
+
+            using (MySqlCommand command = new MySqlCommand(query, sqlConnection))
+            {
+                if (parameters != null)
+                {
+                    command.Parameters.AddRange(parameters);
+                }
+
+                int rowsAffected = command.ExecuteNonQuery();
+                return rowsAffected;
+            }
         }
     }
 }

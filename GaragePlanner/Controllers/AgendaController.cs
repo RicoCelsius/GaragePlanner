@@ -26,7 +26,7 @@ namespace GaragePlanner.Controllers
                 
                 AgendaViewModel model = new();
 
-                List<Day> days = _appointmentCollection.Days;
+                IReadOnlyList<Day> days = _appointmentCollection.Days;
 
                 foreach (var day in days)
                 {
