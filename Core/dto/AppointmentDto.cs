@@ -9,7 +9,7 @@ namespace Domain
 {
     public class AppointmentDto
     {
-        public int? Id { get; set; }
+        public int Id { get; set; }
         public DateOnly Date { get; set; }
         public TimeOnly Time { get; set; }
         public Enums.Type ServiceType { get; set; }
@@ -17,7 +17,7 @@ namespace Domain
         public CustomerDto Customer { get; set; }
         public CarDto Car { get; set; }
 
-        public AppointmentDto(DateOnly date,TimeOnly time, Enums.Type serviceType, Enums.Status status, CustomerDto customer, CarDto car)
+        public AppointmentDto(int id,DateOnly date,TimeOnly time, Enums.Type serviceType, Enums.Status status, CustomerDto customer, CarDto car)
         {
             Date = date;
             Time = time;

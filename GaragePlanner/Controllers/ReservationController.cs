@@ -2,6 +2,7 @@
 using DAL;
 using Domain;
 using Domain.interfaces;
+using Domain.utils;
 using GaragePlanner.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,14 +10,16 @@ namespace GaragePlanner.Controllers
 {
     public class ReservationController : Controller
     {
-        private readonly IAppointmentDal _appointmentDal;
-        private readonly ICustomerDal _customerDal;
-        private readonly ICarDal _carDal;
-        public ReservationController(AppointmentDal appointmentDal, CustomerDal customerDal, CarDal carDal)
+        private readonly AppointmentCollection _appointmentCollection;
+        private readonly CustomerCollection _customerCollection;
+        private readonly CarCollection _carCollection;
+  
+        public ReservationController(AppointmentCollection appointmentCollection, CustomerCollection customerCollection, CarCollection carCollection)
         {
-            _customerDal = customerDal;
-            _appointmentDal = appointmentDal;
-            _carDal = carDal;
+            _appointmentCollection = appointmentCollection;
+            _customerCollection = customerCollection;
+            _carCollection = carCollection;
+         
         }
 
 
@@ -25,35 +28,32 @@ namespace GaragePlanner.Controllers
 
         public IActionResult BookInformation(BookViewModel model, string selectedCustomerEmail, DateTime dateAndTime, string chosenDate, string chosenTime)
         {
-            CustomerCollection customerCollection = new(_customerDal);
-            CarCollection carCollection = new(_carDal);
-            List<string> customerEmails = customerCollection.GetCustomerEmails();
+            try
+            {
+                List<string> customerEmails = _customerCollection.GetCustomerEmails();
+                if (!string.IsNullOrEmpty(selectedCustomerEmail))
+                {
+                    List<Car> customerCars = _carCollection.GetCustomerCarsByCustomerEmail(selectedCustomerEmail);
+                    model.CustomerCars = customerCars;
+                }
 
-            if (!string.IsNullOrEmpty(selectedCustomerEmail))
-            {
-                List<Car> customerCars = carCollection.GetCustomerCarsByCustomerEmail(selectedCustomerEmail);
-                model.CustomerCars = customerCars;
-            }
+                model.CustomerEmails = customerEmails;
+                model.SelectedEmail = selectedCustomerEmail;
 
-            model.CustomerEmails = customerEmails;
-            model.SelectedEmail = selectedCustomerEmail;
-
-            if (!string.IsNullOrEmpty(chosenDate))
-            {
-                model.ChosenDate = chosenDate;
+                model.ChosenDate = !string.IsNullOrEmpty(chosenDate)
+                    ? chosenDate
+                    : dateAndTime.Date.ToString("yyyy-MM-dd");
+                model.ChosenTime = !string.IsNullOrEmpty(chosenTime)
+                    ? chosenTime
+                    : dateAndTime.TimeOfDay.ToString("hh\\:mm");
             }
-            else
+            catch (CouldNotReadDataException)
             {
-                model.ChosenDate = dateAndTime.Date.ToString("yyyy-MM-dd");
-            }
-
-            if (!string.IsNullOrEmpty(chosenTime))
-            {
-                model.ChosenTime = chosenTime;
-            }
-            else
-            {
-                model.ChosenTime = dateAndTime.TimeOfDay.ToString("hh\\:mm");
+                ErrorViewModel errorViewModel = new()
+                {
+                    ErrorMessage = "Something went wrong, please try again"
+                };
+                return View("Error", errorViewModel);
             }
 
             return View(model);
@@ -67,18 +67,19 @@ namespace GaragePlanner.Controllers
         [HttpPost]
         public IActionResult Book(BookViewModel model)
         {
+            try
+            {
 
 
-            AppointmentCollection appointmentCollection = new(_appointmentDal);
-            CustomerCollection customerCollection = new(_customerDal);
-            CarCollection carCollection = new(_carDal);
-            Customer customer = customerCollection.GetCustomerByEmail(model.SelectedEmail);
-            Car car = carCollection.GetCarById(model.SelectedCarId);
+                Customer customer = _customerCollection.GetCustomerByEmail(model.SelectedEmail);
+                Car car = _carCollection.GetCarById(model.SelectedCarId);
+                _appointmentCollection.TryCreateAppointment(DateOnly.Parse(model.ChosenDate),
+                    TimeOnly.Parse(model.ChosenTime), model.SelectedTypeOfAppointment, customer, car);
+            }
+            catch (CouldNotReadDataException)
+            {
 
-
-            Appointment appointment = new(DateOnly.Parse(model.ChosenDate),TimeOnly.Parse(model.ChosenTime),model.SelectedTypeOfAppointment, Enums.Status.Scheduled,
-                customer, car);
-            appointmentCollection.CreateAppointment(appointment);
+            }
 
             return RedirectToAction("Confirmation", model);
 
@@ -86,7 +87,6 @@ namespace GaragePlanner.Controllers
 
         public IActionResult Confirmation(BookViewModel model)
         {
-
             return View(model);
         }
     }

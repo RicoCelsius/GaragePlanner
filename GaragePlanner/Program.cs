@@ -18,11 +18,19 @@ string connectionString = builder.Configuration.GetConnectionString("DefaultConn
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<DbConnection>(sp => new DbConnection(connectionString));
+
 builder.Services.AddScoped<AppointmentCollection>();
 builder.Services.AddScoped<AppointmentDal>();
 builder.Services.AddScoped<IAppointmentDal, AppointmentDal>();
-builder.Services.AddScoped<CustomerDal>();
+
+builder.Services.AddScoped<CarCollection>();
 builder.Services.AddScoped<CarDal>();
+builder.Services.AddScoped<ICarDal, CarDal>();
+
+builder.Services.AddScoped<CustomerCollection>();
+builder.Services.AddScoped<CustomerDal>();
+builder.Services.AddScoped<ICustomerDal, CustomerDal>();
+
 
 
 

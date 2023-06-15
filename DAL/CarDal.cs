@@ -19,7 +19,7 @@ namespace DAL
             _dbConnection = dbConnection;
         }
 
-        public void InsertCar(string email, CarDto car)
+        public void InsertCar(string email, Car car)
         {
             var insertCarQuery = "INSERT INTO car (customer_id, license_plate, model, color, year) " +
                                  "SELECT id, @license_plate, @model, @color, @year " +

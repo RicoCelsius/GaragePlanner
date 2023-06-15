@@ -8,14 +8,14 @@ namespace Domain.dto
 {
     public class CustomerDto
     {
-        public int? Id { get; set; }
+        public int Id { get; set; }
         public string FirstName;
         public string LastName;
         public string Email;
         public string Address;
         public string Password;
 
-        public CustomerDto(int? id,string firstName, string lastName, string email, string address, string password)
+        public CustomerDto(int id,string firstName, string lastName, string email, string address, string password)
         {
             this.Id = id;
             this.FirstName = firstName;

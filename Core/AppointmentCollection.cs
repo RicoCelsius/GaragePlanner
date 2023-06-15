@@ -62,29 +62,29 @@ namespace Domain
 
 
 
-        public Result CreateAppointment(Appointment appointment)
+        public bool TryCreateAppointment(DateOnly date, TimeOnly time,Enums.Type serviceType,Customer customer,Car car)
         {
-
+            Appointment appointment = new Appointment(date,time,serviceType,Enums.Status.Scheduled,customer,car);
 
             Day targetDay = Days.FirstOrDefault(day => day.DateOfDay.Equals(appointment.Date));
 
             TimeSlot targetTimeSlot = targetDay.FindTimeSlot(appointment.Time);
             if (targetTimeSlot.IsAvailable())
             {
-                AppointmentDto appointmentDto = DomainConverter.ConvertAppointmentToAppointmentDto(appointment);
 
                 try
                 {
-                    _appointmentDal.InsertAppointment(appointmentDto);
+                    _appointmentDal.InsertAppointment(appointment);
                 }
                 catch (Exception e)
                 {
                     throw new CouldNotInsertDataException("Appointment could not be inserted", e);
                 }
 
-                return new Result(true, "Appointment created");
+                return true;
             }
-            return new Result(false, "Appointment could not be created");
+
+            return false;
 
 
         }

@@ -10,7 +10,7 @@
         public Car Car { get; }
 
 
-        public Appointment(DateOnly date,TimeOnly time,Enums.Type serviceType, Enums.Status status, Customer customer, Car car)
+        public Appointment(DateOnly date, TimeOnly time, Enums.Type serviceType, Enums.Status status, Customer customer, Car car)
         {
             Date = date;
             Time = time;

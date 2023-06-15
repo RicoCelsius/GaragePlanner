@@ -12,12 +12,12 @@ namespace GaragePlanner.Controllers
 {
     public class AgendaController : Controller
     {
-        private AppointmentCollection appointmentCollection;
+        private readonly AppointmentCollection _appointmentCollection;
 
 
         public AgendaController(AppointmentCollection collection)
         {
-            appointmentCollection = collection;
+            _appointmentCollection = collection;
         }
 
         public IActionResult Index(DateTime dataAndTime)
@@ -28,7 +28,7 @@ namespace GaragePlanner.Controllers
 
                 AgendaViewModel model = new();
 
-                IReadOnlyList<Day> days = appointmentCollection.Days;
+                IReadOnlyList<Day> days = _appointmentCollection.Days;
 
                 foreach (var day in days)
                 {

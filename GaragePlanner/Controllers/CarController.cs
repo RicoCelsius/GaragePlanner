@@ -30,10 +30,21 @@ namespace GaragePlanner.Controllers
         [HttpGet]
         public ActionResult Index(AddCarViewModel carViewModel)
         {
-            List<string> customerEmails = _customerCollection.GetCustomerEmails();
+            try
+            {
+                List<string> customerEmails = _customerCollection.GetCustomerEmails();
 
 
-            carViewModel.CustomerEmails = customerEmails;
+                carViewModel.CustomerEmails = customerEmails;
+            }
+            catch (CouldNotReadDataException)
+            {
+                ErrorViewModel errorViewModel = new()
+                {
+                    ErrorMessage = "Something went wrong, please try again"
+                };
+                return View("Error", errorViewModel);
+            }
 
 
             return View(carViewModel);
@@ -43,18 +54,21 @@ namespace GaragePlanner.Controllers
 
         public ActionResult AddCar(AddCarViewModel carViewModel)
         {
-            
 
-            Car car = new(
-                carViewModel.LicensePlate,
-                carViewModel.SelectedColor,
-                carViewModel.Model,
-                carViewModel.Year
-            );
-            string email = carViewModel.SelectedCustomerEmail;
-
-
-            Result result = _carCollection.CreateCar(email,car);
+            try
+            {
+                string email = carViewModel.SelectedCustomerEmail;
+                Result result = _carCollection.TryCreateCar(email, carViewModel.LicensePlate, carViewModel.Model,
+                    carViewModel.SelectedColor, carViewModel.Year);
+            }
+            catch(CouldNotInsertDataException)
+            {
+                ErrorViewModel errorViewModel = new()
+                {
+                    ErrorMessage = "Something went wrong, please try again"
+                };
+                return View("Error", errorViewModel);
+            }
 
 
             return RedirectToAction("Index", "Home");
@@ -62,7 +76,20 @@ namespace GaragePlanner.Controllers
 
         public ActionResult DeleteCar(int id)
         {
-            _carCollection.DeleteCar(id);
+            try
+            {
+                _carCollection.DeleteCar(id);
+
+            }
+            catch (CouldNotDeleteDataException)
+            {
+                ErrorViewModel errorViewModel = new()
+                {
+                    ErrorMessage = "Something went wrong, please try again"
+                };
+                return View("Error", errorViewModel);
+            }
+            
             return RedirectToAction("Index", "Home");
         }
 

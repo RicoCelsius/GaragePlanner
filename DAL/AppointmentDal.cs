@@ -25,7 +25,7 @@ namespace DAL
             string mySqlDate = date.ToString("yyyy-MM-dd");
 
             var query = @"
-         SELECT appointment.date, appointment.type, appointment.status, appointment.time, 
+         SELECT appointment.id, appointment.date, appointment.type, appointment.status, appointment.time, 
         customers.id, customers.first_name, customers.last_name, customers.Address, customers.Email, customers.Password, car.id,
         car.license_plate, car.color, car.model, car.year 
         FROM appointment 
@@ -63,6 +63,7 @@ namespace DAL
                 );
 
                 AppointmentDto appointment = new(
+                    row.Field<int>("id"),
                     DateOnly.FromDateTime(row.Field<DateTime>("date")),
                     TimeOnly.FromTimeSpan(row.Field<TimeSpan>("time")),
                     (Enums.Type)Enum.Parse(typeof(Enums.Type), row.Field<string>("type")),
@@ -83,7 +84,7 @@ namespace DAL
             List<AppointmentDto> appointments = new ();
 
             var query = @"
-                SELECT appointment.date, appointment.type, appointment.status, 
+                SELECT appointment.id, appointment.date, appointment.type, appointment.status, 
                     customers.id, customers.first_name, customers.last_name, customers.Address, customers.Email, customers.Password, car.id,
                     car.license_plate, car.color, car.model, car.year 
                 FROM appointment 
@@ -113,6 +114,7 @@ namespace DAL
                 );
 
                 AppointmentDto appointment = new (
+                    row.Field<int>("id"),
                     row.Field<DateOnly>("date"),
                     row.Field<TimeOnly>("time"),
                     (Enums.Type)Enum.Parse(typeof(Enums.Type), 
@@ -128,7 +130,7 @@ namespace DAL
             return appointments;
         }
 
-        public void InsertAppointment(AppointmentDto appointment)
+        public void InsertAppointment(Appointment appointment)
         {
             var query = @"
          INSERT INTO appointment (customer_id, car_id, date, time, type, status) 

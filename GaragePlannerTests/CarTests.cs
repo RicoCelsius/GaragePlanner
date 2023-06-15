@@ -18,7 +18,7 @@ namespace GaragePlannerTests
             var carDalMock = new CarDalMock(carDtos);
             var carCollection = new CarCollection(carDalMock);
             //Act
-            Result AddResult = carCollection.CreateCar("test", new Car("test", Enums.Color.Black, "test", 1990));
+            Result AddResult = carCollection.TryCreateCar("test", new Car("test", Enums.Color.Black, "test", 1990));
             //Assert
             Assert.False(AddResult.Success);
 

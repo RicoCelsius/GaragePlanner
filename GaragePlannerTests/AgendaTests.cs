@@ -25,10 +25,10 @@ namespace GaragePlannerTests
             Car car = new Car("AB-12-CD",Enums.Color.Blue,"Audi",2019);
 
             //act
-            Result hasAdded = appointmentCollection.CreateAppointment(new Appointment(date, time, Enums.Type.BigMaintenance, Enums.Status.Scheduled, customer, car));
+            bool hasAdded = appointmentCollection.TryCreateAppointment(date, time, Enums.Type.BigMaintenance, customer, car);
             
             //assert
-            Assert.True(hasAdded.Success);
+            Assert.True(hasAdded);
             Assert.True(appointmentDalMock.HasInsertedAppointment);
         }
 
@@ -41,7 +41,7 @@ namespace GaragePlannerTests
             CustomerDto customerDto = new CustomerDto(1,"Rico", "Aarntzen", "Straatnaam 10", "", "");
             CarDto carDto = new CarDto(1,"AB-12-CD", Enums.Color.Blue, "Audi", 2019);
             List<AppointmentDto> appointmentsOfDay = new List<AppointmentDto>();
-            appointmentsOfDay.Add(new AppointmentDto(date, time, Enums.Type.BigMaintenance, Enums.Status.Scheduled,customerDto,carDto));
+            appointmentsOfDay.Add(new AppointmentDto(1,date, time, Enums.Type.BigMaintenance, Enums.Status.Scheduled,customerDto,carDto));
 
             AppointmentDalMock appointmentDalMock = new AppointmentDalMock(appointmentsOfDay);
             AppointmentCollection appointmentCollection = new AppointmentCollection(appointmentDalMock);
@@ -51,10 +51,10 @@ namespace GaragePlannerTests
 
 
             // Act
-            Result hasAdded = appointmentCollection.CreateAppointment(new Appointment(date, time, Enums.Type.BigMaintenance, Enums.Status.Scheduled, customer, car));
+            bool hasAdded = appointmentCollection.TryCreateAppointment(date, time, Enums.Type.BigMaintenance, customer, car);
 
             // Assert
-            Assert.False(hasAdded.Success);
+            Assert.False(hasAdded);
             Assert.False(appointmentDalMock.HasInsertedAppointment);
         }
 

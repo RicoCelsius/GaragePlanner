@@ -21,15 +21,17 @@ namespace Domain
             _iCarDal = iCarDal;
         }
 
-        public Result CreateCar(string email, Car car)
+        public Result TryCreateCar(string email, string licensePlate, string model, Enums.Color color, int year)
         {
+            Car car = new Car(licensePlate,color,model, year);
             if (_iCarDal.DoesCarAlreadyExist(car.LicensePlate))
             {
                 return new Result(false, "License plate already exists");
             }
 
-            CarDto carDto = DomainConverter.ConvertCarToCarDto(car);
-            _iCarDal.InsertCar(email,carDto);
+
+
+            _iCarDal.InsertCar(email,car);
             return new Result(true, "Car created");
         }
 

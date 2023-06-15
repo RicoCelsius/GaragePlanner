@@ -5,7 +5,7 @@ namespace DAL;
 
 public interface ICarDal
 {
-    void InsertCar(string email, CarDto car);
+    void InsertCar(string email, Car car);
     List<CarDto> GetCarsByEmail(string email);
     CarDto GetCarById(int id);
 
