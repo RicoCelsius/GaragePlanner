@@ -35,7 +35,7 @@ namespace DAL
             
         }
 
-        public int ExecuteNonQuery(string query, MySqlParameter[] parameters)
+        public void ExecuteNonQuery(string query, MySqlParameter[] parameters)
         {
             using MySqlConnection sqlConnection = new MySqlConnection(_connectionString);
             sqlConnection.Open();
@@ -47,8 +47,7 @@ namespace DAL
                     command.Parameters.AddRange(parameters);
                 }
 
-                int rowsAffected = command.ExecuteNonQuery();
-                return rowsAffected;
+                command.ExecuteNonQuery();
             }
         }
     }

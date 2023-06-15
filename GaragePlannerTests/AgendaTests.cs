@@ -18,15 +18,14 @@ namespace GaragePlannerTests
         {
             //arrange
             AppointmentDalMock appointmentDalMock = new AppointmentDalMock(new List<AppointmentDto>());
-            DateTime now = DateTime.Now;
-            DateTime targetDateTime = new DateTime(now.Year, now.Month, now.Day, 10, 0, 0);
-
             AppointmentCollection appointmentCollection = new AppointmentCollection(appointmentDalMock);
+            DateOnly date = appointmentCollection.Days[0].DateOfDay;
+            TimeOnly time = appointmentCollection.Days[0].TimeSlots[0].StartTime;
             Customer customer = new Customer("Rico","Aarntzen","Straatnaam 10","ricoaarntzen@gmail.com","lol123456");
             Car car = new Car("AB-12-CD",Enums.Color.Blue,"Audi",2019);
 
             //act
-            Result hasAdded = appointmentCollection.CreateAppointment(new Appointment(targetDateTime, Enums.Type.BigMaintenance, Enums.Status.Scheduled, customer, car));
+            Result hasAdded = appointmentCollection.CreateAppointment(new Appointment(date, time, Enums.Type.BigMaintenance, Enums.Status.Scheduled, customer, car));
             
             //assert
             Assert.True(hasAdded.Success);
@@ -36,36 +35,32 @@ namespace GaragePlannerTests
         [Fact]
         public void AddAppointmentInNonEmptyTimeSlot()
         {
-            //arrange
+            // Arrange
+            DateOnly date = DateOnly.FromDateTime(DateTime.Now);
+            TimeOnly time = new TimeOnly(10, 0, 0);
+            CustomerDto customerDto = new CustomerDto(1,"Rico", "Aarntzen", "Straatnaam 10", "", "");
+            CarDto carDto = new CarDto(1,"AB-12-CD", Enums.Color.Blue, "Audi", 2019);
+            List<AppointmentDto> appointmentsOfDay = new List<AppointmentDto>();
+            appointmentsOfDay.Add(new AppointmentDto(date, time, Enums.Type.BigMaintenance, Enums.Status.Scheduled,customerDto,carDto));
 
-            DateTime now = DateTime.Now;
-            DateTime targetDateTime = new DateTime(now.Year, now.Month, now.Day, now.Hour+1, 0, 0);
-
-
-
-            CustomerDto customerDto = new CustomerDto(1, "Rico", "Aarntzen", "Straatnaam", "Straatnaam 10", "lol123456");
-            CarDto carDto = new CarDto(1, "AB-12-CD", Enums.Color.Blue, "Audi", 2019);
-            AppointmentDto appointmentDto = new AppointmentDto(targetDateTime,Enums.Type.BigMaintenance, Enums.Status.Scheduled, customerDto, carDto);
-            List<AppointmentDto> appointmentDtos = new List<AppointmentDto>();
-            appointmentDtos.Add(appointmentDto);
-            AppointmentDalMock appointmentDalMock = new AppointmentDalMock(appointmentDtos);
-
+            AppointmentDalMock appointmentDalMock = new AppointmentDalMock(appointmentsOfDay);
             AppointmentCollection appointmentCollection = new AppointmentCollection(appointmentDalMock);
 
-            Customer customer = new Customer("Rico", "Aarntzen", "Straatnaam 10", "ricoaarntzen@gmail.com", "lol123456");
+            Customer customer = new Customer("Rico", "Aarntzen", "Straatnaam 10", "", "");
             Car car = new Car("AB-12-CD", Enums.Color.Blue, "Audi", 2019);
 
 
-            //act
-            Result hasAdded = appointmentCollection.CreateAppointment(new Appointment(targetDateTime, Enums.Type.BigMaintenance, Enums.Status.Scheduled, customer, car));
+            // Act
+            Result hasAdded = appointmentCollection.CreateAppointment(new Appointment(date, time, Enums.Type.BigMaintenance, Enums.Status.Scheduled, customer, car));
 
+            // Assert
             Assert.False(hasAdded.Success);
             Assert.False(appointmentDalMock.HasInsertedAppointment);
-            
         }
 
+
         [Fact]
-        public void AreDaysGeneratedProperly()
+        public void AreAmountOfDaysGeneratedProperly()
         {
             //arrange
             AppointmentDalMock appointmentDalMock = new AppointmentDalMock(new List<AppointmentDto>());
@@ -76,6 +71,54 @@ namespace GaragePlannerTests
             //assert
             Assert.Equal(amountOfDays, days.Count);
         }
+
+        [Fact]
+        public void AreThereWeekDays()
+        {
+            //arrange
+            AppointmentDalMock appointmentDalMock = new AppointmentDalMock(new List<AppointmentDto>());
+            AppointmentCollection appointmentCollection = new AppointmentCollection(appointmentDalMock);
+            int amountOfDays = appointmentCollection.Days.Count;
+            //act
+            List<Day> days = DayGenerator.GenerateDays(amountOfDays);
+            //assert
+            Assert.DoesNotContain(days, day => day.DateOfDay.DayOfWeek == DayOfWeek.Saturday || day.DateOfDay.DayOfWeek == DayOfWeek.Sunday);
+        }
+
+
+      /*  [Fact]
+        public void DoesAgendaLoadCorrectly()
+        {
+            // Arrange
+            var someDate = DateOnly.FromDateTime(DateTime.Now);
+            var someTime = TimeOnly.FromTimeSpan(TimeSpan.FromHours(12));
+
+            var appointmentDto = new AppointmentDto
+            {
+                Date = someDate,
+                Time = someTime,
+                serviceType = Enums.Type.BigMaintenance,
+              
+
+                
+            };
+
+            var appointmentDal = new AppointmentDalMock(new List<AppointmentDto>());
+
+            var days = new List<Day> { new Day { DateOfDay = someDate } };
+            var myClass = new AppointmentCollection(appointmentDal); 
+
+            // Act
+            myClass.LoadAgenda();
+
+            // Assert
+            var targetDay = days.FirstOrDefault(d => d.DateOfDay.Equals(appointmentDto.Date));
+            Assert.NotNull(targetDay);
+            var targetTimeSlot = targetDay.FindTimeSlot(appointmentDto.Time);
+            Assert.NotNull(targetTimeSlot);
+            Assert.Contains(targetTimeSlot.Appointments, a => a.Date == appointmentDto.Date && a.Time == appointmentDto.Time);
+        }*/
+
 
     }
 }

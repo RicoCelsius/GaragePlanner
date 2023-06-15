@@ -4,14 +4,7 @@ namespace GaragePlanner.Models;
 
 public class AgendaViewModel
 {
-
-
-
-    public List<DayViewModel> Days { get; set; } 
-    public List<Car> CarsFromCustomer { get; set; }
-
-
-
+    public List<DayViewModel> Days { get; set; }
 
     public AgendaViewModel()
     {

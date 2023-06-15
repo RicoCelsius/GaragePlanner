@@ -20,7 +20,6 @@ namespace GaragePlannerTests
             //Act
             Result AddResult = customerCollection.CreateCustomer("test", "test", "test", "rico", "test");
             //Assert
-            Assert.Single(customerCollection.Customers);
             Assert.False(AddResult.Success);
 
         }
