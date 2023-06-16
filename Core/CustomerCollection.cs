@@ -21,21 +21,38 @@ namespace Core
 
         public bool CreateCustomer(string firstName, string lastName, string address, string email, string password)
         {
+            string encryptedPassword = PasswordEncryptor.EncryptPassword(password);
+            Customer customer = new(firstName, lastName, address, email, encryptedPassword);
             if (DoesEmailAlreadyExist(email))
             {
                 return false;
             }
 
-            string encryptedPassword = PasswordEncryptor.EncryptPassword(password);
-            Customer customer = new(firstName, lastName, address, email, encryptedPassword);
-            _iCustomerDal.InsertCustomer(customer);
+            try
+            {
+                _iCustomerDal.InsertCustomer(customer);
+            }
+            catch (Exception e)
+            {
+                throw new DalException("Could not create customer", e);
+            }
+
             return true;
         }
 
 
         public bool AuthenticateCustomer(string email, string inputPassword)
         {
-            CustomerDto customerInfo = _iCustomerDal.GetCustomerByEmail(email);
+            CustomerDto customerInfo;
+            try
+            {
+                customerInfo = _iCustomerDal.GetCustomerByEmail(email);
+            }
+            catch (Exception e)
+            {
+                throw new DalException("Could not authenticate customer", e);
+            }
+
             string hashedInputPassword = PasswordEncryptor.EncryptPassword(inputPassword);
 
             if (PasswordEncryptor.VerifyPassword(inputPassword,hashedInputPassword))
@@ -53,16 +70,34 @@ namespace Core
         }
 
 
-        public bool DoesEmailAlreadyExist(string email)
+        private bool DoesEmailAlreadyExist(string email)
         {
-            bool customerExists = _iCustomerDal.DoesCustomerExists(email);
+            bool customerExists;
+            try
+            {
+                customerExists = _iCustomerDal.DoesCustomerExists(email);
+            }
+            catch (Exception e)
+            {
+                throw new DalException("Could not check if customer exists", e);
+            }
+
             return customerExists;
         }
 
 
         public List<string> GetCustomerEmails()
         {
-            List<Customer> allCustomers = GetAllCustomers();
+            List<Customer> allCustomers;
+            try
+            {
+                allCustomers = GetAllCustomers();
+            }
+            catch (Exception e)
+            {
+                throw new DalException("Could not get customer emails", e);
+            }
+
             List<string> customerEmails = new();
 
             foreach (Customer customer in allCustomers)
@@ -76,7 +111,16 @@ namespace Core
 
         public Customer GetCustomerByEmail(string email)
         {
-            CustomerDto customerDto = _iCustomerDal.GetCustomerByEmail(email);
+            CustomerDto customerDto;
+            try
+            { 
+                customerDto = _iCustomerDal.GetCustomerByEmail(email);
+            }
+            catch (Exception e)
+            {
+                throw new DalException("Could not get customer by email", e);
+            }
+
             Customer customer = DtoConverter.ConvertCustomerDtoToCustomer(customerDto);
             return customer;
         }
@@ -84,7 +128,16 @@ namespace Core
 
         public List<Customer> GetAllCustomers()
         {
-            List<CustomerDto> customersDto = _iCustomerDal.GetAllCustomers();
+            List<CustomerDto> customersDto;
+            try
+            {
+                customersDto = _iCustomerDal.GetAllCustomers();
+            }
+            catch(Exception e)
+            {
+                throw new DalException("Could not get all customers", e);
+            }
+
             List<Customer> customers = new();
             foreach (CustomerDto customerDto in customersDto)
             {

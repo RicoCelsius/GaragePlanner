@@ -13,10 +13,10 @@ namespace GaragePlanner.Controllers
 {
     public class RegistrationController : Controller
     {
-        private readonly ICustomerDal _customerDal;
-        public RegistrationController(CustomerDal customerDal)
+        private readonly CustomerCollection _customerCollection;
+        public RegistrationController(CustomerCollection customerCollection )
         {
-            _customerDal = customerDal;
+            _customerCollection = customerCollection;
         }   
 
         public IActionResult Index()
@@ -37,7 +37,7 @@ namespace GaragePlanner.Controllers
 
             try
             {
-                CustomerCollection _customerCollection = new (_customerDal);
+
                 _customerCollection.CreateCustomer(
                     registrationViewModel.FirstName,
                     registrationViewModel.LastName,
