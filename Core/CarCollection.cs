@@ -23,39 +23,78 @@ namespace Domain
 
         public bool TryCreateCar(string email, string licensePlate, string model, Enums.Color color, int year)
         {
+
             Car car = new Car(licensePlate,color,model, year);
-            if (_iCarDal.DoesCarAlreadyExist(car.LicensePlate))
+            try
             {
-                return false;
+                if (_iCarDal.DoesCarAlreadyExist(car.LicensePlate))
+                {
+                    return false;
+                }
+
+
+
+                _iCarDal.InsertCar(email, car);
+            }
+            catch (Exception e)
+            {
+                throw new DalException("Could not create car", e);
             }
 
-
-
-            _iCarDal.InsertCar(email,car);
             return true;
         }
 
         public void DeleteCar(int id)
         {
-            _iCarDal.DeleteCar(id);
+            try
+            {
+                _iCarDal.DeleteCar(id);
+            }
+            catch (Exception e)
+            {
+                throw new DalException("Could not delete car", e);
+            }
         }
 
         public void EditCar(Car car)
         {
-            _iCarDal.UpdateCar(car);
+            try
+            {
+                _iCarDal.UpdateCar(car);
+            }
+            catch (Exception e)
+            {
+                throw new DalException("Could not edit car", e);
+            }
         }
 
         public Car GetCarById(int id)
         {
-            CarDto carDto = _iCarDal.GetCarById(id);
-            Car car = DtoConverter.ConvertCarDtoToCar(carDto);
-            return car;
+            try
+            {
+                CarDto carDto = _iCarDal.GetCarById(id);
+                Car car = DtoConverter.ConvertCarDtoToCar(carDto);
+                return car;
+            }
+            catch (Exception e)
+            {
+                throw new DalException("Could not get car", e);
+            }
         }
 
 
         public List<Car> GetCustomerCarsByCustomerEmail(string email)
         {
-            List<CarDto> customerCarsDto = _iCarDal.GetCarsByEmail(email);
+            List<CarDto> customerCarsDto;
+            try
+            {
+                customerCarsDto = _iCarDal.GetCarsByEmail(email);
+            }
+            catch (Exception e)
+            {
+                throw new DalException("Could not get cars", e);
+            }
+
             List<Car> customerCars = new List<Car>();
 
             foreach (CarDto car in customerCarsDto)

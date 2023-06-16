@@ -16,15 +16,13 @@ namespace GaragePlanner.Controllers
 
         private readonly CustomerCollection _customerCollection;
         private readonly CarCollection _carCollection;
-        private readonly ICustomerDal _customerDal;
-        private readonly ICarDal _carDal;
 
-        public CarController(CustomerDal customerDal, CarDal carDal)
+
+        public CarController(CustomerCollection customerCollection, CarCollection carCollection)
         {
-            _customerDal = customerDal;
-            _carDal = carDal;
-            _customerCollection = new(_customerDal); 
-            _carCollection = new(_carDal);
+            _carCollection = carCollection;
+            _customerCollection = customerCollection;
+
         }
 
         [HttpGet]
@@ -68,12 +66,24 @@ namespace GaragePlanner.Controllers
                     return View("Error", errorViewModel);
                 };
             }
-            catch(DalException)
+            catch (DalException exception)
             {
-                ErrorViewModel errorViewModel = new()
+                Console.WriteLine(exception);
+                var errorViewModel = new ErrorViewModel()
                 {
-                    ErrorMessage = "Something went wrong, please try again"
+                    ErrorMessage = "Technical issues, please try again later."
                 };
+
+                return View("Error", errorViewModel);
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception);
+                var errorViewModel = new ErrorViewModel()
+                {
+                    ErrorMessage = "Something went wrong, please contact support"
+                };
+
                 return View("Error", errorViewModel);
             }
 
