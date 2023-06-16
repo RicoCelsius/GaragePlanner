@@ -12,29 +12,31 @@ namespace GaragePlannerTests.mocks
     internal class CarDalMock : ICarDal
     {
         private readonly List<CarDto> _cars;
-        private bool hasInsertedCar = false;
-        private bool hasDeletedCar = false;
-        private bool hasUpdatedCar = false;
+        public bool HasInsertedCar;
+        public bool HasDeletedCar;
+        public bool HasUpdatedCar;
 
         public CarDalMock(List<CarDto> cars)
         {
             _cars = cars;
+            HasInsertedCar = false;
+            HasDeletedCar = false;
+            HasUpdatedCar = false;
         }
 
         public void DeleteCar(int id)
         {
-            hasDeletedCar = true;
+            HasDeletedCar = true;
         }
 
         public bool DoesCarAlreadyExist(string licenseplate)
         {
-            throw new NotImplementedException();
-
+            return _cars.Any(car => car.LicensePlate == licenseplate);
         }
 
         public CarDto GetCarById(int id)
         {
-            throw new NotImplementedException();
+            return _cars.FirstOrDefault(car => car.Id == id);
         }
 
         public List<CarDto> GetCarsByEmail(string email)
@@ -42,14 +44,15 @@ namespace GaragePlannerTests.mocks
             return _cars;
         }
 
-        public void InsertCar(string email, CarDto car)
+
+        public void InsertCar(string email, Car car)
         {
-            hasInsertedCar = true;
+            HasInsertedCar = true;
         }
 
         public void UpdateCar(Car car)
         {
-            hasUpdatedCar = true;
+            HasUpdatedCar = true;
             
         }
     }

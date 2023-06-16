@@ -19,7 +19,7 @@ namespace Domain
         {
             Days = DayGenerator.GenerateDays(AmountOfDays);
             _appointmentDal = appointmentDal;
-            LoadAgenda();
+           
         }
 
         public void LoadAgenda()
@@ -35,7 +35,7 @@ namespace Domain
 
                 catch (Exception e)
                 {
-                    throw new CouldNotReadDataException("Could not read data", e);
+                    throw new DalException("Could not read data", e);
                 }
 
                 foreach (AppointmentDto appointment in appointments)
@@ -64,6 +64,7 @@ namespace Domain
 
         public bool TryCreateAppointment(DateOnly date, TimeOnly time,Enums.Type serviceType,Customer customer,Car car)
         {
+            LoadAgenda();
             Appointment appointment = new Appointment(date,time,serviceType,Enums.Status.Scheduled,customer,car);
 
             Day targetDay = Days.FirstOrDefault(day => day.DateOfDay.Equals(appointment.Date));
@@ -78,7 +79,7 @@ namespace Domain
                 }
                 catch (Exception e)
                 {
-                    throw new CouldNotInsertDataException("Appointment could not be inserted", e);
+                    throw new DalException("Appointment could not be inserted", e);
                 }
 
                 return true;

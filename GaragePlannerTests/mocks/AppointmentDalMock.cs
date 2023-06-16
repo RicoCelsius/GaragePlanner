@@ -34,7 +34,7 @@ namespace GaragePlannerTests.mocks
             return _appointmentsOfDay;
         }
 
-        public void InsertAppointment(AppointmentDto appointmentDto)
+        public void InsertAppointment(Appointment appointmentDto)
         {
             HasInsertedAppointment = true;
             

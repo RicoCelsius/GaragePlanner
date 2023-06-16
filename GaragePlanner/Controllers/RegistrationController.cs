@@ -1,6 +1,7 @@
 ﻿using Core;
 using DAL;
 using Domain.interfaces;
+using Domain.utils;
 using GaragePlanner.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -46,14 +47,25 @@ namespace GaragePlanner.Controllers
                 );
             }
 
-            catch(Exception ex)
+            catch (DalException exception)
             {
+                Console.WriteLine(exception);
                 var errorViewModel = new ErrorViewModel()
                 {
-                    ErrorMessage = ex.Message
+                    ErrorMessage = "Technical issues, please try again later."
                 };
-               
-                return View("Error",errorViewModel);
+
+                return View("Error", errorViewModel);
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception);
+                var errorViewModel = new ErrorViewModel()
+                {
+                    ErrorMessage = "Something went wrong, please contact support"
+                };
+
+                return View("Error", errorViewModel);
             }
 
             return RedirectToAction("RegistrationSuccess", registrationViewModel);

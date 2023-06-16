@@ -7,6 +7,7 @@ using System.Reflection;
 using DAL;
 using Domain.dto;
 using Domain.utils;
+using System;
 
 namespace GaragePlanner.Controllers
 {
@@ -24,7 +25,7 @@ namespace GaragePlanner.Controllers
         {
             try
             {
-
+                _appointmentCollection.LoadAgenda();
 
                 AgendaViewModel model = new();
 
@@ -48,11 +49,22 @@ namespace GaragePlanner.Controllers
 
                 return View(model);
             }
-            catch (CouldNotReadDataException)
+            catch (DalException exception)
             {
+                Console.WriteLine(exception);
                 var errorViewModel = new ErrorViewModel()
                 {
                     ErrorMessage = "Technical issues, please try again later."
+                };
+
+                return View("Error", errorViewModel);
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception);
+                var errorViewModel = new ErrorViewModel()
+                {
+                    ErrorMessage = "Something went wrong, please contact support"
                 };
 
                 return View("Error", errorViewModel);

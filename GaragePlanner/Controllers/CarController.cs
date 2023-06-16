@@ -37,7 +37,7 @@ namespace GaragePlanner.Controllers
 
                 carViewModel.CustomerEmails = customerEmails;
             }
-            catch (CouldNotReadDataException)
+            catch (DalException)
             {
                 ErrorViewModel errorViewModel = new()
                 {
@@ -61,7 +61,7 @@ namespace GaragePlanner.Controllers
                 Result result = _carCollection.TryCreateCar(email, carViewModel.LicensePlate, carViewModel.Model,
                     carViewModel.SelectedColor, carViewModel.Year);
             }
-            catch(CouldNotInsertDataException)
+            catch(DalException)
             {
                 ErrorViewModel errorViewModel = new()
                 {
@@ -81,15 +81,27 @@ namespace GaragePlanner.Controllers
                 _carCollection.DeleteCar(id);
 
             }
-            catch (CouldNotDeleteDataException)
+            catch (DalException exception)
             {
-                ErrorViewModel errorViewModel = new()
+                Console.WriteLine(exception);
+                var errorViewModel = new ErrorViewModel()
                 {
-                    ErrorMessage = "Something went wrong, please try again"
+                    ErrorMessage = "Technical issues, please try again later."
                 };
+
                 return View("Error", errorViewModel);
             }
-            
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception);
+                var errorViewModel = new ErrorViewModel()
+                {
+                    ErrorMessage = "Something went wrong, please contact support"
+                };
+
+                return View("Error", errorViewModel);
+            }
+
             return RedirectToAction("Index", "Home");
         }
 
@@ -102,8 +114,30 @@ namespace GaragePlanner.Controllers
                 model.CarModel,
                 model.Year
                 );
+            try
+            {
+                _carCollection.EditCar(car);
+            }
+            catch (DalException exception)
+            {
+                Console.WriteLine(exception);
+                var errorViewModel = new ErrorViewModel()
+                {
+                    ErrorMessage = "Technical issues, please try again later."
+                };
 
-            _carCollection.EditCar(car);
+                return View("Error", errorViewModel);
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception);
+                var errorViewModel = new ErrorViewModel()
+                {
+                    ErrorMessage = "Something went wrong, please contact support"
+                };
+
+                return View("Error", errorViewModel);
+            }
 
 
             return RedirectToAction("Overview");
@@ -111,9 +145,33 @@ namespace GaragePlanner.Controllers
 
         public ActionResult Overview(OverviewCarViewModel model)
         {
-            model.CustomerEmails = _customerCollection.GetCustomerEmails();
-            List<Car> customerCars = _carCollection.GetCustomerCarsByCustomerEmail("fefefefefefefe@gmail.com");
-            model.Cars = customerCars;
+            try
+            {
+                model.CustomerEmails = _customerCollection.GetCustomerEmails();
+                List<Car> customerCars = _carCollection.GetCustomerCarsByCustomerEmail("fefefefefefefe@gmail.com");
+                model.Cars = customerCars;
+            }
+            catch (DalException exception)
+            {
+                Console.WriteLine(exception);
+                var errorViewModel = new ErrorViewModel()
+                {
+                    ErrorMessage = "Technical issues, please try again later."
+                };
+
+                return View("Error", errorViewModel);
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception);
+                var errorViewModel = new ErrorViewModel()
+                {
+                    ErrorMessage = "Something went wrong, please contact support"
+                };
+
+                return View("Error", errorViewModel);
+            }
+
             return View(model);
         }
 

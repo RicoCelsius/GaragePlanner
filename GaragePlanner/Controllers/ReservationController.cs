@@ -47,12 +47,24 @@ namespace GaragePlanner.Controllers
                     ? chosenTime
                     : dateAndTime.TimeOfDay.ToString("hh\\:mm");
             }
-            catch (CouldNotReadDataException)
+            catch (DalException exception)
             {
-                ErrorViewModel errorViewModel = new()
+                Console.WriteLine(exception);
+                var errorViewModel = new ErrorViewModel()
                 {
-                    ErrorMessage = "Something went wrong, please try again"
+                    ErrorMessage = "Technical issues, please try again later."
                 };
+
+                return View("Error", errorViewModel);
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception);
+                var errorViewModel = new ErrorViewModel()
+                {
+                    ErrorMessage = "Something went wrong, please contact support"
+                };
+
                 return View("Error", errorViewModel);
             }
 
@@ -73,14 +85,37 @@ namespace GaragePlanner.Controllers
 
                 Customer customer = _customerCollection.GetCustomerByEmail(model.SelectedEmail);
                 Car car = _carCollection.GetCarById(model.SelectedCarId);
-                _appointmentCollection.TryCreateAppointment(DateOnly.Parse(model.ChosenDate),
-                    TimeOnly.Parse(model.ChosenTime), model.SelectedTypeOfAppointment, customer, car);
+                if (!_appointmentCollection.TryCreateAppointment(DateOnly.Parse(model.ChosenDate),
+                        TimeOnly.Parse(model.ChosenTime), model.SelectedTypeOfAppointment, customer, car))
+                {
+                    var errorViewModel = new ErrorViewModel()
+                    {
+                        ErrorMessage = "This timeslot is unavailable, please select another timeslot"
+                    };
+                    return View("Error", errorViewModel);
+                }
+
             }
-            catch (CouldNotReadDataException)
+            catch (DalException exception)
             {
+                Console.WriteLine(exception);
+                var errorViewModel = new ErrorViewModel()
+                {
+                    ErrorMessage = "Technical issues, please try again later."
+                };
 
+                return View("Error", errorViewModel);
             }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception);
+                var errorViewModel = new ErrorViewModel()
+                {
+                    ErrorMessage = "Something went wrong, please contact support"
+                };
 
+                return View("Error", errorViewModel);
+            }
             return RedirectToAction("Confirmation", model);
 
         }
