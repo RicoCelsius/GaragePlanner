@@ -12,30 +12,31 @@ namespace GaragePlannerTests.mocks
     internal class AppointmentDalMock : IAppointmentDal
     {
         private readonly List<AppointmentDto> _appointmentsInAgenda;
+        private readonly List<AppointmentDto> _appointmentsOfDay;
+        public bool HasInsertedAppointment;
 
-        public AppointmentDalMock(List<AppointmentDto> appointmentsInAgenda)
+
+
+        public AppointmentDalMock(List<AppointmentDto> appointmentsOfDay)
         {
-            this._appointmentsInAgenda = appointmentsInAgenda;
-
-
-        }
-        public bool AppointmentExistsByDateAndTime(DateTime dateAndTime)
-        {
-            throw new NotImplementedException();
+            HasInsertedAppointment = false;
+            _appointmentsOfDay = appointmentsOfDay;
         }
 
-        
 
         public List<AppointmentDto> GetAgenda()
         {
-            
-
-     
-           return _appointmentsInAgenda;
+            return _appointmentsInAgenda;
         }
 
-        public void InsertAppointment(AppointmentDto appointmentDto)
+        public List<AppointmentDto> GetAgendaOfDay(DateOnly date)
         {
+            return _appointmentsOfDay;
+        }
+
+        public void InsertAppointment(Appointment appointmentDto)
+        {
+            HasInsertedAppointment = true;
             
         }
     }

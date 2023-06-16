@@ -12,5 +12,6 @@ public interface ICarDal
     bool DoesCarAlreadyExist(string licenseplate);
 
     void UpdateCar(Car car);
+
     void DeleteCar(int id);
 }

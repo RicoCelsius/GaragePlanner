@@ -13,10 +13,69 @@ namespace DAL
 {
     public class AppointmentDal : IAppointmentDal
     {
-        private readonly IDbConnection _dbConnection;
-        public AppointmentDal(IDbConnection dbConnection)
+        private readonly DbConnection _dbConnection;
+        public AppointmentDal(DbConnection dbConnection)
         {
             _dbConnection = dbConnection;
+        }
+
+        public List<AppointmentDto> GetAgendaOfDay(DateOnly date)
+        {
+            List<AppointmentDto> appointments = new();
+            string mySqlDate = date.ToString("yyyy-MM-dd");
+
+            var query = @"
+         SELECT appointment.id, appointment.date, appointment.type, appointment.status, appointment.time, 
+        customers.id, customers.first_name, customers.last_name, customers.Address, customers.Email, customers.Password, car.id,
+        car.license_plate, car.color, car.model, car.year 
+        FROM appointment 
+        INNER JOIN customers ON appointment.customer_id = customers.id 
+        INNER JOIN car ON appointment.car_id = car.id
+        WHERE appointment.date = @mySqlDate";
+
+
+            var connection = _dbConnection;
+            var parameters = new MySqlParameter[]
+            {
+                new MySqlParameter("@mySqlDate", MySqlDbType.Date) { Value = date }
+            };
+
+            var dataTable = connection.ExecuteQuery(query, parameters);
+
+
+            foreach (DataRow row in dataTable.Rows)
+            {
+                CustomerDto customer = new(
+                    row.Field<int>("id"),
+                    row.Field<string>("first_name"),
+                    row.Field<string>("last_name"),
+                    row.Field<string>("Address"),
+                    row.Field<string>("Email"),
+                    row.Field<string>("Password")
+                );
+
+                CarDto car = new(
+                    row.Field<int>("id"),
+                    row.Field<string>("license_plate"),
+                    (Enums.Color)Enum.Parse(typeof(Enums.Color), row.Field<string>("color")),
+                    row.Field<string>("model"),
+                    row.Field<int>("year")
+                );
+
+                AppointmentDto appointment = new(
+                    row.Field<int>("id"),
+                    DateOnly.FromDateTime(row.Field<DateTime>("date")),
+                    TimeOnly.FromTimeSpan(row.Field<TimeSpan>("time")),
+                    (Enums.Type)Enum.Parse(typeof(Enums.Type), row.Field<string>("type")),
+                    (Enums.Status)Enum.Parse(typeof(Enums.Status), row.Field<string>("status")),
+                    customer,
+                    car
+                );
+
+                appointments.Add(appointment);
+            }
+
+            return appointments;
         }
 
 
@@ -25,7 +84,7 @@ namespace DAL
             List<AppointmentDto> appointments = new ();
 
             var query = @"
-                SELECT appointment.date, appointment.type, appointment.status, 
+                SELECT appointment.id, appointment.date, appointment.type, appointment.status, 
                     customers.id, customers.first_name, customers.last_name, customers.Address, customers.Email, customers.Password, car.id,
                     car.license_plate, car.color, car.model, car.year 
                 FROM appointment 
@@ -49,14 +108,17 @@ namespace DAL
                 CarDto car = new(
                     row.Field<int>("id"),
                     row.Field<string>("license_plate"),
-                    row.Field<string>("color"),
+                    (Enums.Color)Enum.Parse(typeof(Enums.Color), row.Field<string>("color")),
                     row.Field<string>("model"),
                     row.Field<int>("year")
                 );
 
                 AppointmentDto appointment = new (
-                    row.Field<DateTime>("date"),
-                    (Enums.Type)Enum.Parse(typeof(Enums.Type), row.Field<string>("type")),
+                    row.Field<int>("id"),
+                    row.Field<DateOnly>("date"),
+                    row.Field<TimeOnly>("time"),
+                    (Enums.Type)Enum.Parse(typeof(Enums.Type), 
+                        row.Field<string>("type")),
                     (Enums.Status)Enum.Parse(typeof(Enums.Status), row.Field<string>("status")),
                     customer,
                     car
@@ -68,16 +130,17 @@ namespace DAL
             return appointments;
         }
 
-        public void InsertAppointment(AppointmentDto appointment)
+        public void InsertAppointment(Appointment appointment)
         {
             var query = @"
-             INSERT INTO appointment (customer_id, car_id, date, type, status) 
-             VALUES (
-            (SELECT id FROM customers WHERE email = @Email),
-            (SELECT id FROM car WHERE license_plate = @LicensePlate),
-            @Date, 
-            @Type, 
-            @Status)";
+         INSERT INTO appointment (customer_id, car_id, date, time, type, status) 
+         VALUES (
+        (SELECT id FROM customers WHERE email = @Email),
+        (SELECT id FROM car WHERE license_plate = @LicensePlate),
+        @Date,
+        @Time, 
+        @Type, 
+        @Status)";
 
             var connection = _dbConnection;
 
@@ -85,13 +148,15 @@ namespace DAL
             {
                 new MySqlParameter("@Email", MySqlDbType.VarChar) { Value = appointment.Customer.Email },
                 new MySqlParameter("@LicensePlate", MySqlDbType.VarChar) { Value = appointment.Car.LicensePlate },
-                new MySqlParameter("@Date", MySqlDbType.DateTime) { Value = appointment.DateAndTime },
+                new MySqlParameter("@Date", MySqlDbType.Date) { Value = appointment.Date },
+                new MySqlParameter("@Time", MySqlDbType.Time) { Value = appointment.Time },
                 new MySqlParameter("@Type", MySqlDbType.VarChar) { Value = appointment.ServiceType },
                 new MySqlParameter("@Status", MySqlDbType.VarChar) { Value = appointment.Status }
             };
 
-            connection.ExecuteQuery(query, parameters);
+            connection.ExecuteNonQuery(query, parameters);
         }
+
 
     }
 }

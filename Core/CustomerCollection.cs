@@ -12,37 +12,33 @@ namespace Core
 {
     public class CustomerCollection
     {
-        public List<Customer> Customers { get; set; }
         private readonly ICustomerDal _iCustomerDal;
 
         public CustomerCollection(ICustomerDal iCustomerDal)
         {
             _iCustomerDal = iCustomerDal;
-            Customers = new List<Customer>();
-            FillListWithCustomers();
         }
 
-        public Result CreateCustomer(string firstName, string lastName, string address, string email, string password)
+        public bool CreateCustomer(string firstName, string lastName, string address, string email, string password)
         {
             if (DoesEmailAlreadyExist(email))
             {
-                return new Result(false, "Email already exists");
+                return false;
             }
 
             string encryptedPassword = PasswordEncryptor.EncryptPassword(password);
             Customer customer = new(firstName, lastName, address, email, encryptedPassword);
             _iCustomerDal.InsertCustomer(customer);
-            return new Result(true, "Customer created");
+            return true;
         }
 
 
-        public Result AuthenticateCustomer(string email, string inputPassword)
+        public bool AuthenticateCustomer(string email, string inputPassword)
         {
             CustomerDto customerInfo = _iCustomerDal.GetCustomerByEmail(email);
-            string hashedPassword = customerInfo.Password;
             string hashedInputPassword = PasswordEncryptor.EncryptPassword(inputPassword);
 
-            if (hashedPassword == hashedInputPassword)
+            if (PasswordEncryptor.VerifyPassword(inputPassword,hashedInputPassword))
             {
                 Customer customer = new(
                     customerInfo.FirstName,
@@ -50,44 +46,53 @@ namespace Core
                     customerInfo.Address,
                     customerInfo.Email,
                     customerInfo.Password);
-                return new Result(true, "Customer authenticated");
+                return true;
             }
 
-            return new Result(false, "Wrong password");
+            return false;
         }
 
-        public void FillListWithCustomers()
-        {
-            List<CustomerDto> customerDtos = _iCustomerDal.GetAllCustomers();
-            foreach (CustomerDto customerDto in customerDtos)
-            {
-                Customer customer = DtoConverter.ConvertCustomerDtoToCustomer(customerDto);
-                Customers.Add(customer);
-            }
-        }
 
         public bool DoesEmailAlreadyExist(string email)
         {
-            bool customerExists = Customers.Any(c => c.Email == email);
+            bool customerExists = _iCustomerDal.DoesCustomerExists(email);
             return customerExists;
+        }
+
+
+        public List<string> GetCustomerEmails()
+        {
+            List<Customer> allCustomers = GetAllCustomers();
+            List<string> customerEmails = new();
+
+            foreach (Customer customer in allCustomers)
+            {
+                customerEmails.Add(customer.Email);
+            }
+
+            return customerEmails;
         }
 
 
         public Customer GetCustomerByEmail(string email)
         {
-            Customer customer = Customers.FirstOrDefault(c => c.Email == email);
-
+            CustomerDto customerDto = _iCustomerDal.GetCustomerByEmail(email);
+            Customer customer = DtoConverter.ConvertCustomerDtoToCustomer(customerDto);
             return customer;
         }
 
 
-
-        public List<string> GetCustomerEmails()
+        public List<Customer> GetAllCustomers()
         {
-            List<string> customerEmails = Customers.Select(c => c.Email).ToList();
-            return customerEmails;
-        }
+            List<CustomerDto> customersDto = _iCustomerDal.GetAllCustomers();
+            List<Customer> customers = new();
+            foreach (CustomerDto customerDto in customersDto)
+            {
+                customers.Add(DtoConverter.ConvertCustomerDtoToCustomer(customerDto));
+            }
 
+            return customers;
+        }
 
     }
 }

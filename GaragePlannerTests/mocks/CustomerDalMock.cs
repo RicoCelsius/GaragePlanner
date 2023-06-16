@@ -12,8 +12,10 @@ namespace GaragePlannerTests.mocks
     public class CustomerDalMock : ICustomerDal
     {
         private readonly List<CustomerDto> _customers;
+        public bool hasInsertedCustomer;
 
         public CustomerDalMock(List<CustomerDto> customers){
+            hasInsertedCustomer = false;
             this._customers = customers;
         }
 
@@ -29,7 +31,12 @@ namespace GaragePlannerTests.mocks
 
         public void InsertCustomer(Customer customer)
         {
-            
+            hasInsertedCustomer = true;
+        }
+
+        public bool DoesCustomerExists(string email)
+        {
+            return true;
         }
     }
 }

@@ -11,7 +11,6 @@ namespace Domain
     {
         public DateOnly DateOfDay;
         public readonly List<TimeSlot> TimeSlots;
-        private readonly IAppointmentDal _appointmentDal;
 
         public Day(DateOnly dateOfDay)
         {

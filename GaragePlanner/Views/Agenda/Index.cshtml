@@ -1,4 +1,4 @@
-﻿@model GaragePlanner.Models.AgendaViewModel;
+﻿@model GaragePlanner.Models.AgendaViewModel
 
 <!DOCTYPE html>
 <html>
@@ -51,9 +51,9 @@
         <thead>
             <tr>
                 <th></th>
-                @foreach (var date in Model.Days)
+                @foreach (var day in Model.Days)
                 {
-                    <th class="day">@date.Date.ToString()</th>
+                    <th class="day">@day.Date.ToString("ddd, dd MMM")</th>
                 }
             </tr>
         </thead>
@@ -66,8 +66,8 @@
                     {
                         var timeslot = day.TimeSlots.FirstOrDefault(ts => ts.Time == timeSlot);
                         var bookLink = timeslot?.IsAvailable == true
-                        ? $"<a href=\"/agenda/bookinformation?dateAndTime={day.Date:yyyy-MM-dd}T{timeSlot:HH:mm:ss}\" class=\"book-link\">Book</a>"
-                        : "Booked";
+                        ? $"<a href=\"/reservation/bookinformation?dateAndTime={day.Date:yyyy-MM-dd}T{timeSlot:HH:mm:ss}\" class=\"book-link\">Book</a>"
+                        : "Not available";
                         <td class="@((timeslot?.IsAvailable == true) ? "available" : "booked")">
                             @Html.Raw(bookLink)
                         </td>

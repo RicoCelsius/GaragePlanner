@@ -127,7 +127,7 @@
         @foreach (Car car in Model.Cars)
         {
             <div class="car-container">
-                <img src="@(!string.IsNullOrEmpty(car.ImageUrl) ? car.ImageUrl : Url.Content("~/img/no-image-found-360x250.png"))" alt="Car Image" class="car-image">
+                <img src="@(Url.Content("~/img/no-image-found-360x250.png"))" alt="Car Image" class="car-image">
                 <p>
                     License plate: @car.LicensePlate
                 </p>

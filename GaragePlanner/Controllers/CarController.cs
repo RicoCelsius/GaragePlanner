@@ -13,22 +13,38 @@ namespace GaragePlanner.Controllers
 {
     public class CarController : Controller
     {
-        private readonly ICarDal _carDal;
-        private readonly ICustomerDal _customerDal;
 
-        public CarController(ICarDal carDal, ICustomerDal customerDal)
+        private readonly CustomerCollection _customerCollection;
+        private readonly CarCollection _carCollection;
+        private readonly ICustomerDal _customerDal;
+        private readonly ICarDal _carDal;
+
+        public CarController(CustomerDal customerDal, CarDal carDal)
         {
-            _carDal = carDal;
             _customerDal = customerDal;
+            _carDal = carDal;
+            _customerCollection = new(_customerDal); 
+            _carCollection = new(_carDal);
         }
 
         [HttpGet]
         public ActionResult Index(AddCarViewModel carViewModel)
         {
-            List<string> customerEmails = new ();
-            CustomerCollection customerCollection = new (_customerDal);
-            customerEmails = customerCollection.GetCustomerEmails();
-            carViewModel.CustomerEmails = customerEmails;
+            try
+            {
+                List<string> customerEmails = _customerCollection.GetCustomerEmails();
+
+
+                carViewModel.CustomerEmails = customerEmails;
+            }
+            catch (DalException)
+            {
+                ErrorViewModel errorViewModel = new()
+                {
+                    ErrorMessage = "Something went wrong, please try again"
+                };
+                return View("Error", errorViewModel);
+            }
 
 
             return View(carViewModel);
@@ -38,19 +54,28 @@ namespace GaragePlanner.Controllers
 
         public ActionResult AddCar(AddCarViewModel carViewModel)
         {
-            CarCollection carCollection = new (_carDal);
-            
 
-            Car car = new(
-                carViewModel.LicensePlate,
-                carViewModel.SelectedColor,
-                carViewModel.Model,
-                carViewModel.Year
-            );
-            string email = carViewModel.SelectedCustomerEmail;
-
-
-            Result result = carCollection.CreateCar(email,car);
+            try
+            {
+                string email = carViewModel.SelectedCustomerEmail;
+                if (!_carCollection.TryCreateCar(email, carViewModel.LicensePlate, carViewModel.Model,
+                        carViewModel.SelectedColor, carViewModel.Year))
+                {
+                    ErrorViewModel errorViewModel = new()
+                    {
+                        ErrorMessage = "License plate already exist. Contact support if this should not be the case."
+                    };
+                    return View("Error", errorViewModel);
+                };
+            }
+            catch(DalException)
+            {
+                ErrorViewModel errorViewModel = new()
+                {
+                    ErrorMessage = "Something went wrong, please try again"
+                };
+                return View("Error", errorViewModel);
+            }
 
 
             return RedirectToAction("Index", "Home");
@@ -58,9 +83,31 @@ namespace GaragePlanner.Controllers
 
         public ActionResult DeleteCar(int id)
         {
-            CarCollection carCollection = new (_carDal);
-            carCollection.DeleteCar(id);
+            try
+            {
+                _carCollection.DeleteCar(id);
 
+            }
+            catch (DalException exception)
+            {
+                Console.WriteLine(exception);
+                var errorViewModel = new ErrorViewModel()
+                {
+                    ErrorMessage = "Technical issues, please try again later."
+                };
+
+                return View("Error", errorViewModel);
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception);
+                var errorViewModel = new ErrorViewModel()
+                {
+                    ErrorMessage = "Something went wrong, please contact support"
+                };
+
+                return View("Error", errorViewModel);
+            }
 
             return RedirectToAction("Index", "Home");
         }
@@ -74,9 +121,30 @@ namespace GaragePlanner.Controllers
                 model.CarModel,
                 model.Year
                 );
+            try
+            {
+                _carCollection.EditCar(car);
+            }
+            catch (DalException exception)
+            {
+                Console.WriteLine(exception);
+                var errorViewModel = new ErrorViewModel()
+                {
+                    ErrorMessage = "Technical issues, please try again later."
+                };
 
-            CarCollection carCollection = new (_carDal);
-            carCollection.EditCar(car);
+                return View("Error", errorViewModel);
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception);
+                var errorViewModel = new ErrorViewModel()
+                {
+                    ErrorMessage = "Something went wrong, please contact support"
+                };
+
+                return View("Error", errorViewModel);
+            }
 
 
             return RedirectToAction("Overview");
@@ -84,12 +152,33 @@ namespace GaragePlanner.Controllers
 
         public ActionResult Overview(OverviewCarViewModel model)
         {
-            CustomerCollection customerCollection = new (_customerDal);
-            CarCollection carCollection = new (_carDal);
+            try
+            {
+                model.CustomerEmails = _customerCollection.GetCustomerEmails();
+                List<Car> customerCars = _carCollection.GetCustomerCarsByCustomerEmail("fefefefefefefe@gmail.com");
+                model.Cars = customerCars;
+            }
+            catch (DalException exception)
+            {
+                Console.WriteLine(exception);
+                var errorViewModel = new ErrorViewModel()
+                {
+                    ErrorMessage = "Technical issues, please try again later."
+                };
 
-            model.CustomerEmails = customerCollection.GetCustomerEmails();
-            List<Car> customerCars = carCollection.GetCustomerCarsByCustomerEmail("fefefefefefefe@gmail.com");
-            model.Cars = customerCars;
+                return View("Error", errorViewModel);
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception);
+                var errorViewModel = new ErrorViewModel()
+                {
+                    ErrorMessage = "Something went wrong, please contact support"
+                };
+
+                return View("Error", errorViewModel);
+            }
+
             return View(model);
         }
 

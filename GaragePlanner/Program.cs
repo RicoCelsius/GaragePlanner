@@ -1,22 +1,39 @@
+using System.Configuration;
+using System.Data;
+using System.Data.SqlClient;
 using Core;
 using DAL;
+using Domain;
 using Domain.interfaces;
 using GaragePlanner.Controllers;
 using Microsoft.Extensions.Configuration;
+
+
 var builder = WebApplication.CreateBuilder(args);
 string connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 
 
 // Add services to the container.
+
 builder.Services.AddControllersWithViews();
-builder.Services.AddScoped<ICustomerDal, CustomerDal>();
-builder.Services.AddScoped<ICarDal, CarDal>();
+builder.Services.AddScoped(sp => new DbConnection(connectionString));
+
+builder.Services.AddScoped<AppointmentCollection>();
+builder.Services.AddScoped<AppointmentDal>();
 builder.Services.AddScoped<IAppointmentDal, AppointmentDal>();
 
-builder.Services.AddSingleton(connectionString);
-builder.Services.AddScoped<DbConnection>();
-builder.Services.AddScoped<IDbConnection>(provider => provider.GetService<DbConnection>());
+builder.Services.AddScoped<CarCollection>();
+builder.Services.AddScoped<CarDal>();
+builder.Services.AddScoped<ICarDal, CarDal>();
+
+builder.Services.AddScoped<CustomerCollection>();
+builder.Services.AddScoped<CustomerDal>();
+builder.Services.AddScoped<ICustomerDal, CustomerDal>();
+
+
+
+
 
 
 

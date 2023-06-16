@@ -14,7 +14,7 @@ namespace GaragePlanner.Models
         [Required(ErrorMessage = "Please enter a license plate number.")]
         public string LicensePlate { get; set; }
         [Required(ErrorMessage = "Please enter a color.")]
-        public string Color { get; set; }
+        public Enums.Color Color { get; set; }
         [Required(ErrorMessage = "Please enter a model.")]
         public string CarModel { get; set; }
         [Required(ErrorMessage = "Please enter a year.")]

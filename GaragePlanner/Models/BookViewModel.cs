@@ -8,7 +8,8 @@ public class BookViewModel
 
 
 
-    public DateTime ChosenDateTime { get; set; }
+    public string ChosenDate { get; set; }
+    public string ChosenTime { get; set; }
     public List<string> CustomerEmails { get; set; }
     
     public List<Car> CustomerCars { get; set; }

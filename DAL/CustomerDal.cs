@@ -12,10 +12,12 @@ namespace DAL
     {
 
         private readonly DbConnection _dbConnection;
+
         public CustomerDal(DbConnection dbConnection)
         {
             _dbConnection = dbConnection;
         }
+
         public void InsertCustomer(Customer customer)
         {
             var query = "INSERT INTO customers (first_name, last_name, Address, Email, Password) " +
@@ -30,10 +32,24 @@ namespace DAL
             };
 
             var connection = _dbConnection;
-            connection.ExecuteQuery(query, parameters);
+            connection.ExecuteNonQuery(query, parameters);
         }
 
 
+
+        public bool DoesCustomerExists(string email)
+        {
+            var query = "SELECT * FROM customers WHERE Email = @Email";
+            var parameters = new MySqlParameter[]
+            {
+                new MySqlParameter("@Email", email)
+            };
+
+            var connection = _dbConnection;
+            var dataTable = connection.ExecuteQuery(query, parameters);
+
+            return dataTable.Rows.Count > 0;
+        }
 
         public CustomerDto GetCustomerByEmail(string email)
         {
@@ -46,29 +62,23 @@ namespace DAL
             var connection = _dbConnection;
             var dataTable = connection.ExecuteQuery(query, parameters);
 
-            if (dataTable.Rows.Count > 0)
-            {
-                var row = dataTable.Rows[0];
-                var customerData = new CustomerDto(
-                    row.Field<int>("id"),
-                    row.Field<string>("first_name"),
-                    row.Field<string>("last_name"),
-                    row.Field<string>("Address"),
-                    row.Field<string>("Email"),
-                    row.Field<string>("Password"));
+            var row = dataTable.Rows[0];
+            var customerData = new CustomerDto(
+                row.Field<int>("id"),
+                row.Field<string>("first_name"),
+                row.Field<string>("last_name"),
+                row.Field<string>("Email"),
+                row.Field<string>("Address"),
+                row.Field<string>("Password"));
+            return customerData;
 
-                return customerData;
-            }
-
-            throw new Exception("Customer not found");
         }
-
 
         public List<CustomerDto> GetAllCustomers()
         {
             var query = "SELECT * FROM customers";
             var connection = _dbConnection;
-  
+
 
             var dataTable = connection.ExecuteQuery(query, null);
 
@@ -88,4 +98,9 @@ namespace DAL
             return customers;
         }
     }
+
+
+
+
+
 }

@@ -6,12 +6,11 @@ using System.Threading.Tasks;
 
 namespace Domain.utils
 {
-    public class CouldNotReadDataException : Exception
+    public class DalException : Exception
     {
         private Exception ex;
 
-
-        public CouldNotReadDataException(string message, Exception ex) : base(message)
+        public DalException(string message, Exception ex) : base(message)
         {
             this.ex = ex;
         }

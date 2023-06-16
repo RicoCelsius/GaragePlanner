@@ -10,14 +10,25 @@ namespace Domain.utils
     {
         public static List<Day> GenerateDays(int amountOfDays)
         {
-            List<Day> Days = new ();
+            List<Day> days = new List<Day>();
             DateOnly startDate = DateOnly.FromDateTime(DateTime.Now);
-            for (int i = 0; i < amountOfDays; i++)
+
+            while (days.Count < amountOfDays)
             {
-                Days.Add(new Day(startDate));
+                if (!IsWeekend(startDate))
+                {
+                    days.Add(new Day(startDate));
+                }
+
                 startDate = startDate.AddDays(1);
             }
-            return Days;
+
+            return days;
+        }
+
+        private static bool IsWeekend(DateOnly date)
+        {
+            return date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday;
         }
     }
 }

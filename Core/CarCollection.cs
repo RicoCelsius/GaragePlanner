@@ -14,21 +14,25 @@ namespace Domain
 {
     public class CarCollection
     {
-        private ICarDal _iCarDal;
+        private readonly ICarDal _iCarDal;
 
         public CarCollection(ICarDal iCarDal)
         {
             _iCarDal = iCarDal;
         }
 
-        public Result CreateCar(string email, Car car)
+        public bool TryCreateCar(string email, string licensePlate, string model, Enums.Color color, int year)
         {
+            Car car = new Car(licensePlate,color,model, year);
             if (_iCarDal.DoesCarAlreadyExist(car.LicensePlate))
             {
-                return new Result(false, "License plate already exists");
+                return false;
             }
+
+
+
             _iCarDal.InsertCar(email,car);
-            return new Result(true, "Car created");
+            return true;
         }
 
         public void DeleteCar(int id)

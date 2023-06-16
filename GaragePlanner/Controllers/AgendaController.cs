@@ -7,30 +7,29 @@ using System.Reflection;
 using DAL;
 using Domain.dto;
 using Domain.utils;
+using System;
 
 namespace GaragePlanner.Controllers
 {
     public class AgendaController : Controller
     {
-        private readonly IAppointmentDal _appointmentDal;
-        private readonly ICustomerDal _customerDal;
-        private readonly ICarDal _carDal;
+        private readonly AppointmentCollection _appointmentCollection;
 
-        public AgendaController(IAppointmentDal appointmentDal, ICustomerDal customerDal, ICarDal carDal)
+
+        public AgendaController(AppointmentCollection collection)
         {
-            _appointmentDal = appointmentDal;
-            _customerDal = customerDal;
-            _carDal = carDal;
+            _appointmentCollection = collection;
         }
+
         public IActionResult Index(DateTime dataAndTime)
         {
             try
             {
-                Agenda agenda = new(_appointmentDal);
+                _appointmentCollection.LoadAgenda();
+
                 AgendaViewModel model = new();
 
-                List<Day> days = agenda.Days;
-
+                IReadOnlyList<Day> days = _appointmentCollection.Days;
 
                 foreach (var day in days)
                 {
@@ -50,8 +49,9 @@ namespace GaragePlanner.Controllers
 
                 return View(model);
             }
-            catch (CouldNotReadDataException)
+            catch (DalException exception)
             {
+                Console.WriteLine(exception);
                 var errorViewModel = new ErrorViewModel()
                 {
                     ErrorMessage = "Technical issues, please try again later."
@@ -59,59 +59,20 @@ namespace GaragePlanner.Controllers
 
                 return View("Error", errorViewModel);
             }
-        }
-
-
-        [HttpGet]
-        [HttpPost]
-
-        public IActionResult BookInformation(BookViewModel model, string selectedCustomerEmail, DateTime dateAndTime)
-        {
-            CustomerCollection customerCollection = new(_customerDal);
-            CarCollection carCollection = new (_carDal);
-            List<String> customerEmails = customerCollection.GetCustomerEmails();
-
-            if (!string.IsNullOrEmpty(selectedCustomerEmail))
+            catch (Exception exception)
             {
-                List<Car> customerCars = carCollection.GetCustomerCarsByCustomerEmail(selectedCustomerEmail);
-                model.CustomerCars = customerCars;
+                Console.WriteLine(exception);
+                var errorViewModel = new ErrorViewModel()
+                {
+                    ErrorMessage = "Something went wrong, please contact support"
+                };
+
+                return View("Error", errorViewModel);
             }
 
-            model.CustomerEmails = customerEmails;
-            model.SelectedEmail = selectedCustomerEmail;
-            model.ChosenDateTime = dateAndTime;
-
-            return View(model);
         }
 
 
-
-
-
-        [HttpPost]
-        public IActionResult Book(BookViewModel model)
-        {
-
-
-            Agenda agenda = new(_appointmentDal);
-            CustomerCollection customerCollection = new(_customerDal);
-            CarCollection carCollection = new (_carDal);
-            Customer customer = customerCollection.GetCustomerByEmail(model.SelectedEmail);
-            Car car = carCollection.GetCarById(model.SelectedCarId);
-
-            Appointment appointment = new(model.ChosenDateTime, model.SelectedTypeOfAppointment, Enums.Status.Scheduled,
-                customer, car);
-            agenda.CreateAppointment(appointment);
-            
-            return RedirectToAction("Confirmation",model);
-
-        }
-
-        public IActionResult Confirmation(BookViewModel model)
-        {
-
-            return View(model);
-        }
 
     }
 }

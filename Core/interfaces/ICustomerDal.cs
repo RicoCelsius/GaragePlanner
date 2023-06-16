@@ -11,6 +11,7 @@ namespace Domain.interfaces
     {
         void InsertCustomer(Customer customer);
         CustomerDto GetCustomerByEmail(string email);
+        bool DoesCustomerExists(string email);
 
         List<CustomerDto> GetAllCustomers();
     }

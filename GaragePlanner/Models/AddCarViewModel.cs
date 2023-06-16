@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Domain;
 
 namespace GaragePlanner.Models
 {
@@ -7,11 +8,10 @@ namespace GaragePlanner.Models
         public List<string> CustomerEmails { get; set; }
         public string SelectedCustomerEmail { get; set; }
 
-
         [Required(ErrorMessage = "Please enter a license plate number.")]
         public string LicensePlate { get; set; }
         [Required(ErrorMessage = "Please enter a color.")]
-        public string SelectedColor { get; set; }
+        public Enums.Color SelectedColor { get; set; }
         [Required(ErrorMessage = "Please enter a model.")]
         public string Model { get; set; }
         [Required(ErrorMessage = "Please enter a year.")]
