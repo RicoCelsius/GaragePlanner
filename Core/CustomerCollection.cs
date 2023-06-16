@@ -19,27 +19,26 @@ namespace Core
             _iCustomerDal = iCustomerDal;
         }
 
-        public Result CreateCustomer(string firstName, string lastName, string address, string email, string password)
+        public bool CreateCustomer(string firstName, string lastName, string address, string email, string password)
         {
             if (DoesEmailAlreadyExist(email))
             {
-                return new Result(false, "Email already exists");
+                return false;
             }
 
             string encryptedPassword = PasswordEncryptor.EncryptPassword(password);
             Customer customer = new(firstName, lastName, address, email, encryptedPassword);
             _iCustomerDal.InsertCustomer(customer);
-            return new Result(true, "Customer created");
+            return true;
         }
 
 
-        public Result AuthenticateCustomer(string email, string inputPassword)
+        public bool AuthenticateCustomer(string email, string inputPassword)
         {
             CustomerDto customerInfo = _iCustomerDal.GetCustomerByEmail(email);
-            string hashedPassword = customerInfo.Password;
             string hashedInputPassword = PasswordEncryptor.EncryptPassword(inputPassword);
 
-            if (hashedPassword == hashedInputPassword)
+            if (PasswordEncryptor.VerifyPassword(inputPassword,hashedInputPassword))
             {
                 Customer customer = new(
                     customerInfo.FirstName,
@@ -47,10 +46,10 @@ namespace Core
                     customerInfo.Address,
                     customerInfo.Email,
                     customerInfo.Password);
-                return new Result(true, "Customer authenticated");
+                return true;
             }
 
-            return new Result(false, "Wrong password");
+            return false;
         }
 
 

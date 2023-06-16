@@ -34,13 +34,22 @@ namespace GaragePlanner.Controllers
             {
                 return View("Index");
             }
-            Result authenticatedCustomer = _customerCollection.AuthenticateCustomer(model.Email,model.Password);
+            bool authenticatedCustomer = _customerCollection.AuthenticateCustomer(model.Email,model.Password);
+            if (!authenticatedCustomer)
+            {
+                ErrorViewModel errorViewModel = new()
+                {
+                    ErrorMessage = "Wrong email or password"
+                };
+                return View("Error", errorViewModel);
+                
+            }
 
-           
+
+            return View("dashboard", authenticatedCustomer);
 
 
 
-            return View("dashboard",authenticatedCustomer);
         }
     }
 }

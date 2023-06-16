@@ -58,8 +58,15 @@ namespace GaragePlanner.Controllers
             try
             {
                 string email = carViewModel.SelectedCustomerEmail;
-                Result result = _carCollection.TryCreateCar(email, carViewModel.LicensePlate, carViewModel.Model,
-                    carViewModel.SelectedColor, carViewModel.Year);
+                if (!_carCollection.TryCreateCar(email, carViewModel.LicensePlate, carViewModel.Model,
+                        carViewModel.SelectedColor, carViewModel.Year))
+                {
+                    ErrorViewModel errorViewModel = new()
+                    {
+                        ErrorMessage = "License plate already exist. Contact support if this should not be the case."
+                    };
+                    return View("Error", errorViewModel);
+                };
             }
             catch(DalException)
             {

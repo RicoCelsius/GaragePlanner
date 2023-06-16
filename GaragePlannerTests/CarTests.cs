@@ -21,9 +21,9 @@ namespace GaragePlannerTests
             var carDalMock = new CarDalMock(carDtos);
             var carCollection = new CarCollection(carDalMock);
             //Act
-            Result AddResult = carCollection.TryCreateCar("test", "1-2-4", "Mercedes", Enums.Color.Black, 1990);
+            bool AddResult = carCollection.TryCreateCar("test", "1-2-4", "Mercedes", Enums.Color.Black, 1990);
             //Assert
-            Assert.True(AddResult.Success);
+            Assert.True(AddResult);
             Assert.True(carDalMock.HasInsertedCar);
 
         }
@@ -41,9 +41,9 @@ namespace GaragePlannerTests
             var carDalMock = new CarDalMock(carDtos);
             var carCollection = new CarCollection(carDalMock);
             //Act
-            Result AddResult = carCollection.TryCreateCar("test", licensePlate, "Mercedes", Enums.Color.Black, 1990);
+            bool AddResult = carCollection.TryCreateCar("test", licensePlate, "Mercedes", Enums.Color.Black, 1990);
             //Assert
-            Assert.False(AddResult.Success);
+            Assert.False(AddResult);
             Assert.False(carDalMock.HasInsertedCar);
 
         }
