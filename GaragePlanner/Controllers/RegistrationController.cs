@@ -38,7 +38,7 @@ namespace GaragePlanner.Controllers
             try
             {
 
-                _customerCollection.CreateCustomer(
+                _customerCollection.TryCreateCustomer(
                     registrationViewModel.FirstName,
                     registrationViewModel.LastName,
                     registrationViewModel.Address,

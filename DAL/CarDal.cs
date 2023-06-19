@@ -130,11 +130,18 @@ namespace DAL
             return true;
         }
 
-
-
-
-
-
+        public List<string> GetBrands()
+        {
+            var query = "SELECT * FROM car_brand";
+            var connection = _dbConnection;
+            var dataTable = connection.ExecuteQuery(query,null);
+            var brands = new List<string>();
+            foreach (DataRow row in dataTable.Rows)
+            {
+                brands.Add(row.Field<string>("name"));
+            }
+            return brands;
+        }
 
     }
 }

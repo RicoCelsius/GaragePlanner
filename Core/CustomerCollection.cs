@@ -19,7 +19,7 @@ namespace Core
             _iCustomerDal = iCustomerDal;
         }
 
-        public bool CreateCustomer(string firstName, string lastName, string address, string email, string password)
+        public bool TryCreateCustomer(string firstName, string lastName, string address, string email, string password)
         {
             string encryptedPassword = PasswordEncryptor.EncryptPassword(password);
             Customer customer = new(firstName, lastName, address, email, encryptedPassword);

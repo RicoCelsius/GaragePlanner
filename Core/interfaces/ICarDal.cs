@@ -9,6 +9,7 @@ public interface ICarDal
     List<CarDto> GetCarsByEmail(string email);
     CarDto GetCarById(int id);
 
+    List<string> GetBrands();
     bool DoesCarAlreadyExist(string licenseplate);
 
     void UpdateCar(Car car);

@@ -105,5 +105,21 @@ namespace Domain
             return customerCars;
         }
 
+        public List<string> GetAllCurrentBrands()
+        {
+            List<string> brands;
+            try
+            {
+                brands = _iCarDal.GetBrands();
+            }
+            catch (Exception e)
+            {
+                throw new DalException("Could not get brands", e);
+            }
+
+            return brands;
+        }
+        
+
     }
 }
