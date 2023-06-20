@@ -9,7 +9,7 @@ namespace Domain
 {
     public class Day
     {
-        public DateOnly DateOfDay;
+        public readonly DateOnly DateOfDay;
         public readonly List<TimeSlot> TimeSlots;
 
         public Day(DateOnly dateOfDay)

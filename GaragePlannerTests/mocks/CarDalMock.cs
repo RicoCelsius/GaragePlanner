@@ -55,5 +55,22 @@ namespace GaragePlannerTests.mocks
             HasUpdatedCar = true;
             
         }
+
+        public void DeleteBrand(string brand)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<string> GetBrands()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void InsertBrand(string brand)
+        {
+            throw new NotImplementedException();
+        }
+
+
     }
 }

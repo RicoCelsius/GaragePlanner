@@ -21,8 +21,10 @@ namespace Domain
 
         public void AddAppointment(Appointment appointment)
         {
-
-            _appointment = appointment;
+            if (IsAvailable())
+            {
+                _appointment = appointment;
+            }
         }
     }
 }

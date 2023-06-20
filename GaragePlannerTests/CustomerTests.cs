@@ -18,7 +18,7 @@ namespace GaragePlannerTests
             var customerDalMock = new CustomerDalMock(customerDtos);
             var customerCollection = new CustomerCollection(customerDalMock);
             //Act
-            bool AddResult = customerCollection.CreateCustomer("test", "test", "test", "rico", "test");
+            bool AddResult = customerCollection.TryCreateCustomer("test", "test", "test", "rico", "test");
             //Assert
             Assert.False(AddResult);
 

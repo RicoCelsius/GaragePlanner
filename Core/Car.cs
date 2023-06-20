@@ -2,11 +2,11 @@
 {
     public class Car
     {
-        public int? Id { get; set; }
-        public string LicensePlate { get; set; }
-        public Enums.Color Color { get; set; }
-        public string Brand { get; set; }
-        public int Year { get; set; }
+        public int? Id { get; }
+        public string LicensePlate { get; }
+        public Enums.Color Color { get;}
+        public string Brand { get;}
+        public int Year { get; }
 
         public Car(string licensePlate, Enums.Color color, string brand, int year)
         {

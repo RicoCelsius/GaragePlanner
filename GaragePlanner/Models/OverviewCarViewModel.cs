@@ -7,7 +7,6 @@ namespace GaragePlanner.Models
     public class OverviewCarViewModel
     {
         public List<string> CustomerEmails { get; set; }
-        public string SelectedCustomerEmail { get; set; }
         public string SelectedBrand { get; set; }
         public List<Car> Cars { get; set; }
 

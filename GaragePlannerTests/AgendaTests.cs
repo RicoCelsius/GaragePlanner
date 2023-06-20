@@ -36,8 +36,8 @@ namespace GaragePlannerTests
         public void AddAppointmentInNonEmptyTimeSlot()
         {
             // Arrange
-            DateOnly date = DateOnly.FromDateTime(DateTime.Now);
-            TimeOnly time = new TimeOnly(10, 0, 0);
+            DateOnly date = DayGenerator.GenerateDays(1)[0].DateOfDay;
+            TimeOnly time = new TimeOnly(16, 0);
             CustomerDto customerDto = new CustomerDto(1,"Rico", "Aarntzen", "Straatnaam 10", "", "");
             CarDto carDto = new CarDto(1,"AB-12-CD", Enums.Color.Blue, "Audi", 2019);
             List<AppointmentDto> appointmentsOfDay = new List<AppointmentDto>();
