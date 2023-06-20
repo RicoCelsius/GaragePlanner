@@ -11,6 +11,8 @@ public interface ICarDal
 
     List<string> GetBrands();
     bool DoesCarAlreadyExist(string licenseplate);
+    void DeleteBrand(string brand);
+    void InsertBrand(string brand);
 
     void UpdateCar(Car car);
 

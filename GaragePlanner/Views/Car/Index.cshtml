@@ -62,13 +62,14 @@
             <option value="@color.ToString()">@color.ToString()</option>
         }
     </select>
-
-
     <br>
-    <label for="model">Model:</label>
-    <input type="text" name="model" id="model">
-    
-    
+        <label for="brand">Brand:</label>
+    <select name="SelectedBrand" id="SelectedBrand">
+        @foreach (var brand in Model.Brands)
+        {
+            <option value="@brand">@brand</option>
+        }
+    </select>
     <br>
     <label for="year">Year:</label>
     <input type="text" name="year" id="year">

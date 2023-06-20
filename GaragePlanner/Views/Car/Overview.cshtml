@@ -135,16 +135,17 @@
                     Color: @car.Color
                 </p>
                 <p>
-                    Model: @car.Model
+                    Brand: @car.Brand
                 </p>
         
                 <form method="get" action="javascript:void(0);">
-                    <button class="edit-button" onclick="showPopup('@car.Id', '@car.LicensePlate', '@car.Color', '@car.Model', '@car.Year')">Edit</button>
+                    <button class="edit-button" onclick="showPopup('@car.Id', '@car.LicensePlate', '@car.Color', '@car.Brand', '@car.Year')">Edit</button>
                 </form>
-                <form method="post" action="@Url.Action("DeleteCar", "Car")">
-                        @Html.Hidden("id", car.Id) 
-                        <button class="delete-button" type="submit">Delete</button>
-                    </form>
+                <form method="post" action="@Url.Action("DeleteCar", "Car")" onsubmit="return confirmDelete();">
+                    @Html.Hidden("id", car.Id)
+                    <button class="delete-button" type="submit">Delete</button>
+                </form>
+
           
 
             </div>
@@ -165,8 +166,13 @@
                     }
                 </select>
 
-                <label for="editCarModel">Car Model:</label>
-                <input type="text" name="CarModel" id="editCarModel" />
+                <label for="editCarBrand">Car Brand:</label>
+                <select name="SelectedBrand" id="SelectedBrand">
+                    @foreach (var brand in Model.Brands)
+                    {
+                        <option value="@brand">@brand</option>
+                    }
+                </select>
 
                 <label for="editYear">Year:</label>
                 <input type="text" name="Year" id="editYear" />
@@ -177,15 +183,20 @@
         </div>
     </div>
 
-    <script>
-        function showPopup(id, licensePlate, color, carModel, year) {
-            document.getElementsByName('Id')[0].value = id;
-            document.getElementsByName('LicensePlate')[0].value = licensePlate;
-            document.getElementsByName('CarModel')[0].value = carModel;
-            document.getElementsByName('Year')[0].value = year;
+<script>
+        function showPopup(id, licensePlate, color, brand, year) {
+            document.getElementById('editId').value = id;
+            document.getElementById('editLicensePlate').value = licensePlate;
+            document.getElementById('SelectedBrand').value = brand;
+            document.getElementById('editYear').value = year;
             document.getElementById('overlay').style.display = 'flex';
             document.getElementById('popup').style.display = 'block';
         }
+        
+            function confirmDelete() {
+        return confirm("If you delete your car, all appointments will be canceled. Are you sure?");
+    }
+
 
         function hidePopup() {
             document.getElementById('overlay').style.display = 'none';

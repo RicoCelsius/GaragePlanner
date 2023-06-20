@@ -27,12 +27,32 @@ namespace Domain
         private void InitializeTimeSlots()
         {
             TimeOnly startTime = new TimeOnly(9, 0);
+            TimeOnly endTime = new TimeOnly(17, 0);
+            DateOnly currentDate = DateOnly.FromDateTime(DateTime.Today);
+            TimeOnly currentTime = TimeOnly.FromDateTime(DateTime.Now);
 
-            for (int i = 0; i < 8; i++)
+            if (currentDate == DateOfDay && currentTime > startTime)
             {
-                TimeSlots.Add(new TimeSlot(startTime));
+                int startIndex = (int)((currentTime - startTime).TotalHours);
+
+                for (int i = 0; i <= startIndex; i++)
+                {
+                    startTime = startTime.Add(TimeSpan.FromHours(1));
+                }
+            }
+
+            while (startTime <= endTime)
+            {
+                if (startTime >= new TimeOnly(9, 0) && startTime <= new TimeOnly(16, 0))
+                {
+                    TimeSlots.Add(new TimeSlot(startTime));
+                }
                 startTime = startTime.Add(TimeSpan.FromHours(1));
             }
         }
+
+
+
+
     }
 }

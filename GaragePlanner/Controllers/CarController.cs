@@ -30,10 +30,11 @@ namespace GaragePlanner.Controllers
         {
             try
             {
-                List<string> customerEmails = _customerCollection.GetCustomerEmails();
+                carViewModel.Brands = _carCollection.GetAllCurrentBrands();
+                
 
 
-                carViewModel.CustomerEmails = customerEmails;
+                carViewModel.CustomerEmails = _customerCollection.GetCustomerEmails();
             }
             catch (DalException)
             {
@@ -50,14 +51,15 @@ namespace GaragePlanner.Controllers
 
         [HttpPost]
 
-        public ActionResult AddCar(AddCarViewModel carViewModel)
+        public ActionResult AddCar(AddCarViewModel addCarViewModel)
         {
 
             try
             {
-                string email = carViewModel.SelectedCustomerEmail;
-                if (!_carCollection.TryCreateCar(email, carViewModel.LicensePlate, carViewModel.Model,
-                        carViewModel.SelectedColor, carViewModel.Year))
+                string email = addCarViewModel.SelectedCustomerEmail;
+                string brand = addCarViewModel.SelectedBrand;
+                if (!_carCollection.TryCreateCar(email, addCarViewModel.LicensePlate, brand,
+                        addCarViewModel.SelectedColor, addCarViewModel.Year))
                 {
                     ErrorViewModel errorViewModel = new()
                     {
@@ -124,11 +126,12 @@ namespace GaragePlanner.Controllers
 
         public ActionResult EditCar(OverviewCarViewModel model)
         {
+            model.Brands = _carCollection.GetAllCurrentBrands();
             Car car = new (
                 model.Id,
                 model.LicensePlate,
                 model.Color,
-                model.CarModel,
+                model.SelectedBrand,
                 model.Year
                 );
             try
@@ -165,6 +168,7 @@ namespace GaragePlanner.Controllers
             try
             {
                 model.CustomerEmails = _customerCollection.GetCustomerEmails();
+                model.Brands = _carCollection.GetAllCurrentBrands();
                 List<Car> customerCars = _carCollection.GetCustomerCarsByCustomerEmail("fefefefefefefe@gmail.com");
                 model.Cars = customerCars;
             }

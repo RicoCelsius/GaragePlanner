@@ -21,31 +21,30 @@ namespace DAL
 
         public List<AppointmentDto> GetAgendaOfDay(DateOnly date)
         {
-            List<AppointmentDto> appointments = new();
+            List<AppointmentDto> appointments = new List<AppointmentDto>();
             string mySqlDate = date.ToString("yyyy-MM-dd");
 
             var query = @"
-         SELECT appointment.id, appointment.date, appointment.type, appointment.status, appointment.time, 
-        customers.id, customers.first_name, customers.last_name, customers.Address, customers.Email, customers.Password, car.id,
-        car.license_plate, car.color, car.model, car.year 
+        SELECT appointment.id, appointment.date, appointment.type, appointment.status, appointment.time, 
+        customers.id, customers.first_name, customers.last_name, customers.Address, customers.Email, customers.Password,
+        car.id, car.license_plate, car.color, car.brand_id, car.year, car_brand.name AS brand_name
         FROM appointment 
         INNER JOIN customers ON appointment.customer_id = customers.id 
         INNER JOIN car ON appointment.car_id = car.id
+        INNER JOIN car_brand ON car.brand_id = car_brand.id
         WHERE appointment.date = @mySqlDate";
-
 
             var connection = _dbConnection;
             var parameters = new MySqlParameter[]
             {
-                new MySqlParameter("@mySqlDate", MySqlDbType.Date) { Value = date }
+        new MySqlParameter("@mySqlDate", MySqlDbType.Date) { Value = date }
             };
 
             var dataTable = connection.ExecuteQuery(query, parameters);
 
-
             foreach (DataRow row in dataTable.Rows)
             {
-                CustomerDto customer = new(
+                CustomerDto customer = new CustomerDto(
                     row.Field<int>("id"),
                     row.Field<string>("first_name"),
                     row.Field<string>("last_name"),
@@ -54,15 +53,15 @@ namespace DAL
                     row.Field<string>("Password")
                 );
 
-                CarDto car = new(
+                CarDto car = new CarDto(
                     row.Field<int>("id"),
                     row.Field<string>("license_plate"),
                     (Enums.Color)Enum.Parse(typeof(Enums.Color), row.Field<string>("color")),
-                    row.Field<string>("model"),
+                    row.Field<string>("brand_name"),
                     row.Field<int>("year")
                 );
 
-                AppointmentDto appointment = new(
+                AppointmentDto appointment = new AppointmentDto(
                     row.Field<int>("id"),
                     DateOnly.FromDateTime(row.Field<DateTime>("date")),
                     TimeOnly.FromTimeSpan(row.Field<TimeSpan>("time")),
@@ -77,6 +76,7 @@ namespace DAL
 
             return appointments;
         }
+
 
 
         public List<AppointmentDto> GetAgenda()

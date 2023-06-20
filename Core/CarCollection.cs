@@ -21,10 +21,10 @@ namespace Domain
             _iCarDal = iCarDal;
         }
 
-        public bool TryCreateCar(string email, string licensePlate, string model, Enums.Color color, int year)
+        public bool TryCreateCar(string email, string licensePlate, string brand, Enums.Color color, int year)
         {
 
-            Car car = new Car(licensePlate,color,model, year);
+            Car car = new Car(licensePlate,color,brand, year);
             try
             {
                 if (_iCarDal.DoesCarAlreadyExist(car.LicensePlate))
@@ -118,6 +118,48 @@ namespace Domain
             }
 
             return brands;
+        }
+
+        public bool TryAddBrand(string brand)
+        {
+            try
+            {
+                if (DoesBrandExist(brand))
+                {
+                    return false;
+                }
+
+                _iCarDal.InsertBrand(brand);
+                return true;
+            }
+            catch (Exception e)
+            {
+                throw new DalException("Could not add brand", e);
+            }
+        }
+
+        public bool TryDeleteBrand(string brand)
+        {
+            try
+            {
+                if (!DoesBrandExist(brand))
+                {
+                    return false;
+                }
+                _iCarDal.DeleteBrand(brand);
+                return true;
+            }
+            catch (Exception e)
+            {
+                throw new DalException("Could not delete brand", e);
+            }
+        }
+        
+
+        private bool DoesBrandExist(string brand)
+        {
+            List<string> brands = GetAllCurrentBrands();
+            return brands.Contains(brand);
         }
         
 

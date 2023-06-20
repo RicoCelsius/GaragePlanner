@@ -11,15 +11,15 @@ namespace Domain.dto
         public int Id { get; set; }
         public string LicensePlate { get; set; }
         public Enums.Color Color { get; set; }
-        public string Model { get; set; }
+        public string Brand { get; set; }
         public int Year { get; set; }
 
-        public CarDto(int id, string licensePlate, Enums.Color color, string model, int year)
+        public CarDto(int id, string licensePlate, Enums.Color color, string brand, int year)
         {
             Id = id;
             LicensePlate = licensePlate;
             Color = color;
-            Model = model;
+            Brand = brand;
             Year = year;
         }
     }

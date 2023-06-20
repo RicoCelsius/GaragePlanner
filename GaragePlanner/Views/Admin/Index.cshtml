@@ -16,15 +16,15 @@
     
 <h2>Add Brand</h2>
     <form method="post" action="@Url.Action("AddBrand", "Admin")">
-    <label for="brandName">Brand Name:</label>
-    <input type="text" id="brandName" name="brandName" required>
+    <label for="AddBrandName">Brand Name:</label>
+    <input type="text" id="AddBrandName" name="AddBrandName" required>
     <input type="submit" value="Add Brand">
 </form>
     
 <h2>Delete Brand</h2>
     <form method="post" action="@Url.Action("DeleteBrand", "Admin")">
-    <label for="deleteBrand">Select Brand:</label>
-    <select id="deleteBrand" name="deleteBrand" required>
+    <label for="DeleteBrandName">Select Brand:</label>
+    <select id="DeleteBrandName" name="DeleteBrandName" required>
         @foreach (var brand in Model.Brands)
         {
             <option value="@brand">@brand</option>

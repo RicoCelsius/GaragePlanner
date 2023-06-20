@@ -5,19 +5,19 @@
         public int? Id { get; set; }
         public string LicensePlate { get; set; }
         public Enums.Color Color { get; set; }
-        public string Model { get; set; }
+        public string Brand { get; set; }
         public int Year { get; set; }
 
-        public Car(string licensePlate, Enums.Color color, string model, int year)
+        public Car(string licensePlate, Enums.Color color, string brand, int year)
         {
             this.LicensePlate = licensePlate;
             this.Color = color;
-            this.Model = model;
+            this.Brand = brand;
             this.Year = year;
             }
 
-        public Car(int? id, string licensePlate, Enums.Color color, string model, int year)
-            : this(licensePlate, color, model, year)
+        public Car(int? id, string licensePlate, Enums.Color color, string brand, int year)
+            : this(licensePlate, color, brand, year)
         {
             this.Id = id;
         }
