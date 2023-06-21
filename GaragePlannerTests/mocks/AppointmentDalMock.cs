@@ -23,6 +23,13 @@ namespace GaragePlannerTests.mocks
             _appointmentsOfDay = appointmentsOfDay;
         }
 
+        public AppointmentDalMock(List<AppointmentDto> appointmentsInAgenda, List<AppointmentDto> appointmentsOfDay)
+        {
+            _appointmentsInAgenda = appointmentsInAgenda;
+            _appointmentsOfDay = appointmentsOfDay;
+        }
+
+
 
         public List<AppointmentDto> GetAgenda()
         {

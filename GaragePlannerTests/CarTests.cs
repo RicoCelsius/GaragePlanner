@@ -18,7 +18,7 @@ namespace GaragePlannerTests
             {
                 carDto
             };
-            var carDalMock = new CarDalMock(carDtos);
+            var carDalMock = new CarDalMock(carDtos, new List<string>());
             var carCollection = new CarCollection(carDalMock);
             //Act
             bool AddResult = carCollection.TryCreateCar("test", "1-2-4", "Mercedes", Enums.Color.Black, 1990);
@@ -38,7 +38,7 @@ namespace GaragePlannerTests
             {
                 carDto
             };
-            var carDalMock = new CarDalMock(carDtos);
+            var carDalMock = new CarDalMock(carDtos, new List<string>());
             var carCollection = new CarCollection(carDalMock);
             //Act
             bool AddResult = carCollection.TryCreateCar("test", licensePlate, "Mercedes", Enums.Color.Black, 1990);

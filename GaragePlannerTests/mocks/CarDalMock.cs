@@ -12,17 +12,28 @@ namespace GaragePlannerTests.mocks
     internal class CarDalMock : ICarDal
     {
         private readonly List<CarDto> _cars;
+        private readonly List<string> _brands;
         public bool HasInsertedCar;
         public bool HasDeletedCar;
         public bool HasUpdatedCar;
 
-        public CarDalMock(List<CarDto> cars)
+        public bool HasInsertedBrand;
+        public bool HasDeletedBrand;
+        public bool HasUpdatedBrand;
+
+        public CarDalMock(List<CarDto> cars, List<string> brands)
         {
             _cars = cars;
             HasInsertedCar = false;
             HasDeletedCar = false;
             HasUpdatedCar = false;
+            HasInsertedBrand = false;
+            HasDeletedBrand = false;
+            HasUpdatedBrand = false;
+            _brands = brands;
         }
+
+
 
         public void DeleteCar(int id)
         {
@@ -58,17 +69,19 @@ namespace GaragePlannerTests.mocks
 
         public void DeleteBrand(string brand)
         {
-            throw new NotImplementedException();
+            HasDeletedBrand = true;
+            
         }
 
         public List<string> GetBrands()
         {
-            throw new NotImplementedException();
+            return new List<string>();
+            
         }
 
         public void InsertBrand(string brand)
         {
-            throw new NotImplementedException();
+            HasInsertedBrand = true;
         }
 
 

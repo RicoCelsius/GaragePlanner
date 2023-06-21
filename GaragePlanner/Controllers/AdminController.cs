@@ -16,8 +16,29 @@ namespace GaragePlanner.Controllers
         [HttpGet]
         public IActionResult Index(AdminViewModel model)
         {
-            model.Brands = _carCollection.GetAllCurrentBrands();
-            return View(model);
+            try
+            {
+                model.Brands = _carCollection.GetAllCurrentBrands();
+                return View(model);
+            }
+            catch (DalException ex)
+            {
+                ErrorViewModel errorViewModel = new()
+                {
+                    ErrorMessage = "Technical issues, please try again later."
+                };
+                Console.WriteLine(ex);
+                return View("Error", errorViewModel);
+            }
+            catch (Exception ex)
+            {
+                ErrorViewModel errorViewModel = new()
+                {
+                    ErrorMessage = "Something went wrong, please contact support"
+                };
+                Console.WriteLine(ex);
+                return View("Error", errorViewModel);
+            }
         }
 
         
@@ -25,19 +46,41 @@ namespace GaragePlanner.Controllers
         [HttpPost]
         public IActionResult AddBrand(string AddBrandName)
         {
+            try
+            {
+                if (!_carCollection.TryAddBrand(AddBrandName))
+                {
+                    ErrorViewModel errorViewModel = new()
+                    {
+                        ErrorMessage = "This brand is already existent in the system."
+                    };
+                    return View("Error", errorViewModel);
+                }
 
-            if(!_carCollection.TryAddBrand(AddBrandName)){
+                AdminViewModel model = new()
+                {
+                    AddBrandName = AddBrandName
+                };
+                return View("Confirmation", model);
+            }
+            catch (DalException ex)
+            {
                 ErrorViewModel errorViewModel = new()
                 {
-                    ErrorMessage = "This brand is already existent in the system."
+                    ErrorMessage = "Technical issues, please try again later."
                 };
+                Console.WriteLine(ex);
                 return View("Error", errorViewModel);
             }
-            AdminViewModel model = new()
+            catch (Exception ex)
             {
-                AddBrandName = AddBrandName
-            };
-            return View("Confirmation",model);
+                ErrorViewModel errorViewModel = new()
+                {
+                    ErrorMessage = "Something went wrong, please contact support"
+                };
+                Console.WriteLine(ex);
+                return View("Error", errorViewModel);
+            }
         }
 
         [HttpPost]

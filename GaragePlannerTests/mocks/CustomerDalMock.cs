@@ -12,10 +12,10 @@ namespace GaragePlannerTests.mocks
     public class CustomerDalMock : ICustomerDal
     {
         private readonly List<CustomerDto> _customers;
-        public bool hasInsertedCustomer;
+        public bool HasInsertedCustomer;
 
         public CustomerDalMock(List<CustomerDto> customers){
-            hasInsertedCustomer = false;
+            HasInsertedCustomer = false;
             this._customers = customers;
         }
 
@@ -26,17 +26,17 @@ namespace GaragePlannerTests.mocks
 
         public CustomerDto GetCustomerByEmail(string email)
         {
-            throw new NotImplementedException();
+            return _customers.FirstOrDefault(customer => customer.Email == email);
         }
 
         public void InsertCustomer(Customer customer)
         {
-            hasInsertedCustomer = true;
+            HasInsertedCustomer = true;
         }
 
         public bool DoesCustomerExists(string email)
         {
-            return true;
+            return _customers.Any(customer => customer.Email == email);
         }
     }
 }

@@ -17,12 +17,12 @@ namespace Domain.dto
 
         public CustomerDto(int id,string firstName, string lastName, string email, string address, string password)
         {
-            this.Id = id;
-            this.FirstName = firstName;
-            this.LastName = lastName;
-            this.Email = email;
-            this.Address = address;
-            this.Password = password;
+            Id = id;
+            FirstName = firstName;
+            LastName = lastName;
+            Email = email;
+            Address = address;
+            Password = password;
         }
     }
 }
