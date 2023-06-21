@@ -21,7 +21,7 @@ namespace GaragePlanner.Controllers
             _appointmentCollection = collection;
         }
 
-        public IActionResult Index(DateTime dataAndTime)
+        public IActionResult Index()
         {
             try
             {
